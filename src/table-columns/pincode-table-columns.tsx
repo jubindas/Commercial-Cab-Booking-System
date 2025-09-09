@@ -33,7 +33,7 @@ export const pincodeColumns: ColumnDef<Pincode>[] = [
     header: "Description",
     cell: ({ row }) => (
       <span className="text-zinc-800">
-        {row.getValue("description") || "—"}
+        {row.getValue("description") || "N/A"}
       </span>
     ),
   },

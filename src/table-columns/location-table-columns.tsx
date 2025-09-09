@@ -27,7 +27,7 @@ export const columns: ColumnDef<Location>[] = [
     header: "Description",
     cell: ({ row }) => (
       <span className="text-zinc-800">
-        {row.getValue("description") || "—"}
+        {row.getValue("description") || "N/A"}
       </span>
     ),
   },

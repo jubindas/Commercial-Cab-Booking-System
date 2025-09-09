@@ -1,4 +1,4 @@
-import { Calendar, Home, Search, Settings, MapPin } from "lucide-react";
+import {  MapPinned , Home, Search, Settings, MapPin } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -14,7 +14,7 @@ import {
 const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "Location", url: "/location", icon: MapPin },
-  { title: "Pin Code", url: "/pincode", icon: Calendar },
+  { title: "Pin Code", url: "/pincode", icon: MapPinned  },
   { title: "Search", url: "/search", icon: Search },
   { title: "Settings", url: "/settings", icon: Settings },
 ];

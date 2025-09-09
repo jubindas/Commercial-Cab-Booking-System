@@ -7,7 +7,7 @@ export default function Layout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="bg-zinc-800 w-full">
+      <main className="bg-zinc-100 w-full">
        <Navbar />
         <Outlet />
       </main>

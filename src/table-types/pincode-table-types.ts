@@ -1,5 +1,6 @@
 export type Pincode = {
     id: string,
     pincode: string,
-    fallBackPincode: string[]
+    fallBackPincode: string[],
+    description?: string
 }

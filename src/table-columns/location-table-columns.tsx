@@ -15,18 +15,18 @@ export const columns: ColumnDef<Location>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: ({ row }) => <span className="text-zinc-400">{row.getValue("id")}</span>,
+    cell: ({ row }) => <span className="text-zinc-800">{row.getValue("id")}</span>,
   },
   {
     accessorKey: "location",
     header: "Location",
-    cell: ({ row }) => <span className="font-medium text-white">{row.getValue("location")}</span>,
+    cell: ({ row }) => <span className="font-medium text-zinc-800">{row.getValue("location")}</span>,
   },
   {
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span className="text-zinc-400">
+      <span className="text-zinc-800">
         {row.getValue("description") || "—"}
       </span>
     ),
@@ -42,7 +42,7 @@ export const columns: ColumnDef<Location>[] = [
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 text-zinc-400 hover:text-white"
+              className="h-8 w-8 p-0 text-zinc-800 hover:text-zinc-800"
             >
               <MoreHorizontal className="h-5 w-5" />
             </Button>
@@ -61,7 +61,7 @@ export const columns: ColumnDef<Location>[] = [
               </Button>
               <Button
                 variant="ghost"
-                className="justify-start text-red-400 hover:bg-red-500 hover:text-white"
+                className="justify-start text-red-400 hover:bg-red-500 hover:text-zinc-800"
                 onClick={() => alert(`Delete ${location.location}`)}
               >
                 Delete

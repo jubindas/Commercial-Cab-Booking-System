@@ -1,4 +1,3 @@
-import { useState } from "react"
 import {
   flexRender,
   getCoreRowModel,
@@ -6,8 +5,13 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   getFilteredRowModel,
-} from "@tanstack/react-table"
-import type { ColumnFiltersState, SortingState, ColumnDef } from "@tanstack/react-table"
+} from "@tanstack/react-table";
+
+import type {
+  ColumnFiltersState,
+  SortingState,
+  ColumnDef,
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -16,20 +20,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { DataTablePagination } from "@/components/table-pagination"
-import DataTableFilter from "./data-table-filter"
+} from "@/components/ui/table";
+
+import { DataTablePagination } from "@/components/table-pagination";
+
+import { useState } from "react";
+
+import DataTableFilter from "./data-table-filter";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  enablePagination?: boolean
-  hideTableInPrint?: boolean
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  enablePagination?: boolean;
+  hideTableInPrint?: boolean;
   filterOptions?: {
-    enableFilter: boolean
-    filterPlaceholder: string
-    filterCol: string
-  }
+    enableFilter: boolean;
+    filterPlaceholder: string;
+    filterCol: string;
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -39,8 +47,10 @@ export function DataTable<TData, TValue>({
   enablePagination = false,
   hideTableInPrint = true,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
@@ -52,16 +62,16 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: { sorting, columnFilters },
-  })
+  });
 
   return (
     <div
       className={`${
         hideTableInPrint ? "print:hidden" : ""
-      } rounded-lg border border-zinc-700 overflow-hidden bg-zinc-900`}
+      }  backdrop-blur border rounded-lg border-zinc-300 overflow-hidden`}
     >
       {filterOptions?.enableFilter && (
-        <div className="flex w-full px-4 py-3 bg-zinc-800 border-b border-zinc-700/60">
+        <div className="flex w-full px-4 py-3 bg-inherit border-b border-zinc-700/60">
           <DataTableFilter
             table={table}
             placeholder={filterOptions.filterPlaceholder}
@@ -71,35 +81,45 @@ export function DataTable<TData, TValue>({
       )}
 
       <Table className="">
-        <TableHeader>
+        <TableHeader className="">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-zinc-800">
+            <TableRow key={headerGroup.id} className="bg-zinc-300 rounded-2xl">
               {headerGroup.headers.map((header, index) => (
                 <TableHead
                   key={header.id}
-                  className={`text-zinc-200 text-xs font-medium uppercase tracking-wider py-4 px-6 text-left
-                    ${index === 0 ? "rounded-tl-lg" : ""}
-                    ${index === headerGroup.headers.length - 1 ? "rounded-tr-lg" : ""}`}
+                  className={`text-black text-xs font-medium uppercase  tracking-wider py-4 px-6 text-left
+            ${index === 0 ? "rounded-tl-lg" : ""}
+            ${index === headerGroup.headers.length - 1 ? "rounded-tr-lg" : ""}`}
                 >
                   {header.isPlaceholder
                     ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </TableHead>
               ))}
             </TableRow>
           ))}
         </TableHeader>
 
-        <TableBody>
+        <TableBody className="">
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, rowIndex) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="bg-zinc-900 hover:bg-zinc-800 transition-colors border-b border-zinc-700"
+                className={`bg-zinc-50 hover:bg-zinc-100 transition-colors ${
+                  rowIndex !== table.getRowModel().rows.length - 1
+                    ? "border-b border-zinc-300"
+                    : ""
+                }`}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-zinc-100 text-sm py-4 px-6">
+                  <TableCell
+                    key={cell.id}
+                    className="text-black text-sm py-4 px-6"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -109,9 +129,9 @@ export function DataTable<TData, TValue>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="h-24 text-center text-zinc-400"
+                className="h-24 text-center text-zinc-500"
               >
-                No results found
+                No results found 
               </TableCell>
             </TableRow>
           )}
@@ -119,10 +139,10 @@ export function DataTable<TData, TValue>({
       </Table>
 
       {enablePagination && (
-        <div className="bg-zinc-900 border-t border-zinc-700 rounded-b-lg">
+        <div className="bg-zinc-50 border-r border-l border-b rounded-b-lg border-zinc-300">
           <DataTablePagination table={table} />
         </div>
       )}
     </div>
-  )
+  );
 }

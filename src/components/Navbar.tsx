@@ -1,18 +1,23 @@
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarTrigger } from "./ui/sidebar";
+
+import { User  } from "lucide-react";
 
 export default function Navbar() {
+
+
+
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between bg-zinc-900/80 px-6 py-3 shadow-md">
-      
-      <div className="flex items-center">
-        <SidebarTrigger className="text-white" />
+    <nav className="sticky top-0 bg-zinc-100/40 backdrop-blur-md px-6 py-3 h-[69px] shadow-lg flex items-center justify-between gap-4 z-50">
+      <div className="flex items-center gap-3">
+        <SidebarTrigger className="text-black hover:text-zinc-300 transition-colors" />
       </div>
 
-      <div className="flex items-center">
-        <div className="h-9 w-9 rounded-full bg-zinc-700 flex items-center justify-center text-white font-semibold">
-          U
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-400 rounded-full flex items-center justify-center text-white font-semibold cursor-pointer hover:opacity-90">
+          <User className="h-5 w-5" />
         </div>
+
       </div>
     </nav>
-  )
+  );
 }

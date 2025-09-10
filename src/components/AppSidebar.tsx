@@ -32,8 +32,13 @@ interface MenuItem {
 
 const items: MenuItem[] = [
   { title: "Home", url: "/", icon: Home },
-  { title: "Location", url: "/location", icon: MapPin },
-  { title: "Pin Code", url: "/pincode", icon: MapPinned },
+  { title: "Location",
+    icon:  MapPin,
+    children: [
+      {title: "area", url: "/location", icon: MapPin },
+      { title: "Pin Code", url: "/pincode", icon: MapPinned },
+    ]
+  }, 
   {
     title: "Service",
     icon: LayoutGrid,

@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import {
   MapPinned,
   Home,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
+
 import { NavLink, useLocation } from "react-router-dom";
 
 import {
@@ -40,6 +42,7 @@ const items: MenuItem[] = [
       { title: "Sub Category", url: "/sub-category" },
     ],
   },
+   { title: "vendor", url: "/vendor", icon: MapPinned },
 ];
 
 export function AppSidebar() {

@@ -10,6 +10,8 @@ import Pincode from "@/pages/Pincode";
 
 import MainCategories from "./pages/MainCategories";
 
+import SubCategories from "./pages/SubCategories";
+
 const router = createBrowserRouter([
   {
     path: "ragistration",
@@ -23,7 +25,8 @@ const router = createBrowserRouter([
       { path: "location", element: <Location /> },
       { path: "pincode", element: <Pincode /> },
       { path: "main-category", element: <MainCategories /> },
-       { path: "sub-category", element: <h1>hi sub</h1> },
+      { path: "sub-category", element: <SubCategories /> },
+      { path: "vendor", element: <h1>hi</h1> },
     ],
   },
 ]);

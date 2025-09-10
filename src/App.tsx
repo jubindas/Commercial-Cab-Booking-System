@@ -13,6 +13,8 @@ import { AuthProvider } from "@/provider/authContext";
 import { useAuth } from "./hooks/useAuth";
 import type { ReactNode } from "react";
 
+import State from "./pages/State";
+
 function ProtectedRoute({ children }: { children: ReactNode}) {
   const { token } = useAuth();
   if (token) return <Navigate to="/login" replace />; 
@@ -38,6 +40,7 @@ const router = createBrowserRouter([
       { path: "main-category", element: <MainCategories /> },
       { path: "sub-category", element: <SubCategories /> },
       { path: "vendor", element: <Vendor /> },
+      {path: "state", element: <State />}
     ],
   },
 ]);

@@ -35,8 +35,9 @@ const items: MenuItem[] = [
   { title: "Location",
     icon:  MapPin,
     children: [
-      {title: "area", url: "/location", icon: MapPin },
-      { title: "Pin Code", url: "/pincode", icon: MapPinned },
+      {title: "State", url: "/state", },
+      {title: "Area", url: "/location", },
+      { title: "Pin Code", url: "/pincode",},
     ]
   }, 
   {

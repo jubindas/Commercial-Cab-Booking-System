@@ -1,9 +1,10 @@
 import { DataTable } from "@/components/data-table"
 
+import {mainCategories} from "@/table-datas/main-category-table-datas"
 
-import { dummyLocations } from "@/table-datas/location-table-datas"
+import { columns } from "@/table-columns/main-category-table-columns"
 
-import { columns } from "@/table-columns/location-table-columns"
+import MainCategoryDialog from "@/components/MainCategoryDialog"
 
 
 export default function MainCategories() {
@@ -15,7 +16,7 @@ export default function MainCategories() {
            <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
              Main Category
            </h1>
-          add dialog
+          <MainCategoryDialog />
          </div>
    
          <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -42,7 +43,7 @@ export default function MainCategories() {
          </div>
    
          <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-           <DataTable data={dummyLocations} columns={columns} enablePagination />
+           <DataTable data={mainCategories} columns={columns} enablePagination />
          </div>
        </div>
      )

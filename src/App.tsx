@@ -6,22 +6,27 @@ import Ragistration from "@/pages/Registration";
 
 import Location from "./pages/Location";
 
-import Pincode from "@/pages/Pincode"
+import Pincode from "@/pages/Pincode";
 
+import MainCategories from "./pages/MainCategories";
 
 const router = createBrowserRouter([
   {
-    path: "ragistration",  element: <Ragistration />,
+    path: "ragistration",
+    element: <Ragistration />,
   },
   {
-    path: "/",  element: <RootLayout />,
-    children: [{ path: "/home", element: <h2>hi home</h2> },
-      { path: "/location", element: <Location /> },
-      { path: "/pincode",  element: <Pincode /> }
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      { path: "home", element: <h2>hi home</h2> },
+      { path: "location", element: <Location /> },
+      { path: "pincode", element: <Pincode /> },
+      { path: "main-category", element: <MainCategories /> },
+       { path: "sub-category", element: <h1>hi sub</h1> },
     ],
   },
 ]);
-
 
 function App() {
   return <RouterProvider router={router} />;

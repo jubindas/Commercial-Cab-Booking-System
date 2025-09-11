@@ -1,45 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import {
-  MapPinned,
-  Home,
-  LayoutGrid,
-  MapPin,
-  ChevronRight,
-  ChevronDown,
-} from "lucide-react";
+import {  MapPinned,  Home,  LayoutGrid,  MapPin,  ChevronRight,  ChevronDown } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
 
 import { NavLink, useLocation } from "react-router-dom";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import {  Sidebar,  SidebarContent,  SidebarGroup,  SidebarGroupLabel,  SidebarGroupContent,  SidebarMenu,  SidebarMenuItem } from "@/components/ui/sidebar";
 
 interface MenuItem {
   title: string;
   url?: string;
   icon?: LucideIcon;
+  count?: number;
   children?: MenuItem[];
 }
 
 const items: MenuItem[] = [
   { title: "Home", url: "/", icon: Home },
-  { title: "Location",
-    icon:  MapPin,
+  {
+    title: "Location",
+    icon: MapPin,
     children: [
-      {title: "State", url: "/state", },
-      {title: "Area", url: "/location", },
-      { title: "Pin Code", url: "/pincode",},
-    ]
-  }, 
+      { title: "State", url: "/state" },
+       { title: "District", url: "/district" },
+      { title: "Area", url: "/location" },
+      { title: "Pin Code", url: "/pincode" },
+    ],
+  },
   {
     title: "Service",
     icon: LayoutGrid,
@@ -48,32 +36,35 @@ const items: MenuItem[] = [
       { title: "Sub Category", url: "/sub-category" },
     ],
   },
-   { title: "vendor", url: "/vendor", icon: MapPinned },
+  { title: "Vendor", url: "/vendor", icon: MapPinned },
 ];
 
 export function AppSidebar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
   const location = useLocation();
 
-  const toggleMenu = (title: string) => {
-    setOpenMenu(openMenu === title ? null : title);
-    setOpenSubMenu(null);
-  };
+  useEffect(() => {
+    const activeParent = items.find(
+      (item) =>
+        item.children &&
+        item.children.some((child) => location.pathname === child.url)
+    );
+    if (activeParent) {
+      setOpenMenu(activeParent.title);
+    }
+  }, [location.pathname]);
 
-  const toggleSubMenu = (title: string) => {
-    setOpenSubMenu(openSubMenu === title ? null : title);
+  const toggleMenu = (title: string) => {
+    setOpenMenu((prev) => (prev === title ? null : title));
   };
 
   const isParentActive = (item: MenuItem) => {
     if (!item.children) return false;
-    return item.children.some(
-      (child) => location.pathname === child.url
-    );
+    return item.children.some((child) => location.pathname === child.url);
   };
 
   return (
-    <Sidebar className="bg-[#1B1B1E] text-zinc-100 border-r border-zinc-800 shadow-xl">
+    <Sidebar className="bg-black text-zinc-200 w-64 min-h-screen border-r border-zinc-800">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-zinc-400 tracking-wide uppercase text-xs px-2 py-3">
@@ -87,9 +78,9 @@ export function AppSidebar() {
                     <>
                       <button
                         onClick={() => toggleMenu(item.title)}
-                        className={`flex items-center justify-between w-full gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                          isParentActive(item)
-                            ? "bg-purple-600 text-white"
+                        className={`flex items-center justify-between w-full gap-3 px-3 py-2 text-sm transition ${
+                          isParentActive(item) || openMenu === item.title
+                            ? "bg-zinc-800 text-white"
                             : "text-zinc-400 hover:bg-zinc-800 hover:text-white"
                         }`}
                       >
@@ -105,59 +96,28 @@ export function AppSidebar() {
                       </button>
 
                       {openMenu === item.title && item.children && (
-                        <div className="ml-10 mt-1 space-y-1">
-                          {item.children.map((child) =>
-                            child.children ? (
-                              <div key={child.title}>
-                                <button
-                                  onClick={() => toggleSubMenu(child.title)}
-                                  className="flex items-center justify-between w-full text-sm text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg px-3 py-2"
-                                >
-                                  {child.title}
-                                  {openSubMenu === child.title ? (
-                                    <ChevronDown className="h-3 w-3" />
-                                  ) : (
-                                    <ChevronRight className="h-3 w-3" />
-                                  )}
-                                </button>
-
-                                {openSubMenu === child.title &&
-                                  child.children && (
-                                    <div className="ml-6 mt-1 space-y-1">
-                                      {child.children.map((sub) => (
-                                        <NavLink
-                                          key={sub.title}
-                                          to={sub.url ?? "#"}
-                                          className={({ isActive }) =>
-                                            `block rounded-lg px-3 py-1.5 text-sm transition ${
-                                              isActive
-                                                ? "bg-purple-600 text-white"
-                                                : "text-zinc-400 hover:text-white hover:bg-zinc-800"
-                                            }`
-                                          }
-                                        >
-                                          {sub.title}
-                                        </NavLink>
-                                      ))}
-                                    </div>
-                                  )}
-                              </div>
-                            ) : (
-                              <NavLink
-                                key={child.title}
-                                to={child.url ?? "#"}
-                                className={({ isActive }) =>
-                                  `block rounded-lg px-3 py-2 text-sm transition ${
-                                    isActive
-                                      ? "bg-purple-600 text-white"
-                                      : "text-zinc-400 hover:text-white hover:bg-zinc-800"
-                                  }`
-                                }
-                              >
-                                {child.title}
-                              </NavLink>
-                            )
-                          )}
+                        <div className="ml-3 mt-1 space-y-1 border-l border-zinc-800 pl-2">
+                          {item.children.map((child) => (
+                            <NavLink
+                              key={child.title}
+                              to={child.url ?? "#"}
+                              className={({ isActive }) =>
+                                `flex items-center justify-between px-3 py-1.5 text-sm rounded-md transition
+                                ${
+                                  isActive
+                                    ? "bg-zinc-800 text-white border-l-2 border-purple-500"
+                                    : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+                                }`
+                              }
+                            >
+                              <span>{child.title}</span>
+                              {child.count && (
+                                <span className="ml-auto inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-zinc-700 px-2 text-xs font-medium text-zinc-100">
+                                  {child.count}
+                                </span>
+                              )}
+                            </NavLink>
+                          ))}
                         </div>
                       )}
                     </>
@@ -165,9 +125,9 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url ?? "#"}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                        `flex items-center gap-3 px-3 py-2 text-sm transition ${
                           isActive
-                            ? "bg-purple-600 text-white"
+                            ? "bg-zinc-800 text-white"
                             : "text-zinc-400 hover:bg-zinc-800 hover:text-white"
                         }`
                       }

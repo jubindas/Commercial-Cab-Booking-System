@@ -1,9 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table"
-import type { State } from "@/table-types/state-table-types"
-import StateTablCcolumnDropdown from "@/table-columns-dropdown/state-table-column-dropdown"
+
+import type {District} from "@/table-types/district-table-types"
+
+import DistrictTableColumnDropdown from "@/table-columns-dropdown/district-table-column-dropdown"
 
 
-export const stateColumns: ColumnDef<State>[] = [
+export const disctrictColumns: ColumnDef<District>[] = [
       {
     accessorKey: "id",
     header: "ID",
@@ -11,12 +13,12 @@ export const stateColumns: ColumnDef<State>[] = [
   },
   {
     accessorKey: "name",
-    header: "STATE",
+    header: "DISTRICT",
     cell: ({ row }) => <span className="text-zinc-800">{row.original.name}</span>,
   },
   {
     accessorKey: "code",
-    header: "STATE CODE",
+    header: "DISTRICT CODE",
     cell: ({ row }) => (
       <span className="text-zinc-800">
         {row.original.code || "N/A"}
@@ -26,6 +28,6 @@ export const stateColumns: ColumnDef<State>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({row}) => <StateTablCcolumnDropdown id={row.original.id} />
+    cell: ({row}) => <DistrictTableColumnDropdown id={row.original.id} />
   },
 ]

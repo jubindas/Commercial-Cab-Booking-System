@@ -15,6 +15,7 @@ export async function userLogin(email: string, password: string) {
     }
 
     return response.data;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Login failed:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Login request failed");

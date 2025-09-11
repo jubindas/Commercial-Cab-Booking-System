@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import RootLayout from "@/components/RootLayout";
@@ -14,10 +18,11 @@ import { useAuth } from "./hooks/useAuth";
 import type { ReactNode } from "react";
 
 import State from "./pages/State";
+import District from "./pages/District";
 
-function ProtectedRoute({ children }: { children: ReactNode}) {
+function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
-  if (token) return <Navigate to="/login" replace />; 
+  if (token) return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -40,7 +45,8 @@ const router = createBrowserRouter([
       { path: "main-category", element: <MainCategories /> },
       { path: "sub-category", element: <SubCategories /> },
       { path: "vendor", element: <Vendor /> },
-      {path: "state", element: <State />}
+      { path: "state", element: <State /> },
+      { path: "district", element: <District /> },
     ],
   },
 ]);

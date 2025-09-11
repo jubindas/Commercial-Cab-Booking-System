@@ -47,7 +47,7 @@ export default function DistrictDialog() {
 
   const createDistricts = useMutation({
     mutationFn: createDistrict,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["district"] });
       toast("The District is Created");
       setSelectedState("");

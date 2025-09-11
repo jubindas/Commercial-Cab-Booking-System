@@ -19,6 +19,7 @@ import type { ReactNode } from "react";
 
 import State from "./pages/State";
 import District from "./pages/District";
+import City from "@/pages/City"
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
       { path: "vendor", element: <Vendor /> },
       { path: "state", element: <State /> },
       { path: "district", element: <District /> },
+      { path: "city", element: <City /> },
     ],
   },
 ]);

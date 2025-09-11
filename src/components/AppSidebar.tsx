@@ -23,7 +23,8 @@ const items: MenuItem[] = [
     icon: MapPin,
     children: [
       { title: "State", url: "/state" },
-       { title: "District", url: "/district" },
+      { title: "District", url: "/district" },
+      { title: "City", url: "/city" },
       { title: "Area", url: "/location" },
       { title: "Pin Code", url: "/pincode" },
     ],

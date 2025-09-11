@@ -25,7 +25,7 @@ const items: MenuItem[] = [
       { title: "State", url: "/state" },
       { title: "District", url: "/district" },
       { title: "City", url: "/city" },
-      { title: "Area", url: "/location" },
+      { title: "Location", url: "/location" },
       { title: "Pin Code", url: "/pincode" },
     ],
   },

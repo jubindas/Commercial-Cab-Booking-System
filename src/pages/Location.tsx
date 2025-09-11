@@ -2,11 +2,25 @@ import { DataTable } from "@/components/data-table"
 
 import LocationDialog from "@/components/LocationDialog"
 
-import { dummyLocations } from "@/table-datas/location-table-datas"
 
 import { columns } from "@/table-columns/location-table-columns"
 
+import { useQuery } from "@tanstack/react-query"
+
+import { getLocation } from "@/service/apiLocation"
+
+
+
 export default function Location() {
+
+
+const {data: location} = useQuery({
+  queryKey: ["locations"],
+  queryFn: getLocation
+})
+
+
+
   return (
      <div className="min-h-screen p-6 bg-zinc-100">
      
@@ -41,7 +55,7 @@ export default function Location() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        <DataTable data={dummyLocations} columns={columns} enablePagination />
+       {location && <DataTable data={location} columns={columns} enablePagination />}
       </div>
     </div>
   )

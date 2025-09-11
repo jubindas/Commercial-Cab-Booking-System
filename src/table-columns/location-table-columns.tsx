@@ -1,33 +1,40 @@
+import type { ColumnDef } from "@tanstack/react-table";
 
-import type { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import type { Location } from "@/table-types/location-table-types";
 
-import type { Location } from "@/table-types/location-table-types" 
+import LocationTableColumnDropdown from "@/table-columns-dropdown/location-table-column-dropdown";
 
 export const columns: ColumnDef<Location>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: ({ row }) => <span className="text-zinc-800">{row.getValue("id")}</span>,
-  },
-  {
-    accessorKey: "location",
-    header: "Location",
-    cell: ({ row }) => <span className="font-medium text-zinc-800">{row.getValue("location")}</span>,
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
     cell: ({ row }) => (
-      <span className="text-zinc-800">
-        {row.getValue("description") || "N/A"}
+      <span className="text-zinc-800">{row.getValue("id")}</span>
+    ),
+  },
+  {
+    accessorKey: "name",
+    header: "Location",
+    cell: ({ row }) => (
+      <span className="font-medium text-zinc-800">{row.getValue("name")}</span>
+    ),
+  },
+  {
+    accessorKey: "latitude",
+    header: "LATITUDE",
+    cell: ({ row }) => (
+      <span className="font-medium text-zinc-800">
+        {row.getValue("latitude")}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "longitude",
+    header: "LONGITUDE",
+    cell: ({ row }) => (
+      <span className="font-medium text-zinc-800">
+        {row.getValue("longitude")}
       </span>
     ),
   },
@@ -35,41 +42,9 @@ export const columns: ColumnDef<Location>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const location = row.original
+   
 
-      return (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              className="h-8 w-8 p-0 text-zinc-800 hover:text-zinc-800"
-            >
-              <MoreHorizontal className="h-5 w-5" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent
-            align="end"
-            className="w-32 bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-xl"
-          >
-            <div className="flex flex-col space-y-1">
-              <Button
-                variant="ghost"
-                className="justify-start text-zinc-200 hover:bg-zinc-800"
-                onClick={() => alert(`Edit ${location.location}`)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="ghost"
-                className="justify-start text-red-400 hover:bg-red-500 hover:text-zinc-800"
-                onClick={() => alert(`Delete ${location.location}`)}
-              >
-                Delete
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
-      )
+      return <LocationTableColumnDropdown id={row.original.id} />
     },
   },
-]
+];

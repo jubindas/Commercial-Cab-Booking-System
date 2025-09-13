@@ -28,6 +28,6 @@ export const cityColumns: ColumnDef<City>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({row}) => <CityTableColumnDropdown id={row.original.id} />
+    cell: ({row}) => <CityTableColumnDropdown id={row.original.id} rowData={{districtId: row.original.district_id, name: row.original.name, code: row.original.code}} />
   },
 ]

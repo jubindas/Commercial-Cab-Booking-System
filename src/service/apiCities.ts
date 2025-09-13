@@ -55,3 +55,25 @@ export async function deleteCity(id: string) {
     throw error; 
   }
 }
+
+
+
+export async function updateCity(
+  id: string,
+  updatedData: { district_id: string; name: string; code: string }
+) {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/cities/${id}`, updatedData);
+
+    if (response && (response.status === 200 || response.status === 201)) {
+      console.log(`City with ID ${id} updated successfully`, response.data);
+      return response.data;
+    } else {
+      console.log("Unexpected response while updating city:", response);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error while updating city:", error);
+    throw error;
+  }
+}

@@ -59,3 +59,31 @@ export async function deleteLocation(id: string) {
     throw error; 
   }
 }
+
+
+
+export async function updateLocation(
+  id: string,
+  updatedData: {
+    city_id: string;
+    name: string;
+    code: string;
+    latitude?: string | null;
+    longitude?: string | null;
+  }
+) {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/locations/${id}`, updatedData);
+
+    if (response && (response.status === 200 || response.status === 201)) {
+      console.log(`Location with ID ${id} updated successfully`, response.data);
+      return response.data;
+    } else {
+      console.log("Unexpected response while updating location:", response);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error while updating location:", error);
+    throw error;
+  }
+}

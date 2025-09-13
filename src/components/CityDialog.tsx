@@ -8,8 +8,11 @@ import {
 } from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Select,
   SelectContent,
@@ -18,36 +21,72 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import { getDistrict } from "@/service/apiDistrict";
-import { createCity } from "@/service/apiCities";
 
-export default function CityDialog() {
+import { createCity, updateCity } from "@/service/apiCities";
+
+interface Props {
+  mode: "create" | "edit";
+  trigger?: React.ReactNode;
+  initialData?: { districtId: string; name: string; code: string };
+  id?: string | number;
+}
+
+export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   const [selectedDistrict, setSelectedDistrict] = useState("");
+
   const [cityName, setCityName] = useState("");
+
   const [cityCode, setCityCode] = useState("");
 
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setSelectedDistrict(initialData.districtId);
+      setCityCode(initialData.code);
+      setCityName(initialData.name);
+    }
+  }, [mode, initialData]);
 
   const { data: districts } = useQuery({
     queryKey: ["district"],
     queryFn: getDistrict,
   });
 
-  const createCities = useMutation({
-    mutationFn: createCity,
+  const cityMutation = useMutation({
+    mutationFn: (cityData: any) => {
+      if (mode === "create") {
+        return createCity(cityData);
+      } else if (mode === "edit") {
+        if (!id) throw new Error("City ID is required for edit mode");
+        return updateCity(String(id), cityData);
+      }
+      throw new Error("Invalid mode");
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cities"] });
-      toast("City created successfully");
+      toast(
+        mode === "create"
+          ? "City created successfully"
+          : "City updated successfully"
+      );
       setSelectedDistrict("");
       setCityName("");
       setCityCode("");
     },
     onError: (err) => {
-      console.error("Failed to create city:", err);
+      console.error(
+        `Failed to ${mode === "create" ? "create" : "update"} city:`,
+        err
+      );
+      toast.error(`Failed to ${mode === "create" ? "create" : "update"} city`);
     },
   });
 
@@ -58,25 +97,29 @@ export default function CityDialog() {
     }
 
     const city = {
-      district_id: selectedDistrict, 
+      district_id: selectedDistrict,
       name: cityName,
       code: cityCode,
     };
 
-    createCities.mutate(city);
+    cityMutation.mutate(city);
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-purple-600 text-white hover:bg-purple-700">
-          Add City
-        </Button>
+        {trigger || (
+          <Button className="bg-purple-600 text-white hover:bg-purple-700">
+            {mode === "create" ? "Add City" : "Edit City"}
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[600px] bg-white text-zinc-900 border border-zinc-200 shadow-md rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-zinc-900">Add a City</DialogTitle>
+          <DialogTitle className="text-zinc-900">
+            {mode === "create" ? "Add a City" : "Edit City"}
+          </DialogTitle>
           <DialogDescription className="text-zinc-500">
             Enter the city details below.
           </DialogDescription>
@@ -87,7 +130,10 @@ export default function CityDialog() {
             <Label htmlFor="district" className="text-zinc-700">
               District
             </Label>
-            <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+            <Select
+              value={selectedDistrict}
+              onValueChange={setSelectedDistrict}
+            >
               <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
                 <SelectValue placeholder="Select a district" />
               </SelectTrigger>
@@ -134,9 +180,9 @@ export default function CityDialog() {
           <Button
             className="bg-purple-600 text-white hover:bg-purple-700"
             onClick={handleSave}
-            disabled={createCities.isPending}
+            disabled={cityMutation.isPending}
           >
-            {createCities.isPending ? "Saving..." : "Save"}
+            {cityMutation.isPending ? "Saving..." : "Save"}
           </Button>
         </div>
       </DialogContent>

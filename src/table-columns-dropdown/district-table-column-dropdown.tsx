@@ -23,7 +23,7 @@ import DistrictDialog from "@/components/DistrictDialog";
 
 interface Props {
   id: string | number;
-  rowData?: {stateId: string; name: string; code: string }; 
+  rowData?: { stateId: string; name: string; code: string };
 }
 
 export default function DistrictTableColumnDropdown({ id, rowData }: Props) {
@@ -56,19 +56,19 @@ export default function DistrictTableColumnDropdown({ id, rowData }: Props) {
         </PopoverTrigger>
         <PopoverContent className="w-32 bg-zinc-800 border border-zinc-700 p-2">
           <div className="flex flex-col">
-           <DistrictDialog
-  mode="edit"
-  id={id}
-  initialData={rowData}
-  trigger={
-    <Button
-      variant="ghost"
-      className="justify-start text-zinc-200 hover:bg-zinc-700"
-    >
-      Edit
-    </Button>
-  }
-/>
+            <DistrictDialog
+              mode="edit"
+              id={id}
+              initialData={rowData}
+              trigger={
+                <Button
+                  variant="ghost"
+                  className="justify-start text-zinc-200 hover:bg-zinc-700"
+                >
+                  Edit
+                </Button>
+              }
+            />
 
             <Button
               variant="ghost"
@@ -93,7 +93,7 @@ export default function DistrictTableColumnDropdown({ id, rowData }: Props) {
             <AlertDialogAction
               onClick={() => deleteDistrictMutation.mutate(id)}
               disabled={deleteDistrictMutation.isPending}
-               className="bg-red-500"
+              className="bg-red-500"
             >
               {deleteDistrictMutation.isPending ? "Deleting..." : "Confirm"}
             </AlertDialogAction>

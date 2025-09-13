@@ -1,35 +1,36 @@
 import { MoreVertical } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+
+import {  Popover, PopoverContent,  PopoverTrigger,} from "@/components/ui/popover";
+
+import {  AlertDialog,  AlertDialogAction,  AlertDialogCancel,  AlertDialogContent,  AlertDialogDescription,  AlertDialogFooter,  AlertDialogHeader,  AlertDialogTitle,  AlertDialogTrigger,} from "@/components/ui/alert-dialog";
 
 import { deletePincode } from "@/service/apiPincode";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
+
+import PincodeDialog from "@/components/PincodeDialog";
 
 interface Props {
   id: string | number;
+  rowData: {
+    locId: string;
+    name: string;
+    pinCode: string;
+    fallBackPincodes: string[];
+  };
 }
 
-export default function PincodeTableColumnsDropdown({ id }: Props) {
+export default function PincodeTableColumnsDropdown({ id, rowData }: Props) {
+  
   const queryClient = useQueryClient();
 
   const deletePincodes = useMutation({
-    mutationFn: (pincodeId: string | number) => deletePincode(String(pincodeId)),
+    mutationFn: (pincodeId: string | number) =>
+      deletePincode(String(pincodeId)),
 
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["pincodes"] });
@@ -53,13 +54,19 @@ export default function PincodeTableColumnsDropdown({ id }: Props) {
 
       <PopoverContent className="w-32 bg-zinc-800 border border-zinc-700 p-2">
         <div className="flex flex-col">
-          <Button
-            variant="ghost"
-            className="justify-start text-zinc-200 hover:bg-zinc-700"
-            onClick={() => console.log("Edit clicked for:", id)}
-          >
-            Edit
-          </Button>
+          <PincodeDialog
+            mode="edit"
+            id={id}
+            initialData={rowData}
+            trigger={
+              <Button
+                variant="ghost"
+                className="justify-start text-zinc-200 hover:bg-zinc-700"
+              >
+                Edit
+              </Button>
+            }
+          />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>

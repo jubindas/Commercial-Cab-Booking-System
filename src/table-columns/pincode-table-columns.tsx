@@ -1,7 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Pincode } from "@/table-types/pincode-table-types";
-import PincodeTableColumnsDropdown from "@/table-columns-dropdown/pincode-table-columns-dropdown";
 
+import type { Pincode } from "@/table-types/pincode-table-types";
+
+import PincodeTableColumnsDropdown from "@/table-columns-dropdown/pincode-table-columns-dropdown";
 
 export const pincodeColumns: ColumnDef<Pincode>[] = [
   {
@@ -22,9 +23,7 @@ export const pincodeColumns: ColumnDef<Pincode>[] = [
     accessorKey: "area_name",
     header: "Area Name",
     cell: ({ row }) => (
-      <span className="text-zinc-800">
-        {row.original.area_name || "N/A"}
-      </span>
+      <span className="text-zinc-800">{row.original.area_name || "N/A"}</span>
     ),
   },
   {
@@ -41,6 +40,16 @@ export const pincodeColumns: ColumnDef<Pincode>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <PincodeTableColumnsDropdown id={row.original.id} />
+    cell: ({ row }) => (
+      <PincodeTableColumnsDropdown
+        id={row.original.id}
+        rowData={{
+          locId: row.original.location_id,
+          name: row.original.area_name,
+          pinCode: row.original.pin_code,
+          fallBackPincodes: row.original.fallback_pin_codes,
+        }}
+      />
+    ),
   },
 ];

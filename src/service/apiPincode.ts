@@ -51,3 +51,32 @@ export async function deletePincode(id: string) {
     throw error;
   }
 }
+
+
+
+
+export async function updatePincode(
+  id: string,
+  updatedData: {
+    location_id: string;
+    area_name?: string;
+    pin_code: string;
+    fallback_pin_codes?: string[];
+  }
+) {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/pin-codes/${id}`, updatedData);
+
+    if (response && (response.status === 200 || response.status === 201)) {
+      console.log(`Pin Code with ID ${id} updated successfully`, response.data);
+      return response.data;
+    } else {
+      console.log("Unexpected response while updating pincode:", response);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error while updating pincode:", error);
+    throw error;
+  }
+}
+

@@ -1,109 +1,130 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import {  Dialog,  DialogContent,  DialogDescription,  DialogHeader,  DialogTitle,  DialogTrigger,} from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-import { useState } from "react";
+import { Label } from "@/components/ui/label";
+
+import { Button } from "@/components/ui/button";
+
+import {  Select,  SelectContent,  SelectItem,  SelectTrigger,  SelectValue,} from "@/components/ui/select";
+
+import { useState, useEffect } from "react";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import { getLocation } from "@/service/apiLocation";
-import { createPincode } from "@/service/apiPincode";
 
-export default function PincodeDialog() {
+import { createPincode, updatePincode } from "@/service/apiPincode";
+
+
+interface Props {
+  mode: "create" | "edit";
+  trigger?: React.ReactNode;
+  initialData?: { locId: string; name: string; pinCode: string; fallBackPincodes: string[] };
+  id?: string | number;
+}
+
+export default function PincodeDialog({ mode, trigger, initialData, id }: Props) {
+
   const [selectedLocation, setSelectedLocation] = useState("");
+
   const [areaName, setAreaName] = useState("");
+
   const [pinCode, setPinCode] = useState("");
+
   const [fallbackPinCodes, setFallbackPinCodes] = useState("");
 
   const queryClient = useQueryClient();
 
-  // Fetch all locations
   const { data: locations } = useQuery({
     queryKey: ["locations"],
     queryFn: getLocation,
   });
 
-  // Mutation for creating Pincode
-  const createPincodes = useMutation({
-    mutationFn: createPincode,
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setSelectedLocation(initialData.locId);
+      setAreaName(initialData.name);
+      setPinCode(initialData.pinCode);
+      setFallbackPinCodes(initialData.fallBackPincodes?.join(", ") || "");
+    }
+  }, [mode, initialData]);
+
+
+  const pincodeMutation = useMutation({
+    mutationFn: (data: any) =>
+      mode === "create"
+        ? createPincode(data)
+        : updatePincode(String(id), data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pincodes"] });
-      toast("Pincode created successfully");
-
-      // reset fields
+      toast(mode === "create" ? "Pincode created successfully" : "Pincode updated successfully");
       setSelectedLocation("");
       setAreaName("");
       setPinCode("");
       setFallbackPinCodes("");
     },
     onError: (err) => {
-      console.error("Failed to create pincode:", err);
+      console.error("Failed to save pincode:", err);
     },
   });
 
-  // Save handler
+
   const handleSave = () => {
     if (!selectedLocation || !pinCode) {
       console.log("Please fill all required fields");
       return;
     }
 
-    const newPincode = {
-  location_id: selectedLocation.toString(), // ensure string
-  area_name: areaName || undefined,
-  pin_code: pinCode,
-  fallback_pin_codes: fallbackPinCodes
-    ? fallbackPinCodes.split(',').map(code => code.trim()) // convert to array
-    : undefined,
-};
+    const fallbackArray = fallbackPinCodes
+      ? fallbackPinCodes.split(",").map((code) => code.trim())
+      : [];
 
+    if (fallbackArray.length > 5) {
+      toast.error("You cannot add more than 5 fallback pincodes");
+      return;
+    }
+
+    const newPincode = {
+      location_id: selectedLocation,
+      area_name: areaName || undefined,
+      pin_code: pinCode,
+      fallback_pin_codes: fallbackArray.length > 0 ? fallbackArray : undefined,
+    };
 
     console.log("Submitting Pincode:", newPincode);
-    createPincodes.mutate(newPincode);
+    pincodeMutation.mutate(newPincode);
   };
+  
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-purple-600 text-white hover:bg-purple-700">
-          Add Pincode
-        </Button>
+        {trigger || (
+          <Button className="bg-purple-600 text-white hover:bg-purple-700">
+            {mode === "create" ? "Add Pincode" : "Edit Pincode"}
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[600px] bg-white text-zinc-900 border border-zinc-200 shadow-md rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-zinc-900">Add a Pincode</DialogTitle>
+          <DialogTitle className="text-zinc-900">
+            {mode === "create" ? "Add a Pincode" : "Edit Pincode"}
+          </DialogTitle>
           <DialogDescription className="text-zinc-500">
             Enter the pincode details below.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-          {/* Select Location */}
           <div className="grid gap-2">
             <Label htmlFor="location" className="text-zinc-700">
               Location
             </Label>
-            <Select
-              value={selectedLocation}
-              onValueChange={setSelectedLocation}
-            >
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
               <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
                 <SelectValue placeholder="Select a location" />
               </SelectTrigger>
@@ -117,7 +138,6 @@ export default function PincodeDialog() {
             </Select>
           </div>
 
-          {/* Area Name */}
           <div className="grid gap-2">
             <Label htmlFor="areaName" className="text-zinc-700">
               Area Name
@@ -131,7 +151,6 @@ export default function PincodeDialog() {
             />
           </div>
 
-          {/* Pin Code */}
           <div className="grid gap-2">
             <Label htmlFor="pinCode" className="text-zinc-700">
               Pin Code
@@ -146,10 +165,9 @@ export default function PincodeDialog() {
             />
           </div>
 
-          {/* Fallback Pin Codes */}
           <div className="grid gap-2">
             <Label htmlFor="fallbackPinCodes" className="text-zinc-700">
-              Fallback Pin Codes (comma separated)
+              Fallback Pin Codes (comma separated, max 5)
             </Label>
             <Input
               id="fallbackPinCodes"
@@ -165,9 +183,9 @@ export default function PincodeDialog() {
           <Button
             className="bg-purple-600 text-white hover:bg-purple-700"
             onClick={handleSave}
-            disabled={createPincodes.isPending}
+            disabled={pincodeMutation.isPending}
           >
-            {createPincodes.isPending ? "Saving..." : "Save"}
+            {pincodeMutation.isPending ? "Saving..." : "Save"}
           </Button>
         </div>
       </DialogContent>

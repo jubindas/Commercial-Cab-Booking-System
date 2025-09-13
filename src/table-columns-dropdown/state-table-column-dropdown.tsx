@@ -23,7 +23,7 @@ import StatesDialog from "@/components/StatesDialog";
 
 interface Props {
   id: string | number;
-  rowData?: { name: string; code: string }; // pass row data here
+  rowData?: { name: string; code: string }; 
 }
 
 export default function StateTablCcolumnDropdown({ id, rowData }: Props) {

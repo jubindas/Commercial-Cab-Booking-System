@@ -40,6 +40,32 @@ export async function createDistrict(district: {state_id: string, name: string, 
 
 
 
+
+export async function updateDistrict(
+  id: string,
+  updatedData: { state_id: string; name: string; code: string }
+) {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/districts/${id}`, updatedData);
+
+    if (response && (response.status === 200 || response.status === 201)) {
+      console.log(`District with ID ${id} updated successfully`, response.data);
+      return response.data;
+    } else {
+      console.log("Unexpected response while updating district:", response);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error while updating district:", error);
+    throw error;
+  }
+}
+
+
+
+
+
+
 export async function deleteDistrict(id: string) {
   try {
     const response = await axios.delete(`${API_BASE_URL}/districts/${id}`);

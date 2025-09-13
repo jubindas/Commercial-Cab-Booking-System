@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -29,57 +29,88 @@ import { getStates } from "@/service/apiStates";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { createDistrict } from "@/service/apiDistrict";
+import { createDistrict, updateDistrict } from "@/service/apiDistrict";
 
 import { toast } from "sonner";
 
-export default function DistrictDialog() {
+interface Props {
+  mode: "create" | "edit";
+  trigger?: React.ReactNode;
+  initialData?: { stateId: string; name: string; code: string };
+  id?: string | number;
+}
+
+export default function DistrictDialog({
+  mode,
+  trigger,
+  initialData,
+  id,
+}: Props) {
   const [selectedState, setSelectedState] = useState("");
   const [districtName, setDistrictName] = useState("");
   const [districtCode, setDistrictCode] = useState("");
 
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setSelectedState(initialData.stateId);
+      setDistrictName(initialData.name);
+      setDistrictCode(initialData.code);
+    }
+  }, [mode, initialData]);
+
   const { data: states } = useQuery({
     queryKey: ["states"],
     queryFn: getStates,
   });
 
-  const createDistricts = useMutation({
-    mutationFn: createDistrict,
+  const mutation = useMutation({
+    mutationFn: (data: any) =>
+      mode === "create"
+        ? createDistrict(data)
+        : updateDistrict(String(id), data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["district"] });
-      toast("The District is Created");
+      toast(`District ${mode === "create" ? "Created" : "Updated"}`);
       setSelectedState("");
       setDistrictName("");
       setDistrictCode("");
     },
     onError: (err) => {
-      console.error(" Failed to create state:", err);
+      console.error(
+        `Failed to ${mode === "create" ? "create" : "update"} district:`,
+        err
+      );
+      toast.error(
+        `Failed to ${mode === "create" ? "create" : "update"} district`
+      );
     },
   });
 
   const handleSave = () => {
     if (!selectedState || !districtName || !districtCode) {
-      console.log("Please fill all required fields");
+      toast.error("Please fill all fields!");
       return;
     }
 
-    const district = {
+    const districtData = {
       state_id: selectedState,
       name: districtName,
       code: districtCode,
     };
 
-    createDistricts.mutate(district);
+    mutation.mutate(districtData);
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-purple-600 text-white hover:bg-purple-700">
-          Add District
-        </Button>
+        {trigger || (
+          <Button className="bg-purple-600 text-white hover:bg-purple-700">
+            Add District
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[600px] bg-white text-zinc-900 border border-zinc-200 shadow-md rounded-xl">
@@ -148,9 +179,9 @@ export default function DistrictDialog() {
           <Button
             className="bg-purple-600 text-white hover:bg-purple-700"
             onClick={handleSave}
-            disabled={createDistricts.isPending}
+            disabled={mutation.isPending}
           >
-            {createDistricts.isPending ? "Saving..." : "Save"}
+            {mutation.isPending ? "Saving..." : "Save"}
           </Button>
         </div>
       </DialogContent>

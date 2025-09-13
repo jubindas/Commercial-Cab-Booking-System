@@ -19,12 +19,14 @@ import { deleteLocation } from "@/service/apiLocation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useState } from "react";
+import LocationDialog from "@/components/LocationDialog";
 
 interface Props {
   id: string | number;
+  rowData?: {cityId: string; name: string; longitude: string; latitude: string}
 }
 
-export default function LocationTableColumnDropdown({ id }: Props) {
+export default function LocationTableColumnDropdown({ id, rowData }: Props) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -54,13 +56,19 @@ export default function LocationTableColumnDropdown({ id }: Props) {
         </PopoverTrigger>
         <PopoverContent className="w-32 bg-zinc-800 border border-zinc-700 p-2">
           <div className="flex flex-col">
-            <Button
-              variant="ghost"
-              className="justify-start text-zinc-200 hover:bg-zinc-700"
-              onClick={() => console.log("Edit clicked for:", id)}
-            >
-              Edit
-            </Button>
+            <LocationDialog 
+             mode="edit"
+              id={id}
+              initialData={rowData}
+              trigger={
+                <Button
+                  variant="ghost"
+                  className="justify-start text-zinc-200 hover:bg-zinc-700"
+                >
+                  Edit
+                </Button>
+              }
+            />
             <Button
               variant="ghost"
               className="justify-start text-red-500 hover:bg-zinc-700"

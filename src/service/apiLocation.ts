@@ -63,7 +63,7 @@ export async function deleteLocation(id: string) {
 
 
 export async function updateLocation(
-  id: string,
+ id: string,
   updatedData: {
     city_id: string;
     name: string;

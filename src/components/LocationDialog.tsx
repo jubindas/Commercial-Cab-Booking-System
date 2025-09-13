@@ -8,8 +8,11 @@ import {
 } from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Select,
   SelectContent,
@@ -18,17 +21,40 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import { getCities } from "@/service/apiCities";
-import { createLocation } from "@/service/apiLocation";
 
-export default function LocationDialog() {
+import { createLocation, updateLocation } from "@/service/apiLocation";
+
+interface Props {
+  mode: "create" | "edit";
+  trigger?: React.ReactNode;
+  initialData?: {
+    cityId: string;
+    name: string;
+    longitude: string;
+    latitude: string;
+  };
+  id?: string | number;
+}
+
+export default function LocationDialog({
+  mode,
+  trigger,
+  initialData,
+  id,
+}: Props) {
   const [selectedCity, setSelectedCity] = useState("");
+
   const [locationName, setLocationName] = useState("");
+
   const [latitude, setLatitude] = useState("");
+
   const [longitude, setLongitude] = useState("");
 
   const queryClient = useQueryClient();
@@ -38,18 +64,34 @@ export default function LocationDialog() {
     queryFn: getCities,
   });
 
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setSelectedCity(initialData.cityId);
+      setLocationName(initialData.name);
+      setLatitude(initialData.latitude);
+      setLongitude(initialData.longitude);
+    }
+  }, [mode, initialData]);
+
   const createLocations = useMutation({
-    mutationFn: createLocation,
+    mutationFn: (locationData: any) => {
+      if (mode === "create") return createLocation(locationData);
+      return updateLocation(String(id), locationData); // call update with id
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations"] });
-      toast("Location created successfully");
+      toast(
+        mode === "create"
+          ? "Location created successfully"
+          : "Location updated successfully"
+      );
       setSelectedCity("");
       setLocationName("");
       setLatitude("");
       setLongitude("");
     },
     onError: (err) => {
-      console.error("Failed to create location:", err);
+      console.error("Failed to save location:", err);
     },
   });
 
@@ -59,24 +101,23 @@ export default function LocationDialog() {
       return;
     }
 
-    const location = {
+    createLocations.mutate({
       city_id: selectedCity,
       name: locationName,
       latitude: latitude || null,
       longitude: longitude || null,
       code: locationName.toLowerCase().slice(0, 3),
-    };
-
-    console.log("Submitting Location:", location);
-    createLocations.mutate(location);
+    });
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-purple-600 text-white hover:bg-purple-700">
-          Add Location
-        </Button>
+        {trigger || (
+          <Button className="bg-purple-600 text-white hover:bg-purple-700">
+            Add Location
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[600px] bg-white text-zinc-900 border border-zinc-200 shadow-md rounded-xl">
@@ -88,7 +129,6 @@ export default function LocationDialog() {
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-          {/* Select City */}
           <div className="grid gap-2">
             <Label htmlFor="city" className="text-zinc-700">
               City
@@ -107,7 +147,6 @@ export default function LocationDialog() {
             </Select>
           </div>
 
-          {/* Location Name */}
           <div className="grid gap-2">
             <Label htmlFor="locationName" className="text-zinc-700">
               Location Name
@@ -122,7 +161,6 @@ export default function LocationDialog() {
             />
           </div>
 
-          {/* Latitude (optional) */}
           <div className="grid gap-2">
             <Label htmlFor="latitude" className="text-zinc-700">
               Latitude (Optional)
@@ -136,7 +174,6 @@ export default function LocationDialog() {
             />
           </div>
 
-          {/* Longitude (optional) */}
           <div className="grid gap-2">
             <Label htmlFor="longitude" className="text-zinc-700">
               Longitude (Optional)

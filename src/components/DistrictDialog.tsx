@@ -47,7 +47,9 @@ export default function DistrictDialog({
   id,
 }: Props) {
   const [selectedState, setSelectedState] = useState("");
+
   const [districtName, setDistrictName] = useState("");
+  
   const [districtCode, setDistrictCode] = useState("");
 
   const queryClient = useQueryClient();

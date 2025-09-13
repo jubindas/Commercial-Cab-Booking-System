@@ -16,29 +16,30 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { deleteStates } from "@/service/apiStates";
+
+import { deletePincode } from "@/service/apiPincode";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import StatesDialog from "@/components/StatesDialog";
 
 interface Props {
   id: string | number;
-  rowData?: { name: string; code: string }; // pass row data here
 }
 
-export default function StateTablCcolumnDropdown({ id, rowData }: Props) {
+export default function PincodeTableColumnsDropdown({ id }: Props) {
   const queryClient = useQueryClient();
 
-  const deleteState = useMutation({
-    mutationFn: (stateId: string | number) => deleteStates(String(stateId)),
+  const deletePincodes = useMutation({
+    mutationFn: (pincodeId: string | number) => deletePincode(String(pincodeId)),
+
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["states"] });
-      toast("The State is Deleted");
-      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ["pincodes"] });
+      console.log("Pincode deleted:", data);
+      toast("The Pincode is Deleted");
     },
+
     onError: (err) => {
-      console.error("Failed to delete state:", err);
-      toast.error("Failed to delete state");
+      console.error("Failed to delete pincode:", err);
+      toast.error("Failed to delete pincode");
     },
   });
 
@@ -52,19 +53,13 @@ export default function StateTablCcolumnDropdown({ id, rowData }: Props) {
 
       <PopoverContent className="w-32 bg-zinc-800 border border-zinc-700 p-2">
         <div className="flex flex-col">
-          <StatesDialog
-            mode="edit"
-            id={id}
-            initialData={rowData}
-            trigger={
-              <Button
-                variant="ghost"
-                className="justify-start text-zinc-200 hover:bg-zinc-700"
-              >
-                Edit
-              </Button>
-            }
-          />
+          <Button
+            variant="ghost"
+            className="justify-start text-zinc-200 hover:bg-zinc-700"
+            onClick={() => console.log("Edit clicked for:", id)}
+          >
+            Edit
+          </Button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -75,22 +70,22 @@ export default function StateTablCcolumnDropdown({ id, rowData }: Props) {
                 Delete
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="bg-white text-zinc-900">
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this state? This action cannot
-                  be undone.
+                  Are you sure you want to delete this pincode? This action
+                  cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => deleteState.mutate(id)}
-                  disabled={deleteState.isPending}
+                  onClick={() => deletePincodes.mutate(id)}
+                  disabled={deletePincodes.isPending}
                   className="bg-red-500"
                 >
-                  {deleteState.isPending ? "Deleting..." : "Delete"}
+                  {deletePincodes.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

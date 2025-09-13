@@ -23,9 +23,15 @@ export const stateColumns: ColumnDef<State>[] = [
       </span>
     ),
   },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({row}) => <StateTablCcolumnDropdown id={row.original.id} />
-  },
+ {
+  id: "actions",
+  header: "Actions",
+  cell: ({ row }) => (
+    <StateTablCcolumnDropdown
+      id={row.original.id}
+      rowData={{ name: row.original.name, code: row.original.code }}
+    />
+  ),
+}
+
 ]

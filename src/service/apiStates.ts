@@ -51,3 +51,23 @@ export async function deleteStates(id: string) {
     throw error; 
   }
 }
+
+export async function updateState(
+  id: string,
+  updatedData: { name: string; code: string }
+) {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/states/${id}`, updatedData);
+
+    if (response && (response.status === 200 || response.status === 201)) {
+      console.log(`State with ID ${id} updated successfully`, response.data);
+      return response.data;
+    } else {
+      console.log("Unexpected response while updating state:", response);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error while updating state:", error);
+    throw error;
+  }
+}

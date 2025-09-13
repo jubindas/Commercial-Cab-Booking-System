@@ -2,11 +2,26 @@ import { DataTable } from "@/components/data-table";
 
 import PincodeDialog from "@/components/PincodeDialog";
 
-import { dummyPincodes } from "@/table-datas/pincode-table-datas";
 
 import { pincodeColumns } from "@/table-columns/pincode-table-columns";
 
+
+import { getPincode } from "@/service/apiPincode";
+
+import { useQuery } from "@tanstack/react-query";
+
 export default function Pincode() {
+
+
+const {data: pincode } = useQuery({
+  queryKey: ["pincodes"],
+  queryFn: getPincode
+})
+
+console.log(pincode);
+
+
+
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
      
@@ -44,11 +59,11 @@ export default function Pincode() {
 
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        <DataTable
-          data={dummyPincodes}
+       {pincode && <DataTable
+          data={pincode}
           columns={pincodeColumns}
           enablePagination
-        />
+        />}
       </div>
     </div>
   );

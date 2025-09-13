@@ -1,12 +1,23 @@
 import { useState, useEffect } from "react";
-
-import {  MapPinned,  Home,  LayoutGrid,  MapPin,  ChevronRight,  ChevronDown } from "lucide-react";
-
+import {
+  MapPinned,
+  Home,
+  LayoutGrid,
+  MapPin,
+  ChevronRight,
+  ChevronDown,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-
 import { NavLink, useLocation } from "react-router-dom";
-
-import {  Sidebar,  SidebarContent,  SidebarGroup,  SidebarGroupLabel,  SidebarGroupContent,  SidebarMenu,  SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 interface MenuItem {
   title: string;
@@ -41,22 +52,30 @@ const items: MenuItem[] = [
 ];
 
 export function AppSidebar() {
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
   const location = useLocation();
 
   useEffect(() => {
-    const activeParent = items.find(
-      (item) =>
-        item.children &&
-        item.children.some((child) => location.pathname === child.url)
-    );
-    if (activeParent) {
-      setOpenMenu(activeParent.title);
+    // Auto-open parent if a child route is active
+    const activeParents = items
+      .filter(
+        (item) =>
+          item.children &&
+          item.children.some((child) => location.pathname === child.url)
+      )
+      .map((item) => item.title);
+
+    if (activeParents.length > 0) {
+      setOpenMenus((prev) => Array.from(new Set([...prev, ...activeParents])));
     }
   }, [location.pathname]);
 
   const toggleMenu = (title: string) => {
-    setOpenMenu((prev) => (prev === title ? null : title));
+    setOpenMenus((prev) =>
+      prev.includes(title)
+        ? prev.filter((t) => t !== title) // close it
+        : [...prev, title] // open it
+    );
   };
 
   const isParentActive = (item: MenuItem) => {
@@ -80,7 +99,7 @@ export function AppSidebar() {
                       <button
                         onClick={() => toggleMenu(item.title)}
                         className={`flex items-center justify-between w-full gap-3 px-3 py-2 text-sm transition ${
-                          isParentActive(item) || openMenu === item.title
+                          isParentActive(item) || openMenus.includes(item.title)
                             ? "bg-zinc-800 text-white"
                             : "text-zinc-400 hover:bg-zinc-800 hover:text-white"
                         }`}
@@ -89,14 +108,14 @@ export function AppSidebar() {
                           {item.icon && <item.icon className="h-5 w-5" />}
                           <span>{item.title}</span>
                         </div>
-                        {openMenu === item.title ? (
+                        {openMenus.includes(item.title) ? (
                           <ChevronDown className="h-4 w-4" />
                         ) : (
                           <ChevronRight className="h-4 w-4" />
                         )}
                       </button>
 
-                      {openMenu === item.title && item.children && (
+                      {openMenus.includes(item.title) && item.children && (
                         <div className="ml-3 mt-1 space-y-1 border-l border-zinc-800 pl-2">
                           {item.children.map((child) => (
                             <NavLink

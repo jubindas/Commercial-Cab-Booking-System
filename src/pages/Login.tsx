@@ -2,8 +2,13 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { userLogin } from "@/service/user";
 
-export default function Login() {
+import { useAuth } from "@/hooks/useAuth";
 
+import { useNavigate } from "react-router-dom";
+
+export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +17,11 @@ export default function Login() {
     mutationFn: () => userLogin(email, password),
     onSuccess: (data) => {
       console.log("Login success:", data);
+      login(data.user, data.token);
+      console.log("Navigating to /");
+      navigate("/");
     },
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       alert(error.response?.data?.message || "Login failed");

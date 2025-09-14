@@ -14,7 +14,11 @@ export async function userLogin(email: string, password: string) {
       localStorage.setItem("token", response.data.token);
     }
 
-    return response.data;
+return {
+  token: response.data.token,
+  user: response.data.user, // or whatever field name your backend sends
+};
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Login failed:", error.response?.data || error.message);

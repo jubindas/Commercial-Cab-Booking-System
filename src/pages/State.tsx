@@ -8,13 +8,33 @@ import { useQuery } from "@tanstack/react-query";
 
 import StatesDialog from "@/components/StatesDialog";
 
+import { useAuth } from "@/hooks/useAuth";
+
 export default function State() {
-  const { data: state } = useQuery({
-    queryKey: ["states"],
-    queryFn: getStates,
+  const { token } = useAuth();
+
+  console.log(token);
+
+  const {
+    data: states,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["states", token],
+    queryFn: () => getStates(token),
+    enabled: !!token,
   });
 
-  console.log("the states is", state);
+  if (isLoading) {
+    return <div className="p-6">Loading states...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -22,7 +42,7 @@ export default function State() {
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           State
         </h1>
-        <StatesDialog />
+        <StatesDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -49,7 +69,11 @@ export default function State() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {state && <DataTable data={state} columns={stateColumns} enablePagination />}
+        {states?.length > 0 ? (
+          <DataTable data={states} columns={stateColumns} enablePagination />
+        ) : (
+          <div className="p-6 text-zinc-500">No states found.</div>
+        )}
       </div>
     </div>
   );

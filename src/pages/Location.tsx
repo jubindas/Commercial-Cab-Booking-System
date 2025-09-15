@@ -9,14 +9,19 @@ import { useQuery } from "@tanstack/react-query"
 
 import { getLocation } from "@/service/apiLocation"
 
+import { useAuth } from "@/hooks/useAuth"
+
 
 
 export default function Location() {
 
+  const {token} = useAuth();
+
 
 const {data: location} = useQuery({
-  queryKey: ["locations"],
-  queryFn: getLocation
+  queryKey: ["locations", token],
+  queryFn: ()=> getLocation(token),
+  enabled: !!token,
 })
 
 
@@ -28,7 +33,7 @@ const {data: location} = useQuery({
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Locations
         </h1>
-        <LocationDialog />
+        <LocationDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

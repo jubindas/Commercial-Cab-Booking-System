@@ -31,6 +31,8 @@ import { getCities } from "@/service/apiCities";
 
 import { createLocation, updateLocation } from "@/service/apiLocation";
 
+import { useAuth } from "@/hooks/useAuth";
+
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
@@ -49,6 +51,9 @@ export default function LocationDialog({
   initialData,
   id,
 }: Props) {
+
+const {token} = useAuth();
+
   const [selectedCity, setSelectedCity] = useState("");
 
   const [locationName, setLocationName] = useState("");
@@ -60,8 +65,8 @@ export default function LocationDialog({
   const queryClient = useQueryClient();
 
   const { data: cities } = useQuery({
-    queryKey: ["cities"],
-    queryFn: getCities,
+    queryKey: ["cities", token],
+    queryFn:()=> getCities(token),
   });
 
   useEffect(() => {
@@ -74,9 +79,10 @@ export default function LocationDialog({
   }, [mode, initialData]);
 
   const createLocations = useMutation({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (locationData: any) => {
-      if (mode === "create") return createLocation(locationData);
-      return updateLocation(String(id), locationData); // call update with id
+      if (mode === "create") return createLocation(locationData, token);
+      return updateLocation(String(id), locationData, token); 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations"] });

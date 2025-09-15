@@ -60,6 +60,7 @@ export default function DistrictDialog({
 
   const queryClient = useQueryClient();
 
+
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setSelectedState(initialData.stateId);
@@ -68,6 +69,7 @@ export default function DistrictDialog({
     }
   }, [mode, initialData]);
 
+  
   const { data: states } = useQuery({
     queryKey: ["states", token],
     queryFn: () => getStates(token),

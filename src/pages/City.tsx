@@ -8,10 +8,16 @@ import { useQuery } from "@tanstack/react-query";
 
 import CityDialog from "@/components/CityDialog";
 
+import { useAuth } from "@/hooks/useAuth";
+
 export default function City() {
+
+  const {token} = useAuth();
+
   const { data: city } = useQuery({
-    queryKey: ["cities"],
-    queryFn: getCities,
+    queryKey: ["cities", token],
+    queryFn: ()=> getCities(token),
+     enabled: !!token,
   });
 
   return (
@@ -20,7 +26,7 @@ export default function City() {
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Cities
         </h1>
-       <CityDialog />
+       <CityDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

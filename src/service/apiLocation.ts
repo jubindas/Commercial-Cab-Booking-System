@@ -3,10 +3,14 @@ import { API_BASE_URL } from "@/lib/db";
 import axios from "axios";
 
 
-export async function getLocation() {
+export async function getLocation(token: string | null) {
 
     try {
-        const response = await axios.get(`${API_BASE_URL}/locations`)
+        const response = await axios.get(`${API_BASE_URL}/locations`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    })
 
    
     if (response && response.status === 200) {
@@ -28,10 +32,15 @@ export async function createLocation(locations: { city_id: string,
   name: string,
   code: string,
   latitude?: string | null,
-  longitude?: string | null}) {
+  longitude?: string | null},
+token: string | null) {
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/locations`, locations)
+    const response = await axios.post(`${API_BASE_URL}/locations`, locations, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    })
    
     if (response && response.status === 201) {
       return response.data;
@@ -46,9 +55,13 @@ export async function createLocation(locations: { city_id: string,
 }
 
 
-export async function deleteLocation(id: string) {
+export async function deleteLocation(id: string, token: string | null) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/locations/${id}`);
+    const response = await axios.delete(`${API_BASE_URL}/locations/${id}`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
 
     if (response.status === 200 || response.status === 204) {
       console.log(`Location with ID ${id} deleted successfully`);
@@ -70,10 +83,15 @@ export async function updateLocation(
     code: string;
     latitude?: string | null;
     longitude?: string | null;
-  }
+  },
+  token: string | null
 ) {
   try {
-    const response = await axios.put(`${API_BASE_URL}/locations/${id}`, updatedData);
+    const response = await axios.put(`${API_BASE_URL}/locations/${id}`, updatedData, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`Location with ID ${id} updated successfully`, response.data);

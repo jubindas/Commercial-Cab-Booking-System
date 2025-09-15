@@ -31,6 +31,8 @@ import { getDistrict } from "@/service/apiDistrict";
 
 import { createCity, updateCity } from "@/service/apiCities";
 
+import { useAuth } from "@/hooks/useAuth";
+
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
@@ -39,6 +41,7 @@ interface Props {
 }
 
 export default function CityDialog({ mode, trigger, initialData, id }: Props) {
+  const { token } = useAuth();
   const [selectedDistrict, setSelectedDistrict] = useState("");
 
   const [cityName, setCityName] = useState("");
@@ -56,23 +59,20 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   }, [mode, initialData]);
 
   const { data: districts } = useQuery({
-    queryKey: ["district"],
-    queryFn: getDistrict,
+    queryKey: ["district", token],
+    queryFn: () => getDistrict(token),
+    enabled: !!token,
   });
 
   const cityMutation = useMutation({
-    mutationFn: (cityData: any) => {
-      if (mode === "create") {
-        return createCity(cityData);
-      } else if (mode === "edit") {
-        if (!id) throw new Error("City ID is required for edit mode");
-        return updateCity(String(id), cityData);
-      }
-      throw new Error("Invalid mode");
-    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mutationFn: (cityData: any) =>
+      mode === "create"
+        ? createCity(cityData, token)
+        : updateCity(String(id), cityData, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cities"] });
-      toast(
+      toast.success(
         mode === "create"
           ? "City created successfully"
           : "City updated successfully"

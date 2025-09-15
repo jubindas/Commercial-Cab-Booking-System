@@ -33,7 +33,6 @@ import { createDistrict, updateDistrict } from "@/service/apiDistrict";
 
 import { toast } from "sonner";
 
-import { useAuth } from "@/hooks/useAuth";
 
 interface Props {
   mode: "create" | "edit";
@@ -48,9 +47,7 @@ export default function DistrictDialog({
   initialData,
   id,
 }: Props) {
-  const { token } = useAuth();
 
-  console.log(token);
 
   const [selectedState, setSelectedState] = useState("");
 
@@ -71,17 +68,16 @@ export default function DistrictDialog({
 
   
   const { data: states } = useQuery({
-    queryKey: ["states", token],
-    queryFn: () => getStates(token),
-    enabled: !!token,
+    queryKey: ["states"],
+    queryFn: getStates,
   });
 
   const mutation = useMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (data: any) =>
       mode === "create"
-        ? createDistrict(data, token)
-        : updateDistrict(String(id), data, token),
+        ? createDistrict(data)
+        : updateDistrict(String(id), data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["district"] });
       toast(`District ${mode === "create" ? "Created" : "Updated"}`);

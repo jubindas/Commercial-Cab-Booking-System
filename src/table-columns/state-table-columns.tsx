@@ -29,7 +29,7 @@ export const stateColumns: ColumnDef<State>[] = [
   cell: ({ row }) => (
     <StateTablCcolumnDropdown
       id={row.original.id}
-      rowData={{ name: row.original.name, code: row.original.code }}
+      rowData={{ name: row.original.name || "", code: row.original.code || "" }}
     />
   ),
 }

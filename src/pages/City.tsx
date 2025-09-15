@@ -8,17 +8,17 @@ import { useQuery } from "@tanstack/react-query";
 
 import CityDialog from "@/components/CityDialog";
 
-import { useAuth } from "@/hooks/useAuth";
 
 export default function City() {
 
-  const {token} = useAuth();
+
 
   const { data: city } = useQuery({
-    queryKey: ["cities", token],
-    queryFn: ()=> getCities(token),
-     enabled: !!token,
+    queryKey: ["cities"],
+    queryFn:  getCities,
   });
+
+  console.log(city)
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -39,7 +39,7 @@ export default function City() {
               </option>
             ))}
           </select>
-          <span className="font-medium">entries</span>
+          <span className="font-medium">Entries</span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-zinc-700">

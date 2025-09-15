@@ -1,6 +1,9 @@
 import { SidebarTrigger } from "./ui/sidebar";
+
 import { User, LogOut } from "lucide-react";
+
 import { useAuth } from "@/hooks/useAuth";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {

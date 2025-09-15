@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -7,13 +8,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
+
 import { Button } from "@/components/ui/button";
+
 import { createState, updateState } from "@/service/apiStates";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth";
+
 
 interface Props {
   mode: "create" | "edit";
@@ -29,7 +36,7 @@ export default function StatesDialog({
   id,
 }: Props) {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
+ 
 
   const [formData, setFormData] = useState({ name: "", code: "" });
 
@@ -42,8 +49,8 @@ export default function StatesDialog({
   const mutation = useMutation({
     mutationFn: (data: { name: string; code: string }) =>
       mode === "create"
-        ? createState(data, token)
-        : updateState(String(id), data, token),
+        ? createState(data)
+        : updateState(String(id), data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["states"] });
       console.log(`State ${mode === "create" ? "created" : "updated"}:`, data);

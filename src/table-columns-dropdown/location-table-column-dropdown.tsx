@@ -81,7 +81,7 @@ export default function LocationTableColumnDropdown({ id, rowData }: Props) {
       </Popover>
 
       <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
-        <AlertDialogContent>
+         <AlertDialogContent className="bg-white">
           <AlertDialogHeader>
             <AlertDialogTitle>
               Are you sure you want to delete this location?

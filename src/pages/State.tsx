@@ -8,12 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import StatesDialog from "@/components/StatesDialog";
 
-import { useAuth } from "@/hooks/useAuth";
 
 export default function State() {
-  const { token } = useAuth();
 
-  console.log(token);
 
   const {
     data: states,
@@ -21,9 +18,8 @@ export default function State() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["states", token],
-    queryFn: () => getStates(token),
-    enabled: !!token,
+    queryKey: ["states"],
+    queryFn:  getStates,
   });
 
   if (isLoading) {
@@ -55,7 +51,7 @@ export default function State() {
               </option>
             ))}
           </select>
-          <span className="font-medium">entries</span>
+          <span className="font-medium">Entries</span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-zinc-700">

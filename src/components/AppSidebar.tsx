@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import {
   MapPinned,
   Home,
@@ -8,7 +9,9 @@ import {
   ChevronDown,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+
 import { NavLink, useLocation } from "react-router-dom";
+
 import {
   Sidebar,
   SidebarContent,
@@ -46,8 +49,10 @@ const items: MenuItem[] = [
     children: [
       { title: "Main Category", url: "/main-category" },
       { title: "Sub Category", url: "/sub-category" },
+      { title: "Membership", url: "/membership" },
     ],
   },
+
   { title: "Vendor", url: "/vendor", icon: MapPinned },
 ];
 
@@ -71,10 +76,11 @@ export function AppSidebar() {
   }, [location.pathname]);
 
   const toggleMenu = (title: string) => {
-    setOpenMenus((prev) =>
-      prev.includes(title)
-        ? prev.filter((t) => t !== title) // close it
-        : [...prev, title] // open it
+    setOpenMenus(
+      (prev) =>
+        prev.includes(title)
+          ? prev.filter((t) => t !== title) // close it
+          : [...prev, title] // open it
     );
   };
 

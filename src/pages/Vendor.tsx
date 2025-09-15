@@ -28,7 +28,7 @@ export default function Vendor() {
                 </option>
               ))}
             </select>
-            <span className="font-medium">entries</span>
+            <span className="font-medium">Entries</span>
           </div>
   
           <div className="flex items-center gap-2 text-sm text-zinc-700">

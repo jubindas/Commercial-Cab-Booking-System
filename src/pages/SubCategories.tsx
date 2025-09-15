@@ -1,22 +1,43 @@
 import { DataTable } from "@/components/data-table";
 
-import { subCategories } from "@/table-datas/sub-category-table-datas";
-
 import { subCategoryColumns } from "@/table-columns/sub-category-table-columns";
 
 import SubCategoriesDialog from "@/components/SubCategoriesDialog";
 
+import { getSubcategories } from "@/service/apiSubCategory";
 
-
+import { useQuery } from "@tanstack/react-query";
 
 export default function SubCategories() {
+  const {
+    data: subCategories,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["subcategories"],
+    queryFn: getSubcategories,
+  });
+
+  console.log(subCategories);
+
+  if (isLoading) {
+    return <div className="p-6">Loading subcategories...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
+    );
+  }
+
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Sub Category
         </h1>
- <SubCategoriesDialog />
+        <SubCategoriesDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -29,7 +50,7 @@ export default function SubCategories() {
               </option>
             ))}
           </select>
-          <span className="font-medium">entries</span>
+          <span className="font-medium">Entries</span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-zinc-700">
@@ -43,7 +64,13 @@ export default function SubCategories() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        <DataTable data={subCategories} columns={subCategoryColumns} enablePagination />
+        {subCategories && (
+          <DataTable
+            data={subCategories}
+            columns={subCategoryColumns}
+            enablePagination
+          />
+        )}
       </div>
     </div>
   );

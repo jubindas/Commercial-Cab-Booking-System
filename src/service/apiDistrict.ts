@@ -1,15 +1,8 @@
-import axios from "axios";
-import { API_BASE_URL } from "@/lib/db";
+import axiosInstance from "@/lib/axios";
 
-
-
-export async function getDistrict(token: string | null) {
+export async function getDistrict() {
   try {
-    const response = await axios.get(`${API_BASE_URL}/districts`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.get(`/districts`);
 
     if (response && response.status === 200) {
       return response.data.data;
@@ -25,14 +18,10 @@ export async function getDistrict(token: string | null) {
 
 
 
-export async function createDistrict(district: {state_id: string, name: string, code: string},   token: string | null) {
+export async function createDistrict(district: {state_id: string, name: string, code: string}) {
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/districts`, district, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
+    const response = await axiosInstance.post(`/districts`, district)
    
     if (response && response.status === 201) {
       return response.data;
@@ -51,14 +40,10 @@ export async function createDistrict(district: {state_id: string, name: string, 
 
 export async function updateDistrict(
   id: string,
-  updatedData: { state_id: string; name: string; code: string }, token: string | null
+  updatedData: { state_id: string; name: string; code: string }
 ) {
   try {
-    const response = await axios.put(`${API_BASE_URL}/districts/${id}`, updatedData, {
-        headers: {
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      });
+    const response = await axiosInstance.put(`/districts/${id}`, updatedData);
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`District with ID ${id} updated successfully`, response.data);
@@ -78,13 +63,9 @@ export async function updateDistrict(
 
 
 
-export async function deleteDistrict(id: string,  token: string | null) {
+export async function deleteDistrict(id: string) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/districts/${id}`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.delete(`/districts/${id}`);
 
     if (response.status === 200 || response.status === 204) {
       console.log(`Districta with ID ${id} deleted successfully`);

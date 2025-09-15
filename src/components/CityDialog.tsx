@@ -31,7 +31,7 @@ import { getDistrict } from "@/service/apiDistrict";
 
 import { createCity, updateCity } from "@/service/apiCities";
 
-import { useAuth } from "@/hooks/useAuth";
+import type { District } from "@/table-types/district-table-types";
 
 interface Props {
   mode: "create" | "edit";
@@ -41,7 +41,6 @@ interface Props {
 }
 
 export default function CityDialog({ mode, trigger, initialData, id }: Props) {
-  const { token } = useAuth();
   const [selectedDistrict, setSelectedDistrict] = useState("");
 
   const [cityName, setCityName] = useState("");
@@ -59,17 +58,16 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   }, [mode, initialData]);
 
   const { data: districts } = useQuery({
-    queryKey: ["district", token],
-    queryFn: () => getDistrict(token),
-    enabled: !!token,
+    queryKey: ["district"],
+    queryFn: getDistrict,
   });
 
   const cityMutation = useMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (cityData: any) =>
       mode === "create"
-        ? createCity(cityData, token)
-        : updateCity(String(id), cityData, token),
+        ? createCity(cityData)
+        : updateCity(String(id), cityData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cities"] });
       toast.success(
@@ -138,7 +136,7 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
                 <SelectValue placeholder="Select a district" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {districts?.map((district: any) => (
+                {districts?.map((district: District) => (
                   <SelectItem key={district.id} value={district.id}>
                     {district.name}
                   </SelectItem>

@@ -1,34 +1,21 @@
-import { DataTable } from "@/components/data-table"
+import { DataTable } from "@/components/data-table";
 
-import LocationDialog from "@/components/LocationDialog"
+import LocationDialog from "@/components/LocationDialog";
 
+import { columns } from "@/table-columns/location-table-columns";
 
-import { columns } from "@/table-columns/location-table-columns"
+import { useQuery } from "@tanstack/react-query";
 
-import { useQuery } from "@tanstack/react-query"
-
-import { getLocation } from "@/service/apiLocation"
-
-import { useAuth } from "@/hooks/useAuth"
-
-
+import { getLocation } from "@/service/apiLocation";
 
 export default function Location() {
-
-  const {token} = useAuth();
-
-
-const {data: location} = useQuery({
-  queryKey: ["locations", token],
-  queryFn: ()=> getLocation(token),
-  enabled: !!token,
-})
-
-
+  const { data: location } = useQuery({
+    queryKey: ["locations"],
+    queryFn: getLocation,
+  });
 
   return (
-     <div className="min-h-screen p-6 bg-zinc-100">
-     
+    <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Locations
@@ -46,7 +33,7 @@ const {data: location} = useQuery({
               </option>
             ))}
           </select>
-          <span className="font-medium">entries</span>
+          <span className="font-medium">Entries</span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-zinc-700">
@@ -60,8 +47,10 @@ const {data: location} = useQuery({
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-       {location && <DataTable data={location} columns={columns} enablePagination />}
+        {location && (
+          <DataTable data={location} columns={columns} enablePagination />
+        )}
       </div>
     </div>
-  )
+  );
 }

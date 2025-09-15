@@ -31,7 +31,9 @@ import { getCities } from "@/service/apiCities";
 
 import { createLocation, updateLocation } from "@/service/apiLocation";
 
-import { useAuth } from "@/hooks/useAuth";
+import type { City } from "@/table-types/city-table-types";
+
+
 
 interface Props {
   mode: "create" | "edit";
@@ -52,7 +54,7 @@ export default function LocationDialog({
   id,
 }: Props) {
 
-const {token} = useAuth();
+
 
   const [selectedCity, setSelectedCity] = useState("");
 
@@ -65,8 +67,8 @@ const {token} = useAuth();
   const queryClient = useQueryClient();
 
   const { data: cities } = useQuery({
-    queryKey: ["cities", token],
-    queryFn:()=> getCities(token),
+    queryKey: ["cities"],
+    queryFn: getCities,
   });
 
   useEffect(() => {
@@ -81,8 +83,8 @@ const {token} = useAuth();
   const createLocations = useMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (locationData: any) => {
-      if (mode === "create") return createLocation(locationData, token);
-      return updateLocation(String(id), locationData, token); 
+      if (mode === "create") return createLocation(locationData);
+      return updateLocation(String(id), locationData); 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations"] });
@@ -144,7 +146,7 @@ const {token} = useAuth();
                 <SelectValue placeholder="Select a city" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {cities?.map((city: any) => (
+                {cities?.map((city: City) => (
                   <SelectItem key={city.id} value={city.id}>
                     {city.name}
                   </SelectItem>

@@ -1,18 +1,9 @@
-import { API_BASE_URL } from "@/lib/db";
+import axiosInstance from "@/lib/axios";
 
-import axios from "axios";
+export async function getCities() {
+  try {
+    const response = await axiosInstance.get(`/cities`);
 
-
-export async function getCities(token: string | null) {
-
-    try {
-        const response = await axios.get(`${API_BASE_URL}/cities`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
-
-   
     if (response && response.status === 200) {
       return response.data.data;
     } else {
@@ -25,18 +16,14 @@ export async function getCities(token: string | null) {
   }
 }
 
-
-
-
-export async function createCity(city: {district_id: string, name: string, code: string}, token: string | null) {
-
+export async function createCity(city: {
+  district_id: string;
+  name: string;
+  code: string;
+}) {
   try {
-    const response = await axios.post(`${API_BASE_URL}/cities`, city, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
-   
+    const response = await axiosInstance.post(`/cities`, city);
+
     if (response && response.status === 201) {
       return response.data;
     } else {
@@ -46,52 +33,36 @@ export async function createCity(city: {district_id: string, name: string, code:
   } catch (error) {
     console.log("the err is", error);
   }
-  
 }
 
-
-export async function deleteCity(id: string, token: string | null) {
+export async function deleteCity(id: string) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/cities/${id}`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.delete(`/cities/${id}`);
 
     if (response.status === 200 || response.status === 204) {
       console.log(`City with ID ${id} deleted successfully`);
-      return response.data; 
+      return response.data;
     }
   } catch (error) {
     console.error("The error is:", error);
-    throw error; 
+    throw error;
   }
 }
 
-
 export async function updateCity(
   id: string,
-  updatedData: { district_id: string; name: string; code: string },
-  token: string | null
+  updatedData: { district_id: string; name: string; code: string }
 ) {
   try {
-    console.log("Sending update request:", { id, updatedData, token });
+    console.log("Sending update request:", { id, updatedData });
 
-    const response = await axios.put(
-      `${API_BASE_URL}/cities/${id}`,
-      updatedData,
-      {
-        headers: {
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      }
-    );
+    const response = await axiosInstance.put(`/cities/${id}`, updatedData);
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`City with ID ${id} updated successfully`, response.data);
       return response.data;
-    } 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.response) {
       console.error("Update failed with response:", error.response.data);

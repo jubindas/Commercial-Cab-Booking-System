@@ -8,15 +8,12 @@ import { useQuery } from "@tanstack/react-query";
 
 import {getDistrict} from "@/service/apiDistrict"
 
-import { useAuth } from "@/hooks/useAuth";
 
 
 
 export default function District() {
 
-  const {token} = useAuth();
 
-  console.log(token)
 
 
   const {
@@ -25,9 +22,9 @@ export default function District() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["district", token],
-    queryFn: ()=> getDistrict(token),
-     enabled: !!token,
+    queryKey: ["district"],
+    queryFn:  getDistrict,
+  
 })
 
 console.log("the districts arw", district)
@@ -65,7 +62,7 @@ console.log("the districts arw", district)
               </option>
             ))}
           </select>
-          <span className="font-medium">entries</span>
+          <span className="font-medium">Entries</span>
         </div>
 
     

@@ -1,14 +1,9 @@
-import { API_BASE_URL } from "@/lib/db";
+import axiosInstance from "@/lib/axios";
 
-import axios from "axios";
 
-export async function getPincode(token: string | null) {
+export async function getPincode() {
   try {
-    const response = await axios.get(`${API_BASE_URL}/pin-codes`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.get(`/pin-codes`);
 
     if (response && response.status === 200) {
       return response.data.data;
@@ -22,37 +17,26 @@ export async function getPincode(token: string | null) {
   }
 }
 
-
 export async function createPincode(pinCode: {
   location_id: string;
   area_name?: string;
   pin_code: string;
   fallback_pin_codes?: string[];
-}, token: string | null) {
+}) {
   try {
     console.log("Sending data:", pinCode);
-    const response = await axios.post(`${API_BASE_URL}/pin-codes`, pinCode, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.post(`/pin-codes`, pinCode);
     return response.data;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.log("the err is", error.response?.data || error);
     throw error;
   }
 }
 
-
-
-export async function deletePincode(id: string, token: string | null) {
+export async function deletePincode(id: string) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/pin-codes/${id}`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.delete(`/pin-codes/${id}`);
 
     if (response.status === 200 || response.status === 204) {
       console.log(`Pin Code with ID ${id} deleted successfully`);
@@ -64,9 +48,6 @@ export async function deletePincode(id: string, token: string | null) {
   }
 }
 
-
-
-
 export async function updatePincode(
   id: string,
   updatedData: {
@@ -74,15 +55,10 @@ export async function updatePincode(
     area_name?: string;
     pin_code: string;
     fallback_pin_codes?: string[];
-  },
-  token: string | null
+  }
 ) {
   try {
-    const response = await axios.put(`${API_BASE_URL}/pin-codes/${id}`, updatedData, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.put(`/pin-codes/${id}`, updatedData);
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`Pin Code with ID ${id} updated successfully`, response.data);
@@ -96,4 +72,3 @@ export async function updatePincode(
     throw error;
   }
 }
-

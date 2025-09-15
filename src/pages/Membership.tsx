@@ -1,28 +1,24 @@
 import { DataTable } from "@/components/data-table";
+import { getMemberships } from "@/service/apiMembership";
 
-import { columns } from "@/table-columns/main-category-table-columns";
-
-import MainCategoryDialog from "@/components/MainCategoryDialog";
-
-import { getCategories } from "@/service/apicategory";
-
+import { membershipColumns } from "@/table-columns/membership-table-column";
 import { useQuery } from "@tanstack/react-query";
 
-export default function MainCategories() {
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getCategories,
+export default function Membership() {
+  const { data: membershipData } = useQuery({
+    queryKey: ["membership"],
+    queryFn: getMemberships,
   });
 
-  console.log(categories);
+  console.log(membershipData);
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-          Main Category
+          Membership
         </h1>
-        <MainCategoryDialog mode="create" />
+        add dialog
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -49,13 +45,11 @@ export default function MainCategories() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {categories ? (
-          <DataTable data={categories} columns={columns} enablePagination />
-        ) : (
-          <p className="p-4 text-zinc-500">
-            No subcategories found or failed to load.
-          </p>
-        )}
+       { membershipData && <DataTable
+          data={membershipData}
+          columns={membershipColumns}
+          enablePagination
+        />}
       </div>
     </div>
   );

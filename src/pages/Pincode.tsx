@@ -10,16 +10,15 @@ import { getPincode } from "@/service/apiPincode";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { useAuth } from "@/hooks/useAuth";
 
 export default function Pincode() {
 
-  const {token} = useAuth();
+
 
 
 const {data: pincode } = useQuery({
-  queryKey: ["pincodes", token],
-  queryFn: ()=> getPincode(token)
+  queryKey: ["pincodes"],
+  queryFn: getPincode
 })
 
 console.log(pincode);
@@ -47,7 +46,7 @@ console.log(pincode);
               </option>
             ))}
           </select>
-          <span className="font-medium">entries</span>
+          <span className="font-medium">Entries</span>
         </div>
 
     

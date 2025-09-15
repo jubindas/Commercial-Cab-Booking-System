@@ -1,18 +1,9 @@
-import { API_BASE_URL } from "@/lib/db";
+import axiosInstance from "@/lib/axios";
 
-import axios from "axios";
+export async function getLocation() {
+  try {
+    const response = await axiosInstance.get(`/locations`);
 
-
-export async function getLocation(token: string | null) {
-
-    try {
-        const response = await axios.get(`${API_BASE_URL}/locations`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
-
-   
     if (response && response.status === 200) {
       return response.data.data;
     } else {
@@ -25,23 +16,16 @@ export async function getLocation(token: string | null) {
   }
 }
 
-
-
-
-export async function createLocation(locations: { city_id: string,
-  name: string,
-  code: string,
-  latitude?: string | null,
-  longitude?: string | null},
-token: string | null) {
-
+export async function createLocation(locations: {
+  city_id: string;
+  name: string;
+  code: string;
+  latitude?: string | null;
+  longitude?: string | null;
+}) {
   try {
-    const response = await axios.post(`${API_BASE_URL}/locations`, locations, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
-   
+    const response = await axiosInstance.post(`/locations`, locations);
+
     if (response && response.status === 201) {
       return response.data;
     } else {
@@ -51,47 +35,34 @@ token: string | null) {
   } catch (error) {
     console.log("the err is", error);
   }
-  
 }
 
-
-export async function deleteLocation(id: string, token: string | null) {
+export async function deleteLocation(id: string) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/locations/${id}`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.delete(`/locations/${id}`);
 
     if (response.status === 200 || response.status === 204) {
       console.log(`Location with ID ${id} deleted successfully`);
-      return response.data; 
+      return response.data;
     }
   } catch (error) {
     console.error("The error is:", error);
-    throw error; 
+    throw error;
   }
 }
 
-
-
 export async function updateLocation(
- id: string,
+  id: string,
   updatedData: {
     city_id: string;
     name: string;
     code: string;
     latitude?: string | null;
     longitude?: string | null;
-  },
-  token: string | null
+  }
 ) {
   try {
-    const response = await axios.put(`${API_BASE_URL}/locations/${id}`, updatedData, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.put(`/locations/${id}`, updatedData);
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`Location with ID ${id} updated successfully`, response.data);

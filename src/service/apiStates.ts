@@ -1,14 +1,8 @@
+import axiosInstance from "@/lib/axios";
 
-import axios from "axios";
-import { API_BASE_URL } from "@/lib/db";
-
-export async function getStates(token: string | null) {
+export async function getStates() {
   try {
-    const response = await axios.get(`${API_BASE_URL}/states`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.get(`/states`);
 
     if (response && response.status === 200) {
       return response.data.data;
@@ -22,16 +16,9 @@ export async function getStates(token: string | null) {
   }
 }
 
-export async function createState(
-  states: { name: string; code: string },
-  token: string | null
-) {
+export async function createState(states: { name: string; code: string }) {
   try {
-    const response = await axios.post(`${API_BASE_URL}/states`, states, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.post(`/states`, states);
 
     if (response && response.status === 201) {
       return response.data;
@@ -44,13 +31,9 @@ export async function createState(
   }
 }
 
-export async function deleteStates(id: string, token: string | null) {
+export async function deleteStates(id: string) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/states/${id}`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+    const response = await axiosInstance.delete(`/states/${id}`);
 
     if (response.status === 200 || response.status === 204) {
       console.log(`State with ID ${id} deleted successfully`);
@@ -64,19 +47,10 @@ export async function deleteStates(id: string, token: string | null) {
 
 export async function updateState(
   id: string,
-  updatedData: { name: string; code: string },
-  token: string | null
+  updatedData: { name: string; code: string }
 ) {
   try {
-    const response = await axios.put(
-      `${API_BASE_URL}/states/${id}`,
-      updatedData,
-      {
-        headers: {
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      }
-    );
+    const response = await axiosInstance.put(`/states/${id}`, updatedData);
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`State with ID ${id} updated successfully`, response.data);

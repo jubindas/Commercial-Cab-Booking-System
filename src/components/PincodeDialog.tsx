@@ -18,6 +18,8 @@ import { getLocation } from "@/service/apiLocation";
 
 import { createPincode, updatePincode } from "@/service/apiPincode";
 
+import { useAuth } from "@/hooks/useAuth";
+
 
 interface Props {
   mode: "create" | "edit";
@@ -27,6 +29,8 @@ interface Props {
 }
 
 export default function PincodeDialog({ mode, trigger, initialData, id }: Props) {
+
+  const {token} = useAuth();
 
   const [selectedLocation, setSelectedLocation] = useState("");
 
@@ -39,8 +43,9 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
   const queryClient = useQueryClient();
 
   const { data: locations } = useQuery({
-    queryKey: ["locations"],
-    queryFn: getLocation,
+    queryKey: ["locations", token],
+    queryFn: ()=> getLocation(token),
+    enabled: !!token
   });
 
   useEffect(() => {
@@ -54,10 +59,11 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
 
 
   const pincodeMutation = useMutation({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (data: any) =>
       mode === "create"
-        ? createPincode(data)
-        : updatePincode(String(id), data),
+        ? createPincode(data, token)
+        : updatePincode(String(id), data, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pincodes"] });
       toast(mode === "create" ? "Pincode created successfully" : "Pincode updated successfully");

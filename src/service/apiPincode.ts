@@ -2,9 +2,13 @@ import { API_BASE_URL } from "@/lib/db";
 
 import axios from "axios";
 
-export async function getPincode() {
+export async function getPincode(token: string | null) {
   try {
-    const response = await axios.get(`${API_BASE_URL}/pin-codes`);
+    const response = await axios.get(`${API_BASE_URL}/pin-codes`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
 
     if (response && response.status === 200) {
       return response.data.data;
@@ -24,10 +28,14 @@ export async function createPincode(pinCode: {
   area_name?: string;
   pin_code: string;
   fallback_pin_codes?: string[];
-}) {
+}, token: string | null) {
   try {
     console.log("Sending data:", pinCode);
-    const response = await axios.post(`${API_BASE_URL}/pin-codes`, pinCode);
+    const response = await axios.post(`${API_BASE_URL}/pin-codes`, pinCode, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
     return response.data;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -38,9 +46,13 @@ export async function createPincode(pinCode: {
 
 
 
-export async function deletePincode(id: string) {
+export async function deletePincode(id: string, token: string | null) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/pin-codes/${id}`);
+    const response = await axios.delete(`${API_BASE_URL}/pin-codes/${id}`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
 
     if (response.status === 200 || response.status === 204) {
       console.log(`Pin Code with ID ${id} deleted successfully`);
@@ -62,10 +74,15 @@ export async function updatePincode(
     area_name?: string;
     pin_code: string;
     fallback_pin_codes?: string[];
-  }
+  },
+  token: string | null
 ) {
   try {
-    const response = await axios.put(`${API_BASE_URL}/pin-codes/${id}`, updatedData);
+    const response = await axios.put(`${API_BASE_URL}/pin-codes/${id}`, updatedData, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`Pin Code with ID ${id} updated successfully`, response.data);

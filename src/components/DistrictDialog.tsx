@@ -33,6 +33,8 @@ import { createDistrict, updateDistrict } from "@/service/apiDistrict";
 
 import { toast } from "sonner";
 
+import { useAuth } from "@/hooks/useAuth";
+
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
@@ -46,10 +48,14 @@ export default function DistrictDialog({
   initialData,
   id,
 }: Props) {
+  const { token } = useAuth();
+
+  console.log(token);
+
   const [selectedState, setSelectedState] = useState("");
 
   const [districtName, setDistrictName] = useState("");
-  
+
   const [districtCode, setDistrictCode] = useState("");
 
   const queryClient = useQueryClient();
@@ -63,15 +69,17 @@ export default function DistrictDialog({
   }, [mode, initialData]);
 
   const { data: states } = useQuery({
-    queryKey: ["states"],
-    queryFn: getStates,
+    queryKey: ["states", token],
+    queryFn: () => getStates(token),
+    enabled: !!token,
   });
 
   const mutation = useMutation({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (data: any) =>
       mode === "create"
-        ? createDistrict(data)
-        : updateDistrict(String(id), data),
+        ? createDistrict(data, token)
+        : updateDistrict(String(id), data, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["district"] });
       toast(`District ${mode === "create" ? "Created" : "Updated"}`);
@@ -172,12 +180,6 @@ export default function DistrictDialog({
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button
-            variant="outline"
-            className="border border-zinc-300 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            Cancel
-          </Button>
           <Button
             className="bg-purple-600 text-white hover:bg-purple-700"
             onClick={handleSave}

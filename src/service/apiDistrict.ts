@@ -3,9 +3,13 @@ import { API_BASE_URL } from "@/lib/db";
 
 
 
-export async function getDistrict() {
+export async function getDistrict(token: string | null) {
   try {
-    const response = await axios.get(`${API_BASE_URL}/districts`);
+    const response = await axios.get(`${API_BASE_URL}/districts`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
 
     if (response && response.status === 200) {
       return response.data.data;
@@ -21,10 +25,14 @@ export async function getDistrict() {
 
 
 
-export async function createDistrict(district: {state_id: string, name: string, code: string}) {
+export async function createDistrict(district: {state_id: string, name: string, code: string},   token: string | null) {
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/districts`, district)
+    const response = await axios.post(`${API_BASE_URL}/districts`, district, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    })
    
     if (response && response.status === 201) {
       return response.data;
@@ -43,10 +51,14 @@ export async function createDistrict(district: {state_id: string, name: string, 
 
 export async function updateDistrict(
   id: string,
-  updatedData: { state_id: string; name: string; code: string }
+  updatedData: { state_id: string; name: string; code: string }, token: string | null
 ) {
   try {
-    const response = await axios.put(`${API_BASE_URL}/districts/${id}`, updatedData);
+    const response = await axios.put(`${API_BASE_URL}/districts/${id}`, updatedData, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
 
     if (response && (response.status === 200 || response.status === 201)) {
       console.log(`District with ID ${id} updated successfully`, response.data);
@@ -66,9 +78,13 @@ export async function updateDistrict(
 
 
 
-export async function deleteDistrict(id: string) {
+export async function deleteDistrict(id: string,  token: string | null) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/districts/${id}`);
+    const response = await axios.delete(`${API_BASE_URL}/districts/${id}`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
 
     if (response.status === 200 || response.status === 204) {
       console.log(`Districta with ID ${id} deleted successfully`);

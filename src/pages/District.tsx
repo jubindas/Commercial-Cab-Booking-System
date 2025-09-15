@@ -8,19 +8,40 @@ import { useQuery } from "@tanstack/react-query";
 
 import {getDistrict} from "@/service/apiDistrict"
 
+import { useAuth } from "@/hooks/useAuth";
+
 
 
 export default function District() {
 
+  const {token} = useAuth();
 
-const {data: district } = useQuery({
-    queryKey: ["district"],
-    queryFn: getDistrict
+  console.log(token)
+
+
+  const {
+    data: district,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["district", token],
+    queryFn: ()=> getDistrict(token),
+     enabled: !!token,
 })
 
 console.log("the districts arw", district)
 
 
+  if (isLoading) {
+    return <div className="p-6">Loading states...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
+    );
+  }
 
 
   return (
@@ -30,7 +51,7 @@ console.log("the districts arw", district)
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
        District
         </h1>
-        <DistrictDialog />
+        <DistrictDialog mode="create" />
       </div>
 
 

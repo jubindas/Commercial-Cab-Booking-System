@@ -12,7 +12,10 @@ type Props = {
   status?: "Active" | "Inactive";
 };
 
-export default function VendorTableColumnDropdown({ id, status }: Props) {
+export default function CreatedVendorsTableColumnDropdown({
+  id,
+  status,
+}: Props) {
   const isActive = status === "Active";
   const navigate = useNavigate();
 
@@ -38,13 +41,6 @@ export default function VendorTableColumnDropdown({ id, status }: Props) {
             onClick={() => navigate(`/view-details/${id}`)}
           >
             View Details
-          </Button>
-          <Button
-            variant="ghost"
-            className="justify-start text-zinc-200 hover:bg-zinc-800"
-            onClick={() => alert(`Varification for ${id}`)}
-          >
-            Varifiaction
           </Button>
 
           <Button

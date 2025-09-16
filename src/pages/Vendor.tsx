@@ -1,11 +1,10 @@
 import { DataTable } from "@/components/data-table"
 
 
-import { vendors } from "@/table-datas/vendor-table-datas"
+import { dummyVendors } from "@/table-datas/vendor-table-datas"
 
 import {  vendorColumns } from "@/table-columns/vendor-table-columns"
 
-import VendorsDialog from "@/components/VendorsDialog"
 
 
 
@@ -15,9 +14,8 @@ export default function Vendor() {
        
         <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
           <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-           Vendors
+          Membership Vendors
           </h1>
-         <VendorsDialog />
         </div>
   
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -44,7 +42,7 @@ export default function Vendor() {
         </div>
   
         <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-          <DataTable data={vendors} columns={ vendorColumns} enablePagination />
+          <DataTable data={dummyVendors} columns={ vendorColumns} enablePagination />
         </div>
       </div>
     )

@@ -53,7 +53,14 @@ const items: MenuItem[] = [
     ],
   },
 
-  { title: "Vendor", url: "/vendor", icon: User },
+  {
+    title: "Vendor",
+    icon: User,
+    children: [
+      { title: "Membership Vendor", url: "/membership-vendor" },
+      { title: "Created Vendor", url: "/created-vendor" },
+    ],
+  },
 ];
 
 export function AppSidebar() {
@@ -75,11 +82,8 @@ export function AppSidebar() {
   }, [location.pathname]);
 
   const toggleMenu = (title: string) => {
-    setOpenMenus(
-      (prev) =>
-        prev.includes(title)
-          ? prev.filter((t) => t !== title) 
-          : [...prev, title]
+    setOpenMenus((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
     );
   };
 
@@ -93,7 +97,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-zinc-400 tracking-wide uppercase text-xs px-2 py-3">
-         logo
+            logo
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

@@ -38,13 +38,22 @@ export const subCategoryColumns: ColumnDef<SubCategory>[] = [
       </span>
     ),
   },
-
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-
-      return <SubCategoryTableColumnDropdown id={row.original.id} rowData={{name: row.original.name || "", description: row.original.description }} />
-    },
+{
+  id: "actions",
+  header: "Actions",
+  cell: ({ row }) => {
+    return (
+      <SubCategoryTableColumnDropdown
+        id={row.original.id}
+        rowData={{
+          name: row.original.name,
+          code: row.original.code,
+          category_id: row.original.category_id,
+          description: row.original.description ?? "",
+        }}
+      />
+    );
   },
+},
+
 ];

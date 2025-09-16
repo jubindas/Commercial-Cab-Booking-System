@@ -1,10 +1,13 @@
-
 export interface Membership {
-  id: string | number;
-  subCategoryName: string; 
+  id: number;
   name: string;
   description: string;
   price: number;
-  discounted_price: number;
-  discounted_percentage: number;
+  discounted_price?: number;
+  discounted_percentage?: number;
+  sub_category_id: number;
+  sub_category?: {
+    id: number;
+    name: string;
+  };
 }

@@ -5,6 +5,8 @@ import { vendors } from "@/table-datas/vendor-table-datas"
 
 import {  vendorColumns } from "@/table-columns/vendor-table-columns"
 
+import VendorsDialog from "@/components/VendorsDialog"
+
 
 
 export default function Vendor() {
@@ -15,7 +17,7 @@ export default function Vendor() {
           <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
            Vendors
           </h1>
-         vendor
+         <VendorsDialog />
         </div>
   
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

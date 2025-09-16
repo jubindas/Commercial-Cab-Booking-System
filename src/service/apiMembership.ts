@@ -5,9 +5,10 @@ export interface MembershipPayload {
   name: string;
   description: string;
   price: number;
-  discounted_price: number;
-  discounted_percentage: number;
+  discounted_price: number | null;        
+  discounted_percentage: number | null;  
 }
+
 
 export async function getMemberships() {
   try {

@@ -22,6 +22,8 @@ import District from "./pages/District";
 import City from "@/pages/City";
 import Membership from "./pages/Membership";
 
+import VendorsViewDetails from "./pages/VendorsViewDetails";
+
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
   if (!token) return <Navigate to="/login" replace />;
@@ -51,6 +53,18 @@ const router = createBrowserRouter([
       { path: "district", element: <District /> },
       { path: "city", element: <City /> },
       { path: "membership", element: <Membership /> },
+      {
+        path: "view-details",
+        element: (
+          <VendorsViewDetails
+            vendor={{
+              name: "ABC Travels",
+              phone: "9876543210",
+              idCard: "1234-5678-9012",
+            }}
+          />
+        ),
+      },
     ],
   },
 ]);

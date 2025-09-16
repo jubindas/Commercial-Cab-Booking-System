@@ -8,13 +8,19 @@ import { MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+
 export const vendorColumns: ColumnDef<Vendor>[] = [
+
+  
+
   {
     accessorKey: "id",
     header: "ID",
@@ -72,9 +78,16 @@ export const vendorColumns: ColumnDef<Vendor>[] = [
           </PopoverTrigger>
           <PopoverContent
             align="end"
-            className="w-32 bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-xl"
+            className="w-36 bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-xl"
           >
             <div className="flex flex-col space-y-1">
+                 <Button
+            variant="ghost"
+            className="justify-start text-zinc-200 hover:bg-zinc-800"
+            onClick={() => {}}
+          >
+            View Details
+          </Button>
               <Button
                 variant="ghost"
                 className="justify-start text-zinc-200 hover:bg-zinc-800"

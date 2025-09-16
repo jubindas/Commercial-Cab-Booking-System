@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/data-table";
+import MembershipDialog from "@/components/MembershipDialog";
 import { getMemberships } from "@/service/apiMembership";
 
 import { membershipColumns } from "@/table-columns/membership-table-column";
@@ -18,7 +19,7 @@ export default function Membership() {
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Membership
         </h1>
-        add dialog
+        <MembershipDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -45,11 +46,13 @@ export default function Membership() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-       { membershipData && <DataTable
-          data={membershipData}
-          columns={membershipColumns}
-          enablePagination
-        />}
+        {membershipData && (
+          <DataTable
+            data={membershipData}
+            columns={membershipColumns}
+            enablePagination
+          />
+        )}
       </div>
     </div>
   );

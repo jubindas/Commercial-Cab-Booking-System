@@ -1,6 +1,6 @@
 import axiosInstance from "@/lib/axios";
 
-// ✅ Correct type for categories
+
 export interface CategoryPayload {
   name: string;
   description?: string;
@@ -21,7 +21,7 @@ export async function getCategories() {
   }
 }
 
-// ✅ Create category
+
 export async function createCategory(data: CategoryPayload) {
   try {
     const response = await axiosInstance.post("/categories", data);
@@ -32,7 +32,7 @@ export async function createCategory(data: CategoryPayload) {
   }
 }
 
-// ✅ Update category
+
 export async function updateCategory(id: string, data: CategoryPayload) {
   try {
     const response = await axiosInstance.put(`/categories/${id}`, data);
@@ -43,13 +43,26 @@ export async function updateCategory(id: string, data: CategoryPayload) {
   }
 }
 
-// ✅ Delete category
+
 export async function deleteCategory(id: string) {
   try {
     const response = await axiosInstance.delete(`/categories/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error deleting category:", error);
+    throw error;
+  }
+}
+
+
+
+
+export async function toggleCategoryStatus(id: string, isActive: boolean) {
+  try {
+    const response = await axiosInstance.put(`/categories/${id}`, { is_active: isActive });
+    return response.data;
+  } catch (error) {
+    console.error("Error toggling category status:", error);
     throw error;
   }
 }

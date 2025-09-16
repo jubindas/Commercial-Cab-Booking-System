@@ -71,3 +71,14 @@ export async function deleteSubcategory(id: number) {
     throw error;
   }
 }
+
+
+export async function toggleSubCategoryStatus(id: string, isActive: boolean) {
+  try {
+    const response = await axiosInstance.put(`/sub-categories/${id}`, { is_active: isActive });
+    return response.data;
+  } catch (error) {
+    console.error("Error toggling sub category status:", error);
+    throw error;
+  }
+}

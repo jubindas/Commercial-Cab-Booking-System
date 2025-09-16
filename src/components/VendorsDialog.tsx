@@ -21,20 +21,38 @@ export default function VendorsDialog({ trigger }: Props) {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    idCard: "",
+    idCard: null as File | null,
+    addressProof: null as File | null,
   });
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const { id, value, files } = e.target;
+
+    if (files && files.length > 0) {
+      setFormData((prev) => ({ ...prev, [id]: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [id]: value }));
+    }
   }
 
   function handleSave() {
-    if (!formData.name || !formData.phone || !formData.idCard) {
+    if (!formData.name || !formData.phone || !formData.idCard || !formData.addressProof) {
       console.error("All fields are required!");
       return;
     }
-    console.log("Vendor Data:", formData);
+
+    const vendorData = new FormData();
+    vendorData.append("name", formData.name);
+    vendorData.append("phone", formData.phone);
+    if (formData.idCard) vendorData.append("idCard", formData.idCard);
+    if (formData.addressProof) vendorData.append("addressProof", formData.addressProof);
+
+    console.log("Vendor Data (FormData):", vendorData);
+
+    // Example API call:
+    // axios.post("/api/vendors", vendorData, { headers: { "Content-Type": "multipart/form-data" } });
   }
 
   return (
@@ -56,6 +74,7 @@ export default function VendorsDialog({ trigger }: Props) {
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
+          {/* Vendor Name */}
           <div className="grid gap-2">
             <Label htmlFor="name">Vendor Name</Label>
             <Input
@@ -66,6 +85,8 @@ export default function VendorsDialog({ trigger }: Props) {
               onChange={handleChange}
             />
           </div>
+
+          {/* Phone Number */}
           <div className="grid gap-2">
             <Label htmlFor="phone">Phone Number</Label>
             <Input
@@ -76,13 +97,25 @@ export default function VendorsDialog({ trigger }: Props) {
               onChange={handleChange}
             />
           </div>
+
+          {/* Aadhaar / Voter ID (Image Upload) */}
           <div className="grid gap-2">
-            <Label htmlFor="idCard">Aadhaar / Voter ID</Label>
+            <Label htmlFor="idCard">Aadhaar / Voter ID (Image)</Label>
             <Input
               id="idCard"
-              type="text"
-              placeholder="Enter Aadhaar or Voter Card Number"
-              value={formData.idCard}
+              type="file"
+              accept="image/*"
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Address Proof (Image Upload) */}
+          <div className="grid gap-2">
+            <Label htmlFor="addressProof">Address Proof (Image)</Label>
+            <Input
+              id="addressProof"
+              type="file"
+              accept="image/*"
               onChange={handleChange}
             />
           </div>

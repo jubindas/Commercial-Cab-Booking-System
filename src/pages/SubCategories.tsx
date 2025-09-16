@@ -8,6 +8,8 @@ import { getSubcategories } from "@/service/apiSubCategory";
 
 import { useQuery } from "@tanstack/react-query";
 
+import type { SubCategory } from "@/table-types/sub-category-table-types";
+
 export default function SubCategories() {
   const {
     data: subCategories,
@@ -19,8 +21,6 @@ export default function SubCategories() {
     queryFn: getSubcategories,
   });
 
-  console.log(subCategories);
-
   if (isLoading) {
     return <div className="p-6">Loading subcategories...</div>;
   }
@@ -30,6 +30,10 @@ export default function SubCategories() {
       <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
     );
   }
+
+  const activeSubCategory = subCategories?.filter(
+    (sub: SubCategory) => sub.category?.is_active === 1
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -64,9 +68,9 @@ export default function SubCategories() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {subCategories && (
+        {activeSubCategory && (
           <DataTable
-            data={subCategories}
+            data={activeSubCategory}
             columns={subCategoryColumns}
             enablePagination
           />

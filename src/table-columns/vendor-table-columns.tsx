@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 
 import type { Vendor } from "@/table-types/vendor-table-types";
 
-import { MoreHorizontal } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -73,7 +73,7 @@ export const vendorColumns: ColumnDef<Vendor>[] = [
               variant="ghost"
               className="h-8 w-8 p-0 text-zinc-800 hover:text-zinc-800"
             >
-              <MoreHorizontal className="h-5 w-5" />
+              <MoreVertical className="h-5 w-5" />
             </Button>
           </PopoverTrigger>
           <PopoverContent

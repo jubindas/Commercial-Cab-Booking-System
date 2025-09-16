@@ -23,12 +23,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 
-import { deleteCategory } from "@/service/apicategory";
+import { toggleCategoryStatus } from "@/service/apiCategory";
+
 import MainCategoryDialog from "@/components/MainCategoryDialog";
 
 interface Props {
   id: string | number;
-  rowData?: { name: string; description: string };
+  rowData?: { name: string; description: string; is_active: boolean };
 }
 
 export default function MainCategoryTableColumnDropdown({
@@ -37,16 +38,21 @@ export default function MainCategoryTableColumnDropdown({
 }: Props) {
   const queryClient = useQueryClient();
 
-  const deleteMutation = useMutation({
-    mutationFn: (categoryId: string | number) =>
-      deleteCategory(String(categoryId)),
+  const toggleMutation = useMutation({
+    mutationFn: ({
+      id,
+      isActive,
+    }: {
+      id: string | number;
+      isActive: boolean;
+    }) => toggleCategoryStatus(String(id), isActive),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      toast("The Category has been deleted.");
+      toast.success(`${rowData?.name} status updated.`);
     },
     onError: (err) => {
-      console.error("Failed to delete category:", err);
-      toast.error("Failed to delete category");
+      console.error("Failed to update category status:", err);
+      toast.error("Failed to update category status");
     },
   });
 
@@ -57,7 +63,7 @@ export default function MainCategoryTableColumnDropdown({
           variant="ghost"
           className="h-8 w-8 p-0 text-zinc-800 hover:text-zinc-800"
         >
-          < MoreVertical className="h-5 w-5" />
+          <MoreVertical className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
 
@@ -84,28 +90,42 @@ export default function MainCategoryTableColumnDropdown({
             <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
-                className="justify-start text-red-400 hover:bg-red-500 hover:text-zinc-800"
+                className={`justify-start ${
+                  rowData?.is_active
+                    ? "text-red-400 hover:bg-red-500"
+                    : "text-green-400 hover:bg-green-500"
+                } hover:text-zinc-800`}
               >
-                Delete
+                {rowData?.is_active ? "Disable" : "Enable"}
               </Button>
             </AlertDialogTrigger>
-           <AlertDialogContent className="bg-white">
+            <AlertDialogContent className="bg-white">
               <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {rowData?.is_active ? "Confirm Disable" : "Confirm Enable"}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete{" "}
-                  <span className="font-semibold">{rowData?.name}</span>? This
-                  action cannot be undone.
+                  Are you sure you want to{" "}
+                  {rowData?.is_active ? "disable" : "enable"}{" "}
+                  <span className="font-semibold">{rowData?.name}</span>?
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => deleteMutation.mutate(id)}
-                  disabled={deleteMutation.isPending}
-                  className="bg-red-500"
+                  onClick={() =>
+                    toggleMutation.mutate({ id, isActive: !rowData?.is_active })
+                  }
+                  disabled={toggleMutation.isPending}
+                  className={rowData?.is_active ? "bg-red-500" : "bg-green-500"}
                 >
-                  {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                  {toggleMutation.isPending
+                    ? rowData?.is_active
+                      ? "Disabling..."
+                      : "Enabling..."
+                    : rowData?.is_active
+                    ? "Disable"
+                    : "Enable"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

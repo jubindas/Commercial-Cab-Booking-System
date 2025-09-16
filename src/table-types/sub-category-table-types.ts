@@ -4,5 +4,6 @@ export type SubCategory = {
   description?: string;
   category?: {
     name: string;
+    is_active: number;
   };
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import {
-  MapPinned,
+  User,
   Home,
   LayoutGrid,
   MapPin,
@@ -53,7 +53,7 @@ const items: MenuItem[] = [
     ],
   },
 
-  { title: "Vendor", url: "/vendor", icon: MapPinned },
+  { title: "Vendor", url: "/vendor", icon: User },
 ];
 
 export function AppSidebar() {
@@ -61,7 +61,6 @@ export function AppSidebar() {
   const location = useLocation();
 
   useEffect(() => {
-    // Auto-open parent if a child route is active
     const activeParents = items
       .filter(
         (item) =>
@@ -79,8 +78,8 @@ export function AppSidebar() {
     setOpenMenus(
       (prev) =>
         prev.includes(title)
-          ? prev.filter((t) => t !== title) // close it
-          : [...prev, title] // open it
+          ? prev.filter((t) => t !== title) 
+          : [...prev, title]
     );
   };
 
@@ -94,7 +93,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-zinc-400 tracking-wide uppercase text-xs px-2 py-3">
-            Application
+         logo
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

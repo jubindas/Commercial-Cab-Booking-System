@@ -1,17 +1,49 @@
 import { DataTable } from "@/components/data-table";
+
 import MembershipDialog from "@/components/MembershipDialog";
+
 import { getMemberships } from "@/service/apiMembership";
 
+import { getSubcategories } from "@/service/apiSubCategory";
+
 import { membershipColumns } from "@/table-columns/membership-table-column";
+
+import type { Membership } from "@/table-types/membership-table-types";
+
+import type { SubCategory } from "@/table-types/sub-category-table-types";
+
 import { useQuery } from "@tanstack/react-query";
 
+
+
 export default function Membership() {
+
+
   const { data: membershipData } = useQuery({
     queryKey: ["membership"],
     queryFn: getMemberships,
   });
 
-  console.log(membershipData);
+
+
+  const { data: subCategories } = useQuery({
+    queryKey: ["subcategories"],
+    queryFn: getSubcategories,
+  });
+
+
+
+  const visibleSubCategories = subCategories?.filter(
+    (sub: SubCategory) => sub.category?.is_active === 1
+  );
+
+
+
+  const visibleMemberships = membershipData?.filter((membership: Membership) =>
+    visibleSubCategories.some((sub: Membership) => sub.id === membership.sub_category?.id)
+  );
+
+
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -46,9 +78,9 @@ export default function Membership() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {membershipData && (
+        {visibleMemberships && (
           <DataTable
-            data={membershipData}
+            data={visibleMemberships}
             columns={membershipColumns}
             enablePagination
           />

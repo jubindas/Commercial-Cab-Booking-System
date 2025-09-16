@@ -60,7 +60,8 @@ const router = createBrowserRouter([
             vendor={{
               name: "ABC Travels",
               phone: "9876543210",
-              idCard: "1234-5678-9012",
+              idCardImage: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F69250540%2Fhow-to-read-decode-secure-qr-code-on-indian-aadhaar-card-image&psig=AOvVaw2kN6po89V0dmiZcS75XMln&ust=1758097212557000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOj2wNPs3I8DFQAAAAAdAAAAABAE",
+             addressProofImage: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.indiamart.com%2Fproddetail%2Faddress-proof-6237315530.html%3Fsrsltid%3DAfmBOooCQXgnc9mGFmlOscCgaz4PycaQDOhCwuWt9YaBnzeVYYFTdF1y&psig=AOvVaw2WlIPMfdsskNsi4oXZXgF2&ust=1758097293551000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCICh5fns3I8DFQAAAAAdAAAAABAE"
             }}
           />
         ),

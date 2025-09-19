@@ -1,4 +1,11 @@
-import {  Dialog,  DialogContent,  DialogDescription,  DialogHeader,  DialogTitle,  DialogTrigger,} from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
 
@@ -6,7 +13,13 @@ import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 
-import {  Select,  SelectContent,  SelectItem,  SelectTrigger,  SelectValue,} from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { useState, useEffect } from "react";
 
@@ -17,22 +30,26 @@ import { toast } from "sonner";
 import { getLocation } from "@/service/apiLocation";
 
 import { createPincode, updatePincode } from "@/service/apiPincode";
-
-
-
-
+import type { Location } from "@/table-types/location-table-types";
 
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
-  initialData?: { locId: string; name: string; pinCode: string; fallBackPincodes: string[] };
+  initialData?: {
+    locId: string;
+    name: string;
+    pinCode: string;
+    fallBackPincodes: string[];
+  };
   id?: string | number;
 }
 
-export default function PincodeDialog({ mode, trigger, initialData, id }: Props) {
-
-
-
+export default function PincodeDialog({
+  mode,
+  trigger,
+  initialData,
+  id,
+}: Props) {
   const [selectedLocation, setSelectedLocation] = useState("");
 
   const [areaName, setAreaName] = useState("");
@@ -45,7 +62,7 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
 
   const { data: locations } = useQuery({
     queryKey: ["locations"],
-    queryFn:  getLocation
+    queryFn: getLocation,
   });
 
   useEffect(() => {
@@ -57,16 +74,17 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
     }
   }, [mode, initialData]);
 
-
   const pincodeMutation = useMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (data: any) =>
-      mode === "create"
-        ? createPincode(data)
-        : updatePincode(String(id), data),
+      mode === "create" ? createPincode(data) : updatePincode(String(id), data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pincodes"] });
-      toast(mode === "create" ? "Pincode created successfully" : "Pincode updated successfully");
+      toast(
+        mode === "create"
+          ? "Pincode created successfully"
+          : "Pincode updated successfully"
+      );
       setSelectedLocation("");
       setAreaName("");
       setPinCode("");
@@ -74,19 +92,33 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
     },
     onError: (err) => {
       console.error("Failed to save pincode:", err);
+      toast.error(
+        err instanceof Error
+          ? `Error: ${err.message}`
+          : "Failed to save pincode. Please try again."
+      );
     },
   });
 
-
   const handleSave = () => {
-    if (!selectedLocation || !pinCode) {
-      console.log("Please fill all required fields");
+    if (!selectedLocation) {
+      toast.error("Please select a location");
+      return;
+    }
+
+    if (!pinCode) {
+      toast.error("Pin code is required");
       return;
     }
 
     const fallbackArray = fallbackPinCodes
       ? fallbackPinCodes.split(",").map((code) => code.trim())
       : [];
+
+    if (fallbackArray.some((code) => code.length !== 6)) {
+      toast.error("Each fallback pincode must be exactly 6 digits");
+      return;
+    }
 
     if (fallbackArray.length > 5) {
       toast.error("You cannot add more than 5 fallback pincodes");
@@ -95,7 +127,7 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
 
     const newPincode = {
       location_id: selectedLocation,
-      area_name: areaName || undefined,
+      area_name: areaName || null,
       pin_code: pinCode,
       fallback_pin_codes: fallbackArray.length > 0 ? fallbackArray : undefined,
     };
@@ -103,7 +135,6 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
     console.log("Submitting Pincode:", newPincode);
     pincodeMutation.mutate(newPincode);
   };
-  
 
   return (
     <Dialog>
@@ -130,12 +161,15 @@ export default function PincodeDialog({ mode, trigger, initialData, id }: Props)
             <Label htmlFor="location" className="text-zinc-700">
               Location
             </Label>
-            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+            <Select
+              value={selectedLocation}
+              onValueChange={setSelectedLocation}
+            >
               <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
                 <SelectValue placeholder="Select a location" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {locations?.map((loc: any) => (
+                {locations?.map((loc: Location) => (
                   <SelectItem key={loc.id} value={loc.id}>
                     {loc.name}
                   </SelectItem>

@@ -19,7 +19,7 @@ export async function getCities() {
 export async function createCity(city: {
   district_id: string;
   name: string;
-  code: string;
+  code: string | null;
 }) {
   try {
     const response = await axiosInstance.post(`/cities`, city);
@@ -51,7 +51,7 @@ export async function deleteCity(id: string) {
 
 export async function updateCity(
   id: string,
-  updatedData: { district_id: string; name: string; code: string }
+  updatedData: { district_id: string; name: string; code: string | null }
 ) {
   try {
     console.log("Sending update request:", { id, updatedData });

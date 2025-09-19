@@ -97,7 +97,7 @@ export default function DistrictDialog({
   });
 
   const handleSave = () => {
-    if (!selectedState || !districtName || !districtCode) {
+    if (!selectedState || !districtName ) {
       toast.error("Please fill all fields!");
       return;
     }

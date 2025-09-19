@@ -89,7 +89,7 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   });
 
   const handleSave = () => {
-    if (!selectedDistrict || !cityName || !cityCode) {
+    if (!selectedDistrict || !cityName ) {
       console.log("Please fill all required fields");
       return;
     }

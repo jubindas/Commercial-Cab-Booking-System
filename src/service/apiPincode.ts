@@ -19,9 +19,9 @@ export async function getPincode() {
 
 export async function createPincode(pinCode: {
   location_id: string;
-  area_name?: string;
+  area_name?: string | null;
   pin_code: string;
-  fallback_pin_codes?: string[];
+  fallback_pin_codes?: string[] | null;
 }) {
   try {
     console.log("Sending data:", pinCode);
@@ -52,9 +52,9 @@ export async function updatePincode(
   id: string,
   updatedData: {
     location_id: string;
-    area_name?: string;
+    area_name?: string | null;
     pin_code: string;
-    fallback_pin_codes?: string[];
+    fallback_pin_codes?: string[] | null;
   }
 ) {
   try {

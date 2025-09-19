@@ -4,7 +4,7 @@ import { columns } from "@/table-columns/main-category-table-columns";
 
 import MainCategoryDialog from "@/components/MainCategoryDialog";
 
-import { getCategories } from "@/service/apicategory";
+import { getCategories } from "@/service/apiCategory";
 
 import { useQuery } from "@tanstack/react-query";
 

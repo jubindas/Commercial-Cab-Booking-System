@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
+
 import {
   Dialog,
   DialogContent,
@@ -7,10 +8,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
+
 import { Textarea } from "@/components/ui/textarea";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Select,
   SelectContent,
@@ -18,10 +24,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import { getSubcategories } from "@/service/apiSubCategory";
+
 import { createMembership, updateMembership } from "@/service/apiMembership";
 
 interface Props {
@@ -49,9 +58,9 @@ export default function MembershipDialog({
   const [subCategoryId, setSubCategoryId] = useState<string>("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<string>(""); // required
-  const [discountedPrice, setDiscountedPrice] = useState<string>(""); // optional
-  const [discountedPercentage, setDiscountedPercentage] = useState<string>(""); // optional
+  const [price, setPrice] = useState<string>(""); 
+  const [discountedPrice, setDiscountedPrice] = useState<string>(""); 
+  const [discountedPercentage, setDiscountedPercentage] = useState<string>(""); 
 
   const { data: subCategories } = useQuery({
     queryKey: ["subcategories"],

@@ -16,7 +16,7 @@ export async function getStates() {
   }
 }
 
-export async function createState(states: { name: string; code: string }) {
+export async function createState(states: { name: string; code: string | null }) {
   try {
     const response = await axiosInstance.post(`/states`, states);
 
@@ -47,7 +47,7 @@ export async function deleteStates(id: string) {
 
 export async function updateState(
   id: string,
-  updatedData: { name: string; code: string }
+  updatedData: { name: string; code: string | null }
 ) {
   try {
     const response = await axiosInstance.put(`/states/${id}`, updatedData);

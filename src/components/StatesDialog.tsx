@@ -21,7 +21,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 
-
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
@@ -36,7 +35,6 @@ export default function StatesDialog({
   id,
 }: Props) {
   const queryClient = useQueryClient();
- 
 
   const [formData, setFormData] = useState({ name: "", code: "" });
 
@@ -47,10 +45,8 @@ export default function StatesDialog({
   }, [mode, initialData]);
 
   const mutation = useMutation({
-    mutationFn: (data: { name: string; code: string }) =>
-      mode === "create"
-        ? createState(data)
-        : updateState(String(id), data),
+    mutationFn: (data: { name: string; code: string | null }) =>
+      mode === "create" ? createState(data) : updateState(String(id), data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["states"] });
       console.log(`State ${mode === "create" ? "created" : "updated"}:`, data);
@@ -68,11 +64,17 @@ export default function StatesDialog({
   }
 
   function handleSave() {
-    if (!formData.name || !formData.code) {
-      toast.error("Both name and code are required!");
+    if (!formData.name) {
+      toast.error("State name is required!");
       return;
     }
-    mutation.mutate(formData);
+
+    const payload = {
+      name: formData.name,
+      code: formData.code?.trim() || null,
+    };
+
+    mutation.mutate(payload);
   }
 
   return (

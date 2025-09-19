@@ -1,18 +1,25 @@
 import { MoreVertical } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { useNavigate } from "react-router-dom";
 
+import type { Vendor } from "@/table-types/vendor-table-types";
+
+const BASE_URL = "https://bhara.eucivi.in/";
+
 type Props = {
-  id: number | string;
+  vendor: Vendor;
   status?: "Active" | "Inactive";
 };
 
-export default function VendorTableColumnDropdown({ id, status }: Props) {
+export default function VendorTableColumnDropdown({ vendor, status }: Props) {
   const isActive = status === "Active";
   const navigate = useNavigate();
 
@@ -35,16 +42,36 @@ export default function VendorTableColumnDropdown({ id, status }: Props) {
           <Button
             variant="ghost"
             className="justify-start text-zinc-200 hover:bg-zinc-800"
-            onClick={() => navigate(`/view-details/${id}`)}
+            onClick={() =>
+              navigate(`/view-details/${vendor.id}`, {
+                state: {
+                  vendor: {
+                    id: vendor.id,
+                    name: vendor.name,
+                    email: vendor.email,
+                    phone: vendor.phone,
+                    alternativePhone: vendor.alternative_phone_number,
+                    address: vendor.address,
+                    idCardImage: vendor.id_proof
+                      ? BASE_URL + vendor.id_proof
+                      : "",
+                    addressProofImage: vendor.address_proof
+                      ? BASE_URL + vendor.address_proof
+                      : "",
+                  },
+                },
+              })
+            }
           >
             View Details
           </Button>
+
           <Button
             variant="ghost"
             className="justify-start text-zinc-200 hover:bg-zinc-800"
-            onClick={() => alert(`Varification for ${id}`)}
+            onClick={() => alert(`Verification for ${vendor.id}`)}
           >
-            Varifiaction
+            Verification
           </Button>
 
           <Button
@@ -52,7 +79,7 @@ export default function VendorTableColumnDropdown({ id, status }: Props) {
             className="justify-start text-zinc-200 hover:bg-zinc-800"
             onClick={() =>
               alert(
-                `${id} is now ${
+                `${vendor.id} is now ${
                   isActive ? "Inactive (Disabled)" : "Active (Enabled)"
                 }`
               )

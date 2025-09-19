@@ -18,7 +18,7 @@ export async function getDistrict() {
 
 
 
-export async function createDistrict(district: {state_id: string, name: string, code: string}) {
+export async function createDistrict(district: {state_id: string, name: string, code: string | null}) {
 
   try {
     const response = await axiosInstance.post(`/districts`, district)
@@ -40,7 +40,7 @@ export async function createDistrict(district: {state_id: string, name: string, 
 
 export async function updateDistrict(
   id: string,
-  updatedData: { state_id: string; name: string; code: string }
+  updatedData: { state_id: string; name: string; code: string | null }
 ) {
   try {
     const response = await axiosInstance.put(`/districts/${id}`, updatedData);

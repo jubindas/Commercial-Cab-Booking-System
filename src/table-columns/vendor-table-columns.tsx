@@ -18,6 +18,13 @@ export const vendorColumns: ColumnDef<Vendor>[] = [
     ),
   },
   {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => (
+      <span className="text-zinc-700">{row.getValue("email")}</span>
+    ),
+  },
+  {
     accessorKey: "phone",
     header: "Phone",
     cell: ({ row }) => (
@@ -25,46 +32,35 @@ export const vendorColumns: ColumnDef<Vendor>[] = [
     ),
   },
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: "alternative_phone_number",
+    header: "Alt. Phone",
     cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("category")}</span>
+      <span className="text-zinc-700">
+        {row.getValue("alternative_phone_number") || "-"}
+      </span>
     ),
   },
   {
-    accessorKey: "subCategory",
-    header: "Sub Category",
+    accessorKey: "address",
+    header: "Address",
     cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("subCategory")}</span>
+      <span className="text-zinc-700">{row.getValue("address")}</span>
     ),
   },
   {
-    accessorKey: "membersgip",
-    header: "Membership",
+    accessorKey: "current_membership_id",
+    header: "Membership ID",
     cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("membersgip")}</span>
+      <span className="text-zinc-700">
+        {row.getValue("current_membership_id") || "N/A"}
+      </span>
     ),
-  },
-  {
-    accessorKey: "timeCreated",
-    header: "Created On",
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("timeCreated"));
-      return (
-        <span className="text-zinc-600 text-sm">
-          {date.toLocaleDateString()}
-        </span>
-      );
-    },
   },
   {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => (
-      <VendorTableColumnDropdown
-        id={row.original.id}
-        status={row.original.status}
-      />
+      <VendorTableColumnDropdown vendor={row.original} />
     ),
   },
 ];

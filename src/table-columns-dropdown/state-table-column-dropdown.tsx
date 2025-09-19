@@ -1,10 +1,13 @@
 import { MoreVertical } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,10 +19,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 import { deleteStates } from "@/service/apiStates";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
+
 import StatesDialog from "@/components/StatesDialog";
+
 
 interface Props {
   id: string | number;

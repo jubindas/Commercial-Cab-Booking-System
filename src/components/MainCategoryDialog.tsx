@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Button } from "@/components/ui/button";
 
-import { createCategory, updateCategory } from "@/service/apicategory";
+import { createCategory, updateCategory } from "@/service/apiCategory";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

@@ -1,5 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
+
 import type { CreatedVendors } from "@/table-types/created-vendors-table-types";
+
 import CreatedVendorsTableColumnDropdown from "@/table-columns-dropdown/created-vendors-table-column-dropdown";
 
 export const createdVendorsColumns: ColumnDef<CreatedVendors>[] = [

@@ -37,6 +37,7 @@ import Membership from "./pages/Membership";
 import VendorsViewDetails from "./pages/VendorsViewDetails";
 
 import CreatedVendors from "./pages/CreatedVendors";
+import VendorProfile from "./pages/VendorProfile";
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -68,6 +69,7 @@ const router = createBrowserRouter([
       { path: "city", element: <City /> },
       { path: "membership", element: <Membership /> },
       { path: "created-vendor", element: <CreatedVendors /> },
+      { path: "profile", element: <VendorProfile /> },
       {
         path: "/view-details/:id",
         element: (

@@ -2,6 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 
 import type { MainCategory } from "@/table-types/main-category-table-types";
+
 import MainCategoryTableColumnDropdown from "@/table-columns-dropdown/main-category-table-column-dropdown";
 
 

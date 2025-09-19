@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { getLocation } from "@/service/apiLocation";
 
 import { createPincode, updatePincode } from "@/service/apiPincode";
-import type { Pincode } from "@/table-types/pincode-table-types";
+
 
 
 

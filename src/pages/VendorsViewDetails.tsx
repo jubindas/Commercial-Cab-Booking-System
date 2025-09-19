@@ -28,8 +28,7 @@ export default function VendorsViewDetails({ vendor }: Props) {
               <span className="text-sm">Vendor Name</span>
             </div>
             <p className="text-base font-medium text-zinc-800">
-              {id}-    
-              {vendor.name}
+              {id}-{vendor.name}
             </p>
           </div>
 

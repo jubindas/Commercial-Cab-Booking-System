@@ -14,14 +14,36 @@ export async function userLogin(email: string, password: string) {
       localStorage.setItem("token", response.data.token);
     }
 
-return {
-  token: response.data.token,
-  user: response.data.user, // or whatever field name your backend sends
-};
+    return {
+      token: response.data.token,
+      user: response.data.user,
+    };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Login failed:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Login request failed");
+  }
+}
+
+
+
+
+
+
+
+
+export async function vendorMe(token: string | null) {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/me`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("vendor err is :", error);
+    throw error;
   }
 }

@@ -7,10 +7,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
+
 import { Textarea } from "@/components/ui/textarea";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Select,
   SelectContent,
@@ -20,11 +25,15 @@ import {
 } from "@/components/ui/select";
 
 import { useState, useEffect } from "react";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
-import { getCategories } from "@/service/apicategory";
+import { getCategories } from "@/service/apiCategory";
+
 import { createSubcategory, updateSubcategory } from "@/service/apiSubCategory";
+
 
 interface Props {
   mode: "create" | "edit";

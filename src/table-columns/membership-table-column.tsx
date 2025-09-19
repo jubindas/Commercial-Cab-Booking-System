@@ -33,7 +33,7 @@ export const membershipColumns: ColumnDef<Membership>[] = [
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("description")}</span>
+      <span className="text-zinc-700">{row.getValue("description") || "N/A"}</span>
     ),
   },
   {

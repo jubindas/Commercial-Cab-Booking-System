@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { getSubcategories } from "@/service/apiSubCategory";
 
 import { createMembership, updateMembership } from "@/service/apiMembership";
+import type { SubCategory } from "@/table-types/sub-category-table-types";
 
 interface Props {
   mode: "create" | "edit";
@@ -175,8 +176,8 @@ export default function MembershipDialog({
               <SelectTrigger className="w-full h-[42px] bg-zinc-50 text-zinc-900 border border-zinc-300 rounded-md">
                 <SelectValue placeholder="Select a Subcategory" />
               </SelectTrigger>
-              <SelectContent className="w-[300px] bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {subCategories?.map((sub: any) => (
+              <SelectContent className="w-[600px] bg-zinc-50 text-zinc-900 border border-zinc-300">
+                {subCategories?.map((sub: SubCategory) => (
                   <SelectItem key={sub.id} value={String(sub.id)}>
                     {sub.name}
                   </SelectItem>

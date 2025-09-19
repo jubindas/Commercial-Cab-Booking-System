@@ -38,7 +38,7 @@ export default function VendorProfile() {
   return (
     <div className="max-w-5xl mx-auto mt-12 mb-12 px-6">
     
-      <div className="bg-gradient-to-r from-zinc-700 to-zinc-200 text-white rounded-2xl shadow-lg p-8 mb-8">
+      <div className="bg-gradient-to-r from-zinc-900 to-zinc-400 text-white rounded-2xl shadow-lg p-8 mb-8">
         <h1 className="text-4xl font-bold mb-2">Vendor Profile</h1>
         <p className="text-lg opacity-90">Manage and verify your details</p>
       </div>

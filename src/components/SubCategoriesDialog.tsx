@@ -34,7 +34,6 @@ import { getCategories } from "@/service/apiCategory";
 
 import { createSubcategory, updateSubcategory } from "@/service/apiSubCategory";
 
-
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
@@ -78,7 +77,9 @@ export default function SubCategoriesDialog({
         : updateSubcategory(Number(id), data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subcategories"] });
-      toast.success(`Subcategory ${mode === "create" ? "created" : "updated"}`);
+      toast.success(
+        `State ${mode === "create" ? "created" : "updated"} successfully`
+      );
 
       setSelectedCategory(null);
       setSubCategoryName("");
@@ -87,6 +88,12 @@ export default function SubCategoriesDialog({
     onError: (err) => {
       console.error(`Failed to ${mode} subcategory:`, err);
       toast.error(`Failed to ${mode} subcategory`);
+
+      if (err instanceof Error) {
+        toast.warning(`Details: ${err.message}`);
+      } else {
+        toast.info("Unexpected error occurred. Please try again.");
+      }
     },
   });
 

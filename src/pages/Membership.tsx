@@ -24,6 +24,7 @@ export default function Membership() {
     queryFn: getMemberships,
   });
 
+  console.log(membershipData)
 
 
   const { data: subCategories } = useQuery({

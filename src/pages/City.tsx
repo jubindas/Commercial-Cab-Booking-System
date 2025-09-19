@@ -8,17 +8,18 @@ import { useQuery } from "@tanstack/react-query";
 
 import CityDialog from "@/components/CityDialog";
 
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function City() {
-
-
-
-  const { data: city } = useQuery({
+  const { data: city, isLoading } = useQuery({
     queryKey: ["cities"],
-    queryFn:  getCities,
+    queryFn: getCities,
   });
 
-  console.log(city)
+
+  if(isLoading){
+    return  <LoadingSkeleton />
+  }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -26,7 +27,7 @@ export default function City() {
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Cities
         </h1>
-       <CityDialog mode="create" />
+        <CityDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -53,7 +54,9 @@ export default function City() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {city && <DataTable data={city} columns={cityColumns} enablePagination />}
+        {city && (
+          <DataTable data={city} columns={cityColumns} enablePagination />
+        )}
       </div>
     </div>
   );

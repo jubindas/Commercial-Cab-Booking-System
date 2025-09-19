@@ -9,6 +9,7 @@ import { getSubcategories } from "@/service/apiSubCategory";
 import { useQuery } from "@tanstack/react-query";
 
 import type { SubCategory } from "@/table-types/sub-category-table-types";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function SubCategories() {
   const {
@@ -22,7 +23,7 @@ export default function SubCategories() {
   });
 
   if (isLoading) {
-    return <div className="p-6">Loading subcategories...</div>;
+    return  <LoadingSkeleton />;
   }
 
   if (isError) {

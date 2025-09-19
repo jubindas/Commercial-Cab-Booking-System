@@ -7,14 +7,17 @@ import MainCategoryDialog from "@/components/MainCategoryDialog";
 import { getCategories } from "@/service/apiCategory";
 
 import { useQuery } from "@tanstack/react-query";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function MainCategories() {
-  const { data: categories } = useQuery({
+  const { data: categories, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
 
-  console.log(categories);
+  if(isLoading){
+    return  <LoadingSkeleton />
+  }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -49,13 +52,9 @@ export default function MainCategories() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {categories ? (
+        {categories && 
           <DataTable data={categories} columns={columns} enablePagination />
-        ) : (
-          <p className="p-4 text-zinc-500">
-            No subcategories found or failed to load.
-          </p>
-        )}
+         }
       </div>
     </div>
   );

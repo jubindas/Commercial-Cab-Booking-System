@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/data-table";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import MembershipDialog from "@/components/MembershipDialog";
 
@@ -14,37 +15,30 @@ import type { SubCategory } from "@/table-types/sub-category-table-types";
 
 import { useQuery } from "@tanstack/react-query";
 
-
-
 export default function Membership() {
-
-
-  const { data: membershipData } = useQuery({
+  const { data: membershipData, isLoading } = useQuery({
     queryKey: ["membership"],
     queryFn: getMemberships,
   });
-
-  console.log(membershipData)
-
 
   const { data: subCategories } = useQuery({
     queryKey: ["subcategories"],
     queryFn: getSubcategories,
   });
 
-
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
   const visibleSubCategories = subCategories?.filter(
     (sub: SubCategory) => sub.category?.is_active === 1
   );
 
-
-
   const visibleMemberships = membershipData?.filter((membership: Membership) =>
-    visibleSubCategories.some((sub: Membership) => sub.id === membership.sub_category?.id)
+    visibleSubCategories.some(
+      (sub: Membership) => sub.id === membership.sub_category?.id
+    )
   );
-
-
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

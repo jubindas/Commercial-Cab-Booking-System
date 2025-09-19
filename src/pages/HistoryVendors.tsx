@@ -1,43 +1,26 @@
 import { DataTable } from "@/components/data-table";
-
 import { stateColumns } from "@/table-columns/state-table-columns";
 
-import { getStates } from "@/service/apiStates";
+const stateData = [
+  { id: 1, name: "Assam", code: "AS" },
+  { id: 2, name: "Arunachal Pradesh", code: "AR" },
+  { id: 3, name: "Nagaland", code: "NL" },
+  { id: 4, name: "Meghalaya", code: "ML" },
+  { id: 5, name: "Manipur", code: "MN" },
+  { id: 6, name: "Mizoram", code: "MZ" },
+  { id: 7, name: "Tripura", code: "TR" },
+  { id: 8, name: "Sikkim", code: "SK" },
+  { id: 9, name: "West Bengal", code: "WB" },
+  { id: 10, name: "Bihar", code: "BR" },
+];
 
-import { useQuery } from "@tanstack/react-query";
-
-import StatesDialog from "@/components/StatesDialog";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
-
-export default function State() {
-  const {
-    data: states,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["states"],
-    queryFn: getStates,
-  });
-
-  if (isLoading) {
-    return ( <LoadingSkeleton />
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
-    );
-  }
-
+export default function HistoryVendors() {
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-          State
+          History
         </h1>
-        <StatesDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -64,11 +47,7 @@ export default function State() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {states?.length > 0 ? (
-          <DataTable data={states} columns={stateColumns} enablePagination />
-        ) : (
-          <div className="p-6 text-zinc-500">No states found.</div>
-        )}
+        <DataTable data={stateData} columns={stateColumns} enablePagination />
       </div>
     </div>
   );

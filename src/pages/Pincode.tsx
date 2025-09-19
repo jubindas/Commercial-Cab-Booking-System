@@ -10,20 +10,23 @@ import { getPincode } from "@/service/apiPincode";
 
 import { useQuery } from "@tanstack/react-query";
 
+import LoadingSkeleton from "@/components/LoadingSkeleton";
+
 
 export default function Pincode() {
 
 
 
 
-const {data: pincode } = useQuery({
+const {data: pincode, isLoading } = useQuery({
   queryKey: ["pincodes"],
   queryFn: getPincode
 })
 
-console.log(pincode);
 
-
+if(isLoading){
+  return  <LoadingSkeleton />
+}
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

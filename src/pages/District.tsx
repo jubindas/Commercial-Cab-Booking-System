@@ -7,6 +7,7 @@ import DistrictDialog from "@/components/DistrictDialog";
 import { useQuery } from "@tanstack/react-query";
 
 import {getDistrict} from "@/service/apiDistrict"
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 
 
@@ -31,7 +32,7 @@ console.log("the districts arw", district)
 
 
   if (isLoading) {
-    return <div className="p-6">Loading states...</div>;
+    return  <LoadingSkeleton />;
   }
 
   if (isError) {

@@ -7,6 +7,7 @@ import {
   MapPin,
   ChevronRight,
   ChevronDown,
+  History 
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -61,6 +62,7 @@ const items: MenuItem[] = [
       { title: "Created Vendor", url: "/created-vendor" },
     ],
   },
+   { title: "History", url: "/history", icon: History },
 ];
 
 export function AppSidebar() {

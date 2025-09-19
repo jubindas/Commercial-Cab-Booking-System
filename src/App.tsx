@@ -37,7 +37,11 @@ import Membership from "./pages/Membership";
 import VendorsViewDetails from "./pages/VendorsViewDetails";
 
 import CreatedVendors from "./pages/CreatedVendors";
+
 import VendorProfile from "./pages/VendorProfile";
+
+import HistoryVendors from "./pages/HistoryVendors";
+import Dashboard from "./pages/Dashboard";
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -58,7 +62,7 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { path: "home", element: <h2>hi home</h2> },
+      { path: "/", element: <Dashboard />},
       { path: "location", element: <Location /> },
       { path: "pincode", element: <Pincode /> },
       { path: "main-category", element: <MainCategories /> },
@@ -70,6 +74,7 @@ const router = createBrowserRouter([
       { path: "membership", element: <Membership /> },
       { path: "created-vendor", element: <CreatedVendors /> },
       { path: "profile", element: <VendorProfile /> },
+      { path: "history", element: <HistoryVendors /> },
       {
         path: "/view-details/:id",
         element: (

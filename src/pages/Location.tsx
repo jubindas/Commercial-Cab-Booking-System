@@ -7,13 +7,20 @@ import { columns } from "@/table-columns/location-table-columns";
 import { useQuery } from "@tanstack/react-query";
 
 import { getLocation } from "@/service/apiLocation";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function Location() {
-  const { data: location } = useQuery({
+  const { data: location, isLoading } = useQuery({
     queryKey: ["locations"],
     queryFn: getLocation,
   });
 
+
+  if(isLoading){
+    return  <LoadingSkeleton />
+  }
+
+  
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">

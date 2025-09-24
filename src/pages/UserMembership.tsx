@@ -1,25 +1,26 @@
-import { useState } from "react";
-
 import { DataTable } from "@/components/data-table";
 
 import { totalUsersColumns } from "@/table-columns/total-users-table-column";
 
-import { totalUsers } from "@/table-datas/total-users-table-data";
-
 import TotalUserDialog from "@/components/TotalUserDialog";
 
-import type { TotalUsers } from "@/table-types/total-users-table-type";
+import { getUserMemberships } from "@/service/apiUserMembership";
 
-export default function TotalUsers() {
-  const [search, setSearch] = useState("");
+import { useQuery } from "@tanstack/react-query";
 
-  const filteredUsers = totalUsers.filter(
-    (user: TotalUsers) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase()) ||
-      user.phone.includes(search) ||
-      user.description.toLowerCase().includes(search.toLowerCase())
-  );
+import { useAuth } from "@/hooks/useAuth";
+
+export default function UserMembership() {
+
+  const { token } = useAuth();
+
+  console.log("Auth Token:", token);
+
+  const { data: memberships } = useQuery({
+    queryKey: ["userMemberships"],
+    queryFn: () => getUserMemberships(token),
+  });
+  console.log("Memberships Data:", memberships);
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -48,8 +49,6 @@ export default function TotalUsers() {
           <input
             type="text"
             placeholder="Type to search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
@@ -57,7 +56,7 @@ export default function TotalUsers() {
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         <DataTable
-          data={filteredUsers}
+          data={memberships || []}
           columns={totalUsersColumns}
           enablePagination
         />

@@ -1,9 +1,12 @@
 import axiosInstance from "@/lib/axios";
 
-
-export async function getUserMemberships() {
+export async function getUserMemberships(token?: string | null) {
   try {
-    const response = await axiosInstance.get(`/user-memberships`);
+    const response = await axiosInstance.get(`/user-memberships`, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
     return response.data;
   } catch (error) {
     console.log("Error fetching user memberships:", error);

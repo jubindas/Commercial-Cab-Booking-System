@@ -47,7 +47,10 @@ import Dashboard from "./pages/Dashboard";
 import TotalSalesMan from "./pages/TotalSalesMan";
 
 import TotalUsers from "./pages/TotalUsers";
+
 import SaledMembership from "./pages/SaledMembership";
+
+import UserMembership from "./pages/UserMembership";
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -82,8 +85,9 @@ const router = createBrowserRouter([
       { path: "profile", element: <VendorProfile /> },
       { path: "history", element: <HistoryVendors /> },
       { path: "total-salesman", element: <TotalSalesMan /> },
-      { path: "total-user", element: <TotalUsers /> },
+      { path: "totaluser", element: <TotalUsers /> },
       { path: "salesman/view-details/:id", element: <SaledMembership /> },
+      { path: "user-membership", element: <UserMembership /> },
       {
         path: "/view-details/:id",
         element: (

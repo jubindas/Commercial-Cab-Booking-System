@@ -1,5 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TotalUsers } from "../table-types/total-users-table-type";
+import TotalUserColumns from "@/table-columns-dropdown/total-user-column-dropdown";
 
 export const totalUsersColumns: ColumnDef<TotalUsers>[] = [
   {
@@ -36,5 +37,10 @@ export const totalUsersColumns: ColumnDef<TotalUsers>[] = [
     cell: ({ row }) => (
       <span className="text-zinc-700">{row.getValue("description")}</span>
     ),
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: () => <TotalUserColumns />,
   },
 ];

@@ -72,7 +72,7 @@ const items: MenuItem[] = [
     children: [{ title: "Total Sales Man", url: "/total-salesman" }],
   },
 
-  { title: "Total User", url: "/total-user", icon: User },
+  { title: "Total User", url: "/totaluser", icon: User },
 
   { title: "History", url: "/history", icon: History },
 ];

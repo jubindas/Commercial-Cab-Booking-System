@@ -39,11 +39,12 @@ export default function Membership() {
     (sub: SubCategory) => sub.category?.is_active === 1
   );
 
-  const visibleMemberships = membershipData?.filter((membership: Membership) =>
-    visibleSubCategories.some(
-      (sub: Membership) => sub.id === membership.sub_category?.id
-    )
-  );
+const visibleMemberships = membershipData?.filter((membership: Membership) =>
+  (visibleSubCategories || []).some(
+    (sub: Membership) => sub.id === membership.sub_category?.id
+  )
+);
+
 
   const filteredMemberships = visibleMemberships.filter(
     (membership: Membership) => {

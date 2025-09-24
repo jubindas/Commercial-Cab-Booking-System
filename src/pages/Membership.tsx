@@ -16,7 +16,11 @@ import type { SubCategory } from "@/table-types/sub-category-table-types";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { useState } from "react";
+
 export default function Membership() {
+  const [search, setSearch] = useState("");
+
   const { data: membershipData, isLoading } = useQuery({
     queryKey: ["membership"],
     queryFn: getMemberships,
@@ -39,6 +43,19 @@ export default function Membership() {
     visibleSubCategories.some(
       (sub: Membership) => sub.id === membership.sub_category?.id
     )
+  );
+
+  const filteredMemberships = visibleMemberships.filter(
+    (membership: Membership) => {
+      const searchLower = search.toLowerCase();
+      return (
+        membership.name.toLowerCase().includes(searchLower) ||
+        (membership.description?.toLowerCase().includes(searchLower) ??
+          false) ||
+        (membership.sub_category?.name.toLowerCase().includes(searchLower) ??
+          false)
+      );
+    }
   );
 
   return (
@@ -68,6 +85,8 @@ export default function Membership() {
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
@@ -76,7 +95,7 @@ export default function Membership() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {visibleMemberships && (
           <DataTable
-            data={visibleMemberships}
+            data={filteredMemberships}
             columns={membershipColumns}
             enablePagination
           />

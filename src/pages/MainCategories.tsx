@@ -7,17 +7,28 @@ import MainCategoryDialog from "@/components/MainCategoryDialog";
 import { getCategories } from "@/service/apiCategory";
 
 import { useQuery } from "@tanstack/react-query";
+
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+import { useState } from "react";
+import type { MainCategory } from "@/table-types/main-category-table-types";
+
 export default function MainCategories() {
+  const [search, setSearch] = useState("");
   const { data: categories, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
 
-  if(isLoading){
-    return  <LoadingSkeleton />
+  if (isLoading) {
+    return <LoadingSkeleton />;
   }
+
+  const filteredCategories = categories.filter(
+    (category: MainCategory) =>
+      category.name?.toLowerCase().includes(search.toLowerCase()) ||
+      category.description?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -46,15 +57,21 @@ export default function MainCategories() {
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {categories && 
-          <DataTable data={categories} columns={columns} enablePagination />
-         }
+        {categories && (
+          <DataTable
+            data={filteredCategories}
+            columns={columns}
+            enablePagination
+          />
+        )}
       </div>
     </div>
   );

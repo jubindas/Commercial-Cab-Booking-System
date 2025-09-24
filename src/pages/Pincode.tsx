@@ -10,10 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+import { useState } from "react";
+import type { Pincode } from "@/table-types/pincode-table-types";
+
 
 export default function Pincode() {
 
-
+const [search, setSearch] = useState("")
 
 
 const {data: pincode, isLoading } = useQuery({
@@ -25,6 +28,14 @@ const {data: pincode, isLoading } = useQuery({
 if(isLoading){
   return  <LoadingSkeleton />
 }
+
+
+const filteredPincodes = pincode.filter(
+  (pincode: Pincode) =>
+    pincode.area_name?.toLowerCase().includes(search.toLowerCase()) ||
+    pincode.pin_code?.toString().toLowerCase().includes(search.toLowerCase()) ||
+    pincode.status?.toLowerCase().includes(search.toLowerCase())
+);
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -50,12 +61,13 @@ if(isLoading){
           <span className="font-medium">Entries</span>
         </div>
 
-    
-        <div className="flex items-center gap-2 text-sm text-zinc-700">
+     <div className="flex items-center gap-2 text-sm text-zinc-700">
           <span className="font-medium">Search:</span>
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
@@ -64,7 +76,7 @@ if(isLoading){
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
        {pincode && <DataTable
-          data={pincode}
+          data={filteredPincodes}
           columns={pincodeColumns}
           enablePagination
         />}

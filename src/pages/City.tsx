@@ -10,7 +10,14 @@ import CityDialog from "@/components/CityDialog";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+import { useState } from "react";
+
+import type { City } from "@/table-types/city-table-types";
+
 export default function City() {
+
+  const [search, setSearch] = useState("");
+
   const { data: city, isLoading } = useQuery({
     queryKey: ["cities"],
     queryFn: getCities,
@@ -20,6 +27,13 @@ export default function City() {
   if(isLoading){
     return  <LoadingSkeleton />
   }
+
+   const filteredCities = city.filter(
+      (city: City) =>
+        city.name?.toLowerCase().includes(search.toLowerCase()) ||
+        city.code?.toLowerCase().includes(search.toLowerCase()) ||
+        city.status?.includes(search)
+    );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -43,11 +57,13 @@ export default function City() {
           <span className="font-medium">Entries</span>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-zinc-700">
+       <div className="flex items-center gap-2 text-sm text-zinc-700">
           <span className="font-medium">Search:</span>
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
@@ -55,7 +71,7 @@ export default function City() {
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {city && (
-          <DataTable data={city} columns={cityColumns} enablePagination />
+          <DataTable data={filteredCities} columns={cityColumns} enablePagination />
         )}
       </div>
     </div>

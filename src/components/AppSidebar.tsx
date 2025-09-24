@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 import {
   User,
   Home,
-  LayoutGrid,
   MapPin,
   ChevronRight,
   ChevronDown,
   History,
   Briefcase,
-  Car
+  Car,
+  Contact,
+  Folder,
+  FolderOutput,
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -36,6 +38,7 @@ interface MenuItem {
 
 const items: MenuItem[] = [
   { title: "Home", url: "/", icon: Home },
+
   {
     title: "Location",
     icon: MapPin,
@@ -47,15 +50,12 @@ const items: MenuItem[] = [
       { title: "Pin Code", url: "/pincode" },
     ],
   },
-  {
-    title: "Service",
-    icon: LayoutGrid,
-    children: [
-      { title: "Main Category", url: "/main-category" },
-      { title: "Sub Category", url: "/sub-category" },
-      { title: "Membership", url: "/membership" },
-    ],
-  },
+
+  { title: "Main Category", url: "/main-category", icon: Folder },
+
+  { title: "Sub Category", url: "/sub-category", icon: FolderOutput },
+
+  { title: "Membership", url: "/membership", icon: Contact },
 
   {
     title: "Vendor",
@@ -65,12 +65,15 @@ const items: MenuItem[] = [
       { title: "Created Vendor", url: "/created-vendor" },
     ],
   },
+
   {
     title: "Sales Man",
     icon: Briefcase,
     children: [{ title: "Total Sales Man", url: "/total-salesman" }],
   },
-   { title: "Total User", url: "/total-user", icon: User },
+
+  { title: "Total User", url: "/total-user", icon: User },
+
   { title: "History", url: "/history", icon: History },
 ];
 

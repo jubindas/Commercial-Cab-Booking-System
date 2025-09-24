@@ -10,7 +10,13 @@ import StatesDialog from "@/components/StatesDialog";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+import type { State } from "@/table-types/state-table-types";
+
+import { useState } from "react";
+
 export default function State() {
+  const [search, setSearch] = useState("");
+  
   const {
     data: states,
     isLoading,
@@ -22,8 +28,7 @@ export default function State() {
   });
 
   if (isLoading) {
-    return ( <LoadingSkeleton />
-    );
+    return <LoadingSkeleton />;
   }
 
   if (isError) {
@@ -31,6 +36,13 @@ export default function State() {
       <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
     );
   }
+
+  const filteredStates = states.filter(
+    (state: State) =>
+      state.name?.toLowerCase().includes(search.toLowerCase()) ||
+      state.code?.toLowerCase().includes(search.toLowerCase()) ||
+      state.status?.includes(search)
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -59,16 +71,20 @@ export default function State() {
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {states?.length > 0 ? (
-          <DataTable data={states} columns={stateColumns} enablePagination />
-        ) : (
-          <div className="p-6 text-zinc-500">No states found.</div>
+        {states && (
+          <DataTable
+            data={filteredStates}
+            columns={stateColumns}
+            enablePagination
+          />
         )}
       </div>
     </div>

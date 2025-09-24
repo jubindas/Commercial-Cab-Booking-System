@@ -4,13 +4,38 @@ import { DataTable } from "@/components/data-table";
 
 import { totalUsersColumns } from "@/table-columns/total-users-table-column";
 
-import { totalUsers } from "@/table-datas/total-users-table-data";
+// import { totalUsers } from "@/table-datas/total-users-table-data";
+
+import TotalUserDialog from "@/components/TotalUserDialog";
+
+import { getUserMemberships } from "@/service/apiUserMembership";
+
+import { useQuery } from "@tanstack/react-query";
+import type { TotalUsers } from "@/table-types/total-users-table-type";
 
 export default function TotalUsers() {
+
   const [search, setSearch] = useState("");
 
-  const filteredUsers = totalUsers.filter(
-    (user) =>
+  const {
+    data: memberships,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["userMemberships"],
+    queryFn: getUserMemberships,
+  });
+
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading memberships</div>;
+
+  console.log("Memberships Data:", memberships);
+
+  
+
+  const filteredUsers = memberships.filter(
+    (user: TotalUsers) =>
       user.name.toLowerCase().includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase()) ||
       user.phone.includes(search) ||
@@ -23,6 +48,7 @@ export default function TotalUsers() {
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Total Users
         </h1>
+        <TotalUserDialog />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

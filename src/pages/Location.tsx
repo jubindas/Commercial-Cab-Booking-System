@@ -10,18 +10,29 @@ import { getLocation } from "@/service/apiLocation";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+import { useState } from "react";
+
+import type { Location } from "@/table-types/location-table-types";
+
 export default function Location() {
+  const [search, setSearch] = useState("");
+
   const { data: location, isLoading } = useQuery({
     queryKey: ["locations"],
     queryFn: getLocation,
   });
 
-
-  if(isLoading){
-    return  <LoadingSkeleton />
+  if (isLoading) {
+    return <LoadingSkeleton />;
   }
 
-  
+ const filteredLocations = (location || []).filter((loc: Location) =>
+  loc.name.toLowerCase().includes(search.toLowerCase()) ||
+  loc.city_id.toString().toLowerCase().includes(search.toLowerCase()) ||
+  loc.status.toLowerCase().includes(search.toLowerCase())
+);
+
+
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
@@ -49,6 +60,8 @@ export default function Location() {
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
@@ -56,7 +69,11 @@ export default function Location() {
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {location && (
-          <DataTable data={location} columns={columns} enablePagination />
+          <DataTable
+            data={filteredLocations}
+            columns={columns}
+            enablePagination
+          />
         )}
       </div>
     </div>

@@ -6,17 +6,17 @@ import DistrictDialog from "@/components/DistrictDialog";
 
 import { useQuery } from "@tanstack/react-query";
 
-import {getDistrict} from "@/service/apiDistrict"
+import { getDistrict } from "@/service/apiDistrict";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+import { useState } from "react";
 
-
+import type { District } from "@/table-types/district-table-types";
 
 export default function District() {
-
-
-
+  
+  const [search, setSearch] = useState("");
 
   const {
     data: district,
@@ -25,15 +25,13 @@ export default function District() {
     error,
   } = useQuery({
     queryKey: ["district"],
-    queryFn:  getDistrict,
-  
-})
+    queryFn: getDistrict,
+  });
 
-console.log("the districts arw", district)
-
+  console.log("the districts arw", district);
 
   if (isLoading) {
-    return  <LoadingSkeleton />;
+    return <LoadingSkeleton />;
   }
 
   if (isError) {
@@ -42,17 +40,21 @@ console.log("the districts arw", district)
     );
   }
 
+  const filteredDistricts = district.filter(
+    (district: District) =>
+      district.name?.toLowerCase().includes(search.toLowerCase()) ||
+      district.code?.toLowerCase().includes(search.toLowerCase()) ||
+      district.status?.includes(search)
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
-     
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-       District
+          District
         </h1>
         <DistrictDialog mode="create" />
       </div>
-
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div className="flex items-center gap-2 text-sm text-zinc-700">
@@ -67,24 +69,26 @@ console.log("the districts arw", district)
           <span className="font-medium">Entries</span>
         </div>
 
-    
         <div className="flex items-center gap-2 text-sm text-zinc-700">
           <span className="font-medium">Search:</span>
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
       </div>
 
-
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-       {district && <DataTable
-          data={district}
-          columns={disctrictColumns}
-          enablePagination
-        />}
+        {district && (
+          <DataTable
+            data={filteredDistricts}
+            columns={disctrictColumns}
+            enablePagination
+          />
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { User, Phone, IdCard, Home } from "lucide-react";
+
 import { useParams } from "react-router-dom";
 
 interface Vendor {

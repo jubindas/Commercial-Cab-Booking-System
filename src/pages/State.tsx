@@ -7,6 +7,7 @@ import { getStates } from "@/service/apiStates";
 import { useQuery } from "@tanstack/react-query";
 
 import StatesDialog from "@/components/StatesDialog";
+
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function State() {

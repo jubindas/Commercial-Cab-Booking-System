@@ -7,8 +7,11 @@ import {
   MapPin,
   ChevronRight,
   ChevronDown,
-  History 
+  History,
+  Briefcase,
+  Car
 } from "lucide-react";
+
 import type { LucideIcon } from "lucide-react";
 
 import { NavLink, useLocation } from "react-router-dom";
@@ -56,13 +59,19 @@ const items: MenuItem[] = [
 
   {
     title: "Vendor",
-    icon: User,
+    icon: Car,
     children: [
       { title: "Membership Vendor", url: "/membership-vendor" },
       { title: "Created Vendor", url: "/created-vendor" },
     ],
   },
-   { title: "History", url: "/history", icon: History },
+  {
+    title: "Sales Man",
+    icon: Briefcase,
+    children: [{ title: "Total Sales Man", url: "/total-salesman" }],
+  },
+   { title: "Total User", url: "/total-user", icon: User },
+  { title: "History", url: "/history", icon: History },
 ];
 
 export function AppSidebar() {

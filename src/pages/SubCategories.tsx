@@ -9,6 +9,7 @@ import { getSubcategories } from "@/service/apiSubCategory";
 import { useQuery } from "@tanstack/react-query";
 
 import type { SubCategory } from "@/table-types/sub-category-table-types";
+
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function SubCategories() {

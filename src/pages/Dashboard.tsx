@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
+
 import { DollarSign, RefreshCw, Wallet, Truck } from "lucide-react"
 
 export default function Dashboard() {

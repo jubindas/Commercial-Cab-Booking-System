@@ -32,6 +32,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createDistrict, updateDistrict } from "@/service/apiDistrict";
 
 import { toast } from "sonner";
+import type { State } from "@/table-types/state-table-types";
 
 
 interface Props {
@@ -139,7 +140,7 @@ export default function DistrictDialog({
                 <SelectValue placeholder="Select a state" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {states?.map((state: any) => (
+                {states?.map((state: State) => (
                   <SelectItem key={state.id} value={state.id}>
                     {state.name}
                   </SelectItem>

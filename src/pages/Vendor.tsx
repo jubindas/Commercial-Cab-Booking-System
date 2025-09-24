@@ -1,6 +1,5 @@
 import { DataTable } from "@/components/data-table"
 
-
 import { dummyVendors } from "@/table-datas/vendor-table-datas"
 
 import {  vendorColumns } from "@/table-columns/vendor-table-columns"

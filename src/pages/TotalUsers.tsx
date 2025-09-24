@@ -1,58 +1,29 @@
+import { useState } from "react";
+
 import { DataTable } from "@/components/data-table";
 
-import { disctrictColumns } from "@/table-columns/district-table-columns";
+import { totalUsersColumns } from "@/table-columns/total-users-table-column";
 
-import DistrictDialog from "@/components/DistrictDialog";
+import { totalUsers } from "@/table-datas/total-users-table-data";
 
-import { useQuery } from "@tanstack/react-query";
+export default function TotalUsers() {
+  const [search, setSearch] = useState("");
 
-import {getDistrict} from "@/service/apiDistrict"
-
-import LoadingSkeleton from "@/components/LoadingSkeleton";
-
-
-
-
-export default function District() {
-
-
-
-
-  const {
-    data: district,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["district"],
-    queryFn:  getDistrict,
-  
-})
-
-console.log("the districts arw", district)
-
-
-  if (isLoading) {
-    return  <LoadingSkeleton />;
-  }
-
-  if (isError) {
-    return (
-      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
-    );
-  }
-
+  const filteredUsers = totalUsers.filter(
+    (user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase()) ||
+      user.phone.includes(search) ||
+      user.description.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
-     
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-       District
+          Total Users
         </h1>
-        <DistrictDialog mode="create" />
       </div>
-
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div className="flex items-center gap-2 text-sm text-zinc-700">
@@ -67,24 +38,24 @@ console.log("the districts arw", district)
           <span className="font-medium">Entries</span>
         </div>
 
-    
         <div className="flex items-center gap-2 text-sm text-zinc-700">
           <span className="font-medium">Search:</span>
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
       </div>
 
-
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-       {district && <DataTable
-          data={district}
-          columns={disctrictColumns}
+        <DataTable
+          data={filteredUsers}
+          columns={totalUsersColumns}
           enablePagination
-        />}
+        />
       </div>
     </div>
   );

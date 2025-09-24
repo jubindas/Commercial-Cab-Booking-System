@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/data-table";
+
 import { stateColumns } from "@/table-columns/state-table-columns";
 
 const stateData = [
@@ -8,13 +9,14 @@ const stateData = [
   { id: 4, name: "Meghalaya", code: "ML" },
   { id: 5, name: "Manipur", code: "MN" },
   { id: 6, name: "Mizoram", code: "MZ" },
-  { id: 7, name: "Tripura", code: "TR" },
+  { id: 7, name: "Tripura",   code: "TR" },
   { id: 8, name: "Sikkim", code: "SK" },
   { id: 9, name: "West Bengal", code: "WB" },
   { id: 10, name: "Bihar", code: "BR" },
 ];
 
 export default function HistoryVendors() {
+
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">

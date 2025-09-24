@@ -2,9 +2,7 @@ import { DataTable } from "@/components/data-table";
 
 import PincodeDialog from "@/components/PincodeDialog";
 
-
 import { pincodeColumns } from "@/table-columns/pincode-table-columns";
-
 
 import { getPincode } from "@/service/apiPincode";
 

@@ -7,6 +7,7 @@ import { columns } from "@/table-columns/location-table-columns";
 import { useQuery } from "@tanstack/react-query";
 
 import { getLocation } from "@/service/apiLocation";
+
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function Location() {

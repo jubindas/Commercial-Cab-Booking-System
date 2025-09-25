@@ -30,12 +30,18 @@ export const membershipColumns: ColumnDef<Membership>[] = [
     ),
   },
   {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("description") || "N/A"}</span>
-    ),
-  },
+  accessorKey: "description",
+  header: "Description",
+  cell: ({ row }) => (
+    <span
+      className="text-zinc-700 block max-w-15 truncate" 
+      title={row.getValue("description") || "N/A"}
+    >
+      {row.getValue("description") || "N/A"}
+    </span>
+  ),
+},
+
   {
     accessorKey: "price",
     header: "Price",

@@ -19,41 +19,42 @@ export const subCategoryColumns: ColumnDef<SubCategory>[] = [
       <span className="font-medium text-zinc-800">{row.getValue("name")}</span>
     ),
   },
-{
-  accessorKey: "mainCategory",
-  header: "Main Category",
-  cell: ({ row }) => (
-    <span className="text-zinc-700">
-      {row.original.category?.name || "-"}
-    </span>
-  ),
-},
+  {
+    accessorKey: "mainCategory",
+    header: "Main Category",
+    cell: ({ row }) => (
+      <span className="text-zinc-700">
+        {row.original.category?.name || "-"}
+      </span>
+    ),
+  },
 
   {
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span className="text-zinc-600">
+      <span
+        className="text-zinc-700 block max-w-15 truncate"
+        title={row.getValue("description") || "N/A"}
+      >
         {row.getValue("description") || "N/A"}
       </span>
     ),
   },
-{
-  id: "actions",
-  header: "Actions",
-  cell: ({ row }) => {
-    return (
-      <SubCategoryTableColumnDropdown
-        id={row.original.id}
-        rowData={{
-          name: row.original.name,
-          code: row.original.code,
-          category_id: row.original.category_id,
-          description: row.original.description ?? "",
-        }}
-      />
-    );
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      return (
+        <SubCategoryTableColumnDropdown
+          id={row.original.id}
+          rowData={{
+            name: row.original.name,
+            category_id: row.original.category?.id || 0,
+            description: row.original.description ?? "",
+          }}
+        />
+      );
+    },
   },
-},
-
 ];

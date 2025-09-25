@@ -32,7 +32,6 @@ interface Props {
   id: string | number;
   rowData?: {
     name: string;
-    code: string;
     category_id: number;
     description?: string;
   };

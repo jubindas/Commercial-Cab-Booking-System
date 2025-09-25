@@ -28,6 +28,8 @@ import { useState } from "react";
 
 import MembershipDialog from "@/components/MembershipDialog";
 
+import { useNavigate } from "react-router-dom";
+
 interface Props {
   id: string | number;
   rowData?: {
@@ -43,6 +45,8 @@ interface Props {
 export default function MembershipTableColumnDropdown({ id, rowData }: Props) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
+
+  const navigate = useNavigate();
 
   const deleteMutation = useMutation({
     mutationFn: (membershipId: string | number) =>
@@ -80,6 +84,15 @@ export default function MembershipTableColumnDropdown({ id, rowData }: Props) {
                 </Button>
               }
             />
+
+            <Button
+              variant="ghost"
+              className="justify-start text-zinc-200 hover:bg-zinc-800"
+              onClick={() => navigate(`/user-membership`)}
+            >
+              View Details
+            </Button>
+
             <Button
               variant="ghost"
               className="justify-start text-red-500 hover:bg-zinc-700"

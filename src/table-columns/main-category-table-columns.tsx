@@ -36,7 +36,7 @@ export const columns: ColumnDef<MainCategory>[] = [
     header: "Description",
     cell: ({ row }) => (
       <span
-        className={row.original.is_active ? "text-zinc-800" : "text-red-700 italic"}
+        className={row.original.is_active ? "text-zinc-800 block max-w-15 truncate" : "text-red-700 italic block max-w-15 truncate"}
       >
         {row.getValue("description") || "N/A"}
       </span>

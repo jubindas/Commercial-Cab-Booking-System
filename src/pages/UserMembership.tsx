@@ -26,7 +26,7 @@ export default function UserMembership() {
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-          Total Users
+         User Memberships
         </h1>
         <TotalUserDialog />
       </div>

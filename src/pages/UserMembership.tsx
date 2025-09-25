@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
 
-import { totalUsersColumns } from "@/table-columns/total-users-table-column";
+import { membershipColumns } from "@/table-columns/user-membership-table-column";
 
 import TotalUserDialog from "@/components/TotalUserDialog";
 
@@ -57,7 +57,7 @@ export default function UserMembership() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         <DataTable
           data={memberships || []}
-          columns={totalUsersColumns}
+          columns={membershipColumns}
           enablePagination
         />
       </div>

@@ -3,54 +3,34 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import RootLayout from "@/components/RootLayout";
-
-import Login from "@/pages/Login";
-
-import Location from "./pages/Location";
-
-import Pincode from "@/pages/Pincode";
-
-import MainCategories from "./pages/MainCategories";
-
-import SubCategories from "./pages/SubCategories";
-
-import Vendor from "./pages/Vendor";
+import { Suspense, lazy, type ReactNode } from "react";
 
 import { AuthProvider } from "@/provider/authContext";
-
 import { useAuth } from "./hooks/useAuth";
 
-import type { ReactNode } from "react";
 
-import State from "./pages/State";
-
-import District from "./pages/District";
-
-import City from "@/pages/City";
-
-import Membership from "./pages/Membership";
-
-import VendorsViewDetails from "./pages/VendorsViewDetails";
-
-import CreatedVendors from "./pages/CreatedVendors";
-
-import VendorProfile from "./pages/VendorProfile";
-
-import HistoryVendors from "./pages/HistoryVendors";
-
-import Dashboard from "./pages/Dashboard";
-
-import TotalSalesMan from "./pages/TotalSalesMan";
-
-import TotalUsers from "./pages/TotalUsers";
-
-import SaledMembership from "./pages/SaledMembership";
-
-import UserMembership from "./pages/UserMembership";
+const RootLayout = lazy(() => import("@/components/RootLayout"));
+const Login = lazy(() => import("@/pages/Login"));
+const Location = lazy(() => import("@/pages/Location"));
+const Pincode = lazy(() => import("@/pages/Pincode"));
+const MainCategories = lazy(() => import("@/pages/MainCategories"));
+const SubCategories = lazy(() => import("@/pages/SubCategories"));
+const Vendor = lazy(() => import("@/pages/Vendor"));
+const State = lazy(() => import("@/pages/State"));
+const District = lazy(() => import("@/pages/District"));
+const City = lazy(() => import("@/pages/City"));
+const Membership = lazy(() => import("@/pages/Membership"));
+const VendorsViewDetails = lazy(() => import("@/pages/VendorsViewDetails"));
+const CreatedVendors = lazy(() => import("@/pages/CreatedVendors"));
+const VendorProfile = lazy(() => import("@/pages/VendorProfile"));
+const HistoryVendors = lazy(() => import("@/pages/HistoryVendors"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const TotalSalesMan = lazy(() => import("@/pages/TotalSalesMan"));
+const TotalUsers = lazy(() => import("@/pages/TotalUsers"));
+const SaledMembership = lazy(() => import("@/pages/SaledMembership"));
+const UserMembership = lazy(() => import("@/pages/UserMembership"));
+const SalesManWallet = lazy(() => import("@/pages/SalesManWallet"));
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -61,46 +41,62 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 const router = createBrowserRouter([
   {
     path: "login",
-    element: <Login />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Login />
+      </Suspense>
+    ),
   },
   {
     path: "/",
     element: (
       <ProtectedRoute>
-        <RootLayout />
+        <Suspense fallback={<div>Loading layout...</div>}>
+          <RootLayout />
+        </Suspense>
       </ProtectedRoute>
     ),
     children: [
-      { path: "/", element: <Dashboard /> },
-      { path: "location", element: <Location /> },
-      { path: "pincode", element: <Pincode /> },
-      { path: "main-category", element: <MainCategories /> },
-      { path: "sub-category", element: <SubCategories /> },
-      { path: "membership-vendor", element: <Vendor /> },
-      { path: "state", element: <State /> },
-      { path: "district", element: <District /> },
-      { path: "city", element: <City /> },
-      { path: "membership", element: <Membership /> },
-      { path: "created-vendor", element: <CreatedVendors /> },
-      { path: "profile", element: <VendorProfile /> },
-      { path: "history", element: <HistoryVendors /> },
-      { path: "total-salesman", element: <TotalSalesMan /> },
-      { path: "totaluser", element: <TotalUsers /> },
-      { path: "salesman/view-details/:id", element: <SaledMembership /> },
-      { path: "user-membership", element: <UserMembership /> },
+      {
+        path: "/",
+        element: (
+          <Suspense fallback={<div>Loading dashboard...</div>}>
+            <Dashboard />
+          </Suspense>
+        ),
+      },
+      { path: "location", element: <Suspense fallback={<div>Loading...</div>}><Location /></Suspense> },
+      { path: "pincode", element: <Suspense fallback={<div>Loading...</div>}><Pincode /></Suspense> },
+      { path: "main-category", element: <Suspense fallback={<div>Loading...</div>}><MainCategories /></Suspense> },
+      { path: "sub-category", element: <Suspense fallback={<div>Loading...</div>}><SubCategories /></Suspense> },
+      { path: "membership-vendor", element: <Suspense fallback={<div>Loading...</div>}><Vendor /></Suspense> },
+      { path: "state", element: <Suspense fallback={<div>Loading...</div>}><State /></Suspense> },
+      { path: "district", element: <Suspense fallback={<div>Loading...</div>}><District /></Suspense> },
+      { path: "city", element: <Suspense fallback={<div>Loading...</div>}><City /></Suspense> },
+      { path: "membership", element: <Suspense fallback={<div>Loading...</div>}><Membership /></Suspense> },
+      { path: "created-vendor", element: <Suspense fallback={<div>Loading...</div>}><CreatedVendors /></Suspense> },
+      { path: "profile", element: <Suspense fallback={<div>Loading...</div>}><VendorProfile /></Suspense> },
+      { path: "history", element: <Suspense fallback={<div>Loading...</div>}><HistoryVendors /></Suspense> },
+      { path: "total-salesman", element: <Suspense fallback={<div>Loading...</div>}><TotalSalesMan /></Suspense> },
+      { path: "totaluser", element: <Suspense fallback={<div>Loading...</div>}><TotalUsers /></Suspense> },
+      { path: "salesman/view-details/:id", element: <Suspense fallback={<div>Loading...</div>}><SaledMembership /></Suspense> },
+      { path: "user-membership", element: <Suspense fallback={<div>Loading...</div>}><UserMembership /></Suspense> },
+      { path: "salesman/wallet/:id", element: <Suspense fallback={<div>Loading...</div>}><SalesManWallet /></Suspense> },
       {
         path: "/view-details/:id",
         element: (
-          <VendorsViewDetails
-            vendor={{
-              name: "ABC Travels",
-              phone: "9876543210",
-              idCardImage:
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F69250540%2Fhow-to-read-decode-secure-qr-code-on-indian-aadhaar-card-image&psig=AOvVaw2kN6po89V0dmiZcS75XMln&ust=1758097212557000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOj2wNPs3I8DFQAAAAAdAAAAABAE",
-              addressProofImage:
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.indiamart.com%2Fproddetail%2Faddress-proof-6237315530.html%3Fsrsltid%3DAfmBOooCQXgnc9mGFmlOscCgaz4PycaQDOhCwuWt9YaBnzeVYYFTdF1y&psig=AOvVaw2WlIPMfdsskNsi4oXZXgF2&ust=1758097293551000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCICh5fns3I8DFQAAAAAdAAAAABAE",
-            }}
-          />
+          <Suspense fallback={<div>Loading vendor details...</div>}>
+            <VendorsViewDetails
+              vendor={{
+                name: "ABC Travels",
+                phone: "9876543210",
+                idCardImage:
+                  "https://example.com/id-card.png",
+                addressProofImage:
+                  "https://example.com/address-proof.png",
+              }}
+            />
+          </Suspense>
         ),
       },
     ],

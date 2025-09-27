@@ -1,6 +1,6 @@
 export type TotalSalesMan = {
     id: string,
     name: string,
-    phone_num: string,
-    description: string
+    email: string,
+    password: string,
 }

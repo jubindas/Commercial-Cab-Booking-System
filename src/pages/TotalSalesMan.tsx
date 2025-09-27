@@ -3,6 +3,7 @@ import { DataTable } from "@/components/data-table";
 import {dataSalesmen} from "@/table-datas/total-sales-man-table-datas"
 
 import {salesmanColumns} from "@/table-columns/total-sales-man-table-column"
+import SalesManDialog from "@/components/SalesManDialog";
 
 export default function TotalSalesMan() {
  return (
@@ -11,6 +12,7 @@ export default function TotalSalesMan() {
          <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
         Total Sales Man
          </h1>
+         <SalesManDialog />
        </div>
  
        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

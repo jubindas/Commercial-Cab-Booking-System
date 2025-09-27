@@ -32,6 +32,6 @@ export const membershipColumns: ColumnDef<Membership>[] = [
   {
     accessorKey: "notes",
     header: "Notes",
-    cell: ({ row }) => <span>{row.getValue("notes") ?? "—"}</span>,
+    cell: ({ row }) => <span>{row.getValue("notes") ?? "N/A"}</span>,
   },
 ];

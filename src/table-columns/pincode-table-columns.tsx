@@ -45,9 +45,9 @@ export const pincodeColumns: ColumnDef<Pincode>[] = [
         id={row.original.id}
         rowData={{
           locId: row.original.location_id,
-          name: row.original.area_name,
-          pinCode: row.original.pin_code,
-          fallBackPincodes: row.original.fallback_pin_codes,
+          name: row.original.area_name || "",
+          pinCode: row.original.pin_code || "",
+          fallBackPincodes: row.original.fallback_pin_codes || [],
         }}
       />
     ),

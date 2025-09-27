@@ -18,17 +18,17 @@ export const salesmanColumns: ColumnDef<TotalSalesMan>[] = [
     ),
   },
   {
-    accessorKey: "phone_num",
-    header: "Phone",
+    accessorKey: "email",
+    header: "Email",
     cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("phone_num")}</span>
+      <span className="text-zinc-700">{row.getValue("email")}</span>
     ),
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "password",
+    header: "Password",
     cell: ({ row }) => (
-      <span className="text-zinc-600">{row.getValue("description")}</span>
+      <span className="text-zinc-600">{row.getValue("password")}</span>
     ),
   },
   {

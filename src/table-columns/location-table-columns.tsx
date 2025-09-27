@@ -47,8 +47,8 @@ export const columns: ColumnDef<Location>[] = [
           rowData={{
             cityId: row.original.city_id,
             name: row.original.name,
-            longitude: row.original.longitude,
-            latitude: row.original.latitude,
+            longitude: row.original.longitude || "",
+            latitude: row.original.latitude || "",
           }}
         />
       );

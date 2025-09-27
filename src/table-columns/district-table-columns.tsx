@@ -35,7 +35,7 @@ export const disctrictColumns: ColumnDef<District>[] = [
         rowData={{
           stateId: row.original.state_id,
           name: row.original.name,
-          code: row.original.code,
+          code: row.original.code || "",
         }}
       />
     ),

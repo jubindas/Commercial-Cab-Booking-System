@@ -16,7 +16,7 @@ import { useState } from "react";
 
 export default function State() {
   const [search, setSearch] = useState("");
-  
+
   const {
     data: states,
     isLoading,
@@ -26,6 +26,8 @@ export default function State() {
     queryKey: ["states"],
     queryFn: getStates,
   });
+
+  console.log("States data:", states);
 
   if (isLoading) {
     return <LoadingSkeleton />;

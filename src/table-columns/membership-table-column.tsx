@@ -30,17 +30,17 @@ export const membershipColumns: ColumnDef<Membership>[] = [
     ),
   },
   {
-  accessorKey: "description",
-  header: "Description",
-  cell: ({ row }) => (
-    <span
-      className="text-zinc-700 block max-w-15 truncate" 
-      title={row.getValue("description") || "N/A"}
-    >
-      {row.getValue("description") || "N/A"}
-    </span>
-  ),
-},
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => (
+      <span
+        className="text-zinc-700 block max-w-15 truncate"
+        title={row.getValue("description") || "N/A"}
+      >
+        {row.getValue("description") || "N/A"}
+      </span>
+    ),
+  },
 
   {
     accessorKey: "price",
@@ -61,7 +61,7 @@ export const membershipColumns: ColumnDef<Membership>[] = [
     header: "Discount",
     cell: ({ row }) => (
       <span className="text-zinc-700">
-        {row.getValue("discounted_percentage")}%
+        {row.getValue("discounted_percentage") || "0"}%
       </span>
     ),
   },

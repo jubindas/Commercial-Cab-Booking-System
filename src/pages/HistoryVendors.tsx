@@ -1,22 +1,10 @@
 import { DataTable } from "@/components/data-table";
 
-import { stateColumns } from "@/table-columns/state-table-columns";
+import { vendorColumns } from "@/table-columns/vendor-history-table-column";
 
-const stateData = [
-  { id: 1, name: "Assam", code: "AS" },
-  { id: 2, name: "Arunachal Pradesh", code: "AR" },
-  { id: 3, name: "Nagaland", code: "NL" },
-  { id: 4, name: "Meghalaya", code: "ML" },
-  { id: 5, name: "Manipur", code: "MN" },
-  { id: 6, name: "Mizoram", code: "MZ" },
-  { id: 7, name: "Tripura",   code: "TR" },
-  { id: 8, name: "Sikkim", code: "SK" },
-  { id: 9, name: "West Bengal", code: "WB" },
-  { id: 10, name: "Bihar", code: "BR" },
-];
+import { vendorData } from "@/table-datas/history-vendor-data";
 
 export default function HistoryVendors() {
-
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
@@ -49,7 +37,7 @@ export default function HistoryVendors() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        <DataTable data={stateData} columns={stateColumns} enablePagination />
+        <DataTable data={vendorData} columns={vendorColumns} enablePagination />
       </div>
     </div>
   );

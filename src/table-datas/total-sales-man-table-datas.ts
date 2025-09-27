@@ -2,24 +2,21 @@ import type { TotalSalesMan } from "@/table-types/total-sales-man-table-type";
 
 export const dataSalesmen: TotalSalesMan[] = [
   {
-    id: "sm001",
+    id: "BHAARA-67896",
     name: "Rohit Sharma",
-    phone_num: "+91-9876543210",
-    description:
-      "Senior salesman specializing in corporate accounts with 8 years of experience.",
+    email: "rohit.sharma@example.com",
+    password: "securepassword123",
   },
   {
-    id: "sm002",
+    id: "BHAARA-67856",
     name: "Anjali Verma",
-    phone_num: "+91-9123456789",
-    description:
-      "Focused on retail and small business sales, known for excellent customer engagement.",
+    email: "anjali.verma@example.com",
+    password: "securepassword456",
   },
   {
-    id: "sm003",
+    id: "BHAARA-67896",
     name: "Amit Das",
-    phone_num: "+91-9988776655",
-    description:
-      "Tech product salesman handling SaaS subscriptions and client onboarding.",
+    email: "amit.das@example.com",
+    password: "securepassword789",
   },
 ];

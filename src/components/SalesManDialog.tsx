@@ -12,18 +12,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
+
 import { getLocation } from "@/service/apiLocation";
 
 import { useQuery } from "@tanstack/react-query";
 
 import { Select } from "@radix-ui/react-select";
+
 import {
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+
 import { useState } from "react";
+
 import type { Location } from "@/table-types/location-table-types";
 
 export default function SalesManDialog() {

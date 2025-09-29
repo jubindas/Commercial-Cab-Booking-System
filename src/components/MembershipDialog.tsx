@@ -234,11 +234,11 @@ export default function MembershipDialog({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="discountedPercentage">Discount Percentage</Label>
+            <Label htmlFor="discountedPercentage">Comission</Label>
             <Input
               id="discountedPercentage"
               type="number"
-              placeholder="Enter discount %"
+              placeholder="Enter Comission"
               value={discountedPercentage}
               onChange={(e) => setDiscountedPercentage(e.target.value)}
               min={0}

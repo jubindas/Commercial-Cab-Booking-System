@@ -28,6 +28,8 @@ export default function SubCategories() {
     queryFn: getSubcategories,
   });
 
+  console.log("sub categories", subCategories);
+
   if (isLoading) {
     return  <LoadingSkeleton />;
   }

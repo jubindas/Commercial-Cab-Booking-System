@@ -164,6 +164,8 @@ interface SortConfig {
 }
 
 const Vendors: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -186,6 +188,8 @@ const Vendors: React.FC = () => {
     },
   });
 
+  console.log(vendors.data);
+
   const vendorData: Vendor[] = vendors.data?.data || [];
 
   const filteredVendors = vendorData.filter((vendor: Vendor) => {
@@ -204,12 +208,11 @@ const Vendors: React.FC = () => {
 
     return matchesSearch && matchesFilter;
   });
-
-  const sortedVendors = [...filteredVendors].sort((a: Vendor, b: Vendor) => {
+  const sortedVendorsAll = [...filteredVendors].sort((a: Vendor, b: Vendor) => {
     if (!sortConfig.key) return 0;
 
-    let aValue: string | number | Date = a[sortConfig.key];
-    let bValue: string | number | Date = b[sortConfig.key];
+    let aValue: string | number | Date = a[sortConfig.key as keyof Vendor];
+    let bValue: string | number | Date = b[sortConfig.key as keyof Vendor];
 
     if (sortConfig.key === "created_at") {
       aValue = new Date(aValue);
@@ -220,6 +223,15 @@ const Vendors: React.FC = () => {
     if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
     return 0;
   });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const sortedVendors = sortedVendorsAll.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(sortedVendorsAll.length / itemsPerPage);
 
   const handleSort = (key: SortKey): void => {
     setSortConfig((prev) => ({
@@ -615,6 +627,73 @@ const Vendors: React.FC = () => {
                 })}
               </tbody>
             </table>
+            <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 bg-gray-50 border-t border-gray-200">
+              <div className="flex items-center space-x-2 mb-2 sm:mb-0">
+                <span className="text-sm text-gray-700">Rows per page:</span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="mt-1 block w-full sm:w-auto pl-2 pr-8 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                >
+                  {[5, 10, 20, 50].map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-1">
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {"<<"}
+                </button>
+                <button
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {"<"}
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-3 py-1 rounded-md border border-gray-300 text-sm font-medium ${
+                        page === currentPage
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "bg-white text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                )}
+
+                <button
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {">"}
+                </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {">>"}
+                </button>
+              </div>
+            </div>
           </div>
 
           {filteredVendors.length === 0 && (

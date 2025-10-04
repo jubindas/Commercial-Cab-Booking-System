@@ -11,6 +11,7 @@ import { Suspense, lazy, type ReactNode } from "react";
 import { AuthProvider } from "@/provider/authContext";
 
 import { useAuth } from "./hooks/useAuth";
+
 import Vendors from "./pages/Vendors";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));

@@ -53,6 +53,8 @@ export default function SubCategoriesDialog({
   const [subCategoryName, setSubCategoryName] = useState("");
   const [subCategoryDescription, setSubCategoryDescription] = useState("");
 
+  console.log("sub category", selectedCategory);
+
   const { data: categories } = useQuery<Array<{ id: number; name: string }>>({
     queryKey: ["categories"],
     queryFn: getCategories,
@@ -146,7 +148,7 @@ export default function SubCategoriesDialog({
               </SelectTrigger>
               <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
                 {categories?.map((cat: any) => (
-                  <SelectItem key={cat.id} value={cat.id}>
+                  <SelectItem key={cat.id} value={cat.id.toString()}>
                     {cat.name}
                   </SelectItem>
                 ))}

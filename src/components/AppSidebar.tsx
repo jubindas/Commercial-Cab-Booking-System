@@ -57,13 +57,18 @@ const items: MenuItem[] = [
 
   { title: "Membership", url: "/membership", icon: Contact },
 
+  // {
+  //   title: "Vendor",
+  //   icon: Car,
+  //   children: [
+  //     { title: "Membership Vendor", url: "/membership-vendor" },
+  //     { title: "Created Vendor", url: "/created-vendor" },
+  //   ],
+  // },
   {
-    title: "Vendor",
+    title: "Vendors",
+    url: "/vendors",
     icon: Car,
-    children: [
-      { title: "Membership Vendor", url: "/membership-vendor" },
-      { title: "Created Vendor", url: "/created-vendor" },
-    ],
   },
 
   {

@@ -2,14 +2,16 @@ import axiosInstance from "@/lib/axios";
 
 import type { Location } from "@/table-types/location-table-types";
 
-export async function getAllLocations(): Promise<Location[]> {
+export async function getLocation(): Promise<Location[]> {
   let allLocations: Location[] = [];
   let currentPage = 1;
   let hasMore = true;
 
   try {
     while (hasMore) {
-      const response = await axiosInstance.get(`/locations?page=${currentPage}`);
+      const response = await axiosInstance.get(
+        `/locations?page=${currentPage}`
+      );
 
       if (response && response.status === 200) {
         const data = response.data.data;
@@ -32,7 +34,6 @@ export async function getAllLocations(): Promise<Location[]> {
     return [];
   }
 }
-
 
 export async function createLocation(locations: {
   city_id: string;

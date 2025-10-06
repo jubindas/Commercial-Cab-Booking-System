@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import { useState } from "react";
+
 import type { Pincode } from "@/table-types/pincode-table-types";
 
 
@@ -24,13 +25,14 @@ const {data: pincode, isLoading } = useQuery({
   queryFn: getPincode
 })
 
+const dataPincode = pincode || []
 
 if(isLoading){
   return  <LoadingSkeleton />
 }
 
 
-const filteredPincodes = pincode.filter(
+const filteredPincodes = dataPincode.filter(
   (pincode: Pincode) =>
     pincode.area_name?.toLowerCase().includes(search.toLowerCase()) ||
     pincode.pin_code?.toString().toLowerCase().includes(search.toLowerCase()) ||

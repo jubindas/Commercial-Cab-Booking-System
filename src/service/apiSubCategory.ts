@@ -1,14 +1,31 @@
 import axiosInstance from "@/lib/axios";
 
-export async function getSubcategories() {
+import type { SubCategory } from "@/table-types/sub-category-table-types";
+
+export async function getSubcategories(): Promise<SubCategory[]> {
+  let allSubcategories: SubCategory[] = [];
+  let currentPage = 1;
+  let hasMore = true;
+
   try {
-    const response = await axiosInstance.get("/sub-categories");
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.warn("Unexpected response:", response);
-      return [];
+    while (hasMore) {
+      const response = await axiosInstance.get(
+        `/sub-categories?page=${currentPage}`
+      );
+      if (response && response.status === 200) {
+        const data = response.data.data;
+        if (data.length > 0) {
+          allSubcategories = [...allSubcategories, ...data];
+          currentPage++;
+        } else {
+          hasMore = false;
+        }
+      } else {
+        console.warn("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+    return allSubcategories;
   } catch (error) {
     console.error("Error fetching subcategories:", error);
     return [];
@@ -16,8 +33,8 @@ export async function getSubcategories() {
 }
 
 export async function createSubcategory(data: {
-   name: string;
-  description: string;  
+  name: string;
+  description: string;
   category_id: number;
 }) {
   try {
@@ -37,9 +54,7 @@ export async function createSubcategory(data: {
 
 export async function updateSubcategory(
   id: number,
-  data: {  name?: string;
-  description?: string;  
-  category_id?: number; }
+  data: { name?: string; description?: string; category_id?: number }
 ) {
   try {
     const response = await axiosInstance.put(`/sub-categories/${id}`, data);
@@ -72,10 +87,11 @@ export async function deleteSubcategory(id: number) {
   }
 }
 
-
 export async function toggleSubCategoryStatus(id: string, isActive: boolean) {
   try {
-    const response = await axiosInstance.put(`/sub-categories/${id}`, { is_active: isActive });
+    const response = await axiosInstance.put(`/sub-categories/${id}`, {
+      is_active: isActive,
+    });
     return response.data;
   } catch (error) {
     console.error("Error toggling sub category status:", error);

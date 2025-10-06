@@ -6,7 +6,7 @@ import { columns } from "@/table-columns/location-table-columns";
 
 import { useQuery } from "@tanstack/react-query";
 
-import {getAllLocations as getLocation} from "@/service/apiLocation";
+import { getLocation } from "@/service/apiLocation";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
@@ -26,12 +26,12 @@ export default function Location() {
     return <LoadingSkeleton />;
   }
 
- const filteredLocations = (location || []).filter((loc: Location) =>
-  loc.name.toLowerCase().includes(search.toLowerCase()) ||
-  loc.city_id.toString().toLowerCase().includes(search.toLowerCase()) ||
-  loc.status.toLowerCase().includes(search.toLowerCase())
-);
-
+  const filteredLocations = (location || []).filter(
+    (loc: Location) =>
+      loc.name.toLowerCase().includes(search.toLowerCase()) ||
+      loc.city_id.toString().toLowerCase().includes(search.toLowerCase()) ||
+      loc.status.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

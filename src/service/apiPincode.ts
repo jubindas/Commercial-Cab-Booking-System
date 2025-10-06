@@ -1,18 +1,31 @@
 import axiosInstance from "@/lib/axios";
 
+import type { Pincode } from "@/table-types/pincode-table-types";
 
-export async function getPincode() {
+export async function getPincode(): Promise<Pincode[]> {
+  let allPincodes: Pincode[] = [];
+  let currentPage = 1;
+  let hasMore = true;
+
   try {
-    const response = await axiosInstance.get(`/pin-codes`);
-
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+    while (hasMore) {
+      const response = await axiosInstance.get(
+        `/pin-codes?page=${currentPage}`
+      );
+      if (response && response.status === 200) {
+        const data = response.data.data;
+        if (data.length > 0) {
+          allPincodes = [...allPincodes, ...data];
+          currentPage++;
+        } else {
+          hasMore = false;
+        }
+      }
     }
+
+    return allPincodes;
   } catch (error) {
-    console.error("The error is:", error);
+    console.error("Error fetching pincodes:", error);
     return [];
   }
 }

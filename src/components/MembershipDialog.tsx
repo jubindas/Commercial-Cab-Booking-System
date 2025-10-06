@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 import {
   Dialog,
@@ -60,9 +60,9 @@ export default function MembershipDialog({
   const [subCategoryId, setSubCategoryId] = useState<string>("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<string>(""); 
-  const [discountedPrice, setDiscountedPrice] = useState<string>(""); 
-  const [discountedPercentage, setDiscountedPercentage] = useState<string>(""); 
+  const [price, setPrice] = useState<string>("");
+  const [discountedPrice, setDiscountedPrice] = useState<string>("");
+  const [discountedPercentage, setDiscountedPercentage] = useState<string>("");
 
   const { data: subCategories } = useQuery({
     queryKey: ["subcategories"],
@@ -238,9 +238,20 @@ export default function MembershipDialog({
             <Input
               id="discountedPercentage"
               type="number"
-              placeholder="Enter discount %"
+              placeholder="Enter Discount Percentage"
               value={discountedPercentage}
               onChange={(e) => setDiscountedPercentage(e.target.value)}
+              min={0}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className="grid gap-2">
+            <Label htmlFor="commission">Commission</Label>
+            <Input
+              type="number"
+              placeholder="Enter Discount Percentage"
               min={0}
             />
           </div>

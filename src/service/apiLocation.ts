@@ -1,20 +1,38 @@
 import axiosInstance from "@/lib/axios";
 
-export async function getLocation() {
-  try {
-    const response = await axiosInstance.get(`/locations`);
+import type { Location } from "@/table-types/location-table-types";
 
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+export async function getAllLocations(): Promise<Location[]> {
+  let allLocations: Location[] = [];
+  let currentPage = 1;
+  let hasMore = true;
+
+  try {
+    while (hasMore) {
+      const response = await axiosInstance.get(`/locations?page=${currentPage}`);
+
+      if (response && response.status === 200) {
+        const data = response.data.data;
+
+        if (data.length > 0) {
+          allLocations = [...allLocations, ...data];
+          currentPage++;
+        } else {
+          hasMore = false;
+        }
+      } else {
+        console.log("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+
+    return allLocations;
   } catch (error) {
-    console.error("The error is:", error);
+    console.error("Error fetching locations:", error);
     return [];
   }
 }
+
 
 export async function createLocation(locations: {
   city_id: string;

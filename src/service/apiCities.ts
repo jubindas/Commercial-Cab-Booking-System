@@ -1,15 +1,31 @@
 import axiosInstance from "@/lib/axios";
 
-export async function getCities() {
-  try {
-    const response = await axiosInstance.get(`/cities`);
+import type { City } from "@/table-types/city-table-types";
 
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+export async function getCities(): Promise<City[]> {
+  let allCities: City[] = [];
+  let currentPage = 1;
+  let hasMore = true;
+  try {
+    while (hasMore) {
+      const response = await axiosInstance.get(`/cities?page=${currentPage}`);
+
+      if (response && response.status === 200) {
+        const data = response.data.data;
+
+        if (data.length > 0) {
+          allCities = [...allCities, ...data];
+          currentPage++;
+        } else {
+          hasMore = false;
+        }
+      } else {
+        console.log("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+
+    return allCities;
   } catch (error) {
     console.error("The error is:", error);
     return [];

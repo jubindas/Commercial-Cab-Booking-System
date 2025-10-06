@@ -37,4 +37,18 @@ export const saledMembershipColumns: ColumnDef<SaledMembership>[] = [
       <span className="text-zinc-700">{row.getValue("description")}</span>
     ),
   },
+  {
+    accessorKey: "sub-category",
+    header: "Sub-Category",
+    cell: ({ row }) => (
+      <span className="text-zinc-700">{row.getValue("sub-category")}</span>
+    ),
+  },
+  {
+    accessorKey: "location",
+    header: "Location",
+    cell: ({ row }) => (
+      <span className="text-zinc-700">{row.getValue("location")}</span>
+    ),
+  },
 ];

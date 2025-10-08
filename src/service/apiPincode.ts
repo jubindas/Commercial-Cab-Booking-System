@@ -1,21 +1,48 @@
 import axiosInstance from "@/lib/axios";
 
+export interface PincodePayload {
+  id: number;
+  code: string;
+  cityId?: number;
+  districtId?: number;
+}
 
-export async function getPincode() {
+export async function getAllPincodes(): Promise<PincodePayload[]> {
+  let allPincodes: PincodePayload[] = [];
+  let currentPage = 1;
+  const limit = 15; // adjust if your API supports a limit
+  let hasMore = true;
+
   try {
-    const response = await axiosInstance.get(`/pin-codes`);
+    while (hasMore) {
+      // Fetch current page
+      const response = await axiosInstance.get(`/pin-codes?page=${currentPage}&limit=${limit}`);
 
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+      if (response && response.status === 200) {
+        const data: PincodePayload[] = response.data.data || [];
+
+        // Append fetched data
+        allPincodes = [...allPincodes, ...data];
+
+        // Stop if fewer items than limit
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          currentPage += 1; // move to next page
+        }
+      } else {
+        console.log("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+
+    return allPincodes;
   } catch (error) {
-    console.error("The error is:", error);
-    return [];
+    console.error("Error fetching pin codes:", error);
+    return allPincodes;
   }
 }
+
 
 export async function createPincode(pinCode: {
   location_id: string;

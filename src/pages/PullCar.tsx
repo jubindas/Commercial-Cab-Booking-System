@@ -2,7 +2,7 @@ import { DataTable } from "@/components/data-table";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getPullCar } from "@/service/apiPullcar";
+import { getAllPullCars } from "@/service/apiPullcar";
 
 import { useState } from "react";
 
@@ -15,7 +15,7 @@ export default function PullCar() {
 
   const { data: pullcardata } = useQuery({
     queryKey: ["pulllcar"],
-    queryFn: getPullCar,
+    queryFn: getAllPullCars,
   });
 
   console.log("data of pullCar ", pullcardata);

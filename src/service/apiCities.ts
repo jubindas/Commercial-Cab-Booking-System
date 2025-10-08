@@ -1,18 +1,44 @@
 import axiosInstance from "@/lib/axios";
 
-export async function getCities() {
-  try {
-    const response = await axiosInstance.get(`/cities`);
+export interface CityPayload {
+  id: number;
+  name: string;
+  state?: string;
+  country?: string;
+}
 
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+export async function getAllCities(): Promise<CityPayload[]> {
+  let allCities: CityPayload[] = [];
+  let currentPage = 1;
+  const limit = 15;
+  let hasMore = true;
+
+  try {
+    while (hasMore) {
+      const response = await axiosInstance.get(
+        `/cities?page=${currentPage}&limit=${limit}`
+      );
+
+      if (response && response.status === 200) {
+        const data: CityPayload[] = response.data.data || [];
+
+        allCities = [...allCities, ...data];
+
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          currentPage += 1;
+        }
+      } else {
+        console.log("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+
+    return allCities;
   } catch (error) {
-    console.error("The error is:", error);
-    return [];
+    console.error("Error fetching cities:", error);
+    return allCities;
   }
 }
 

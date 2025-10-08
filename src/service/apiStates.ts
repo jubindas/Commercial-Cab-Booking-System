@@ -1,22 +1,46 @@
 import axiosInstance from "@/lib/axios";
 
-export async function getStates() {
-  try {
-    const response = await axiosInstance.get(`/states`);
+import type { State } from "@/table-types/state-table-types";
 
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+export async function getAllStates(): Promise<State[]> {
+  let allStates: State[] = [];
+  let currentPage = 1;
+  const limit = 15;
+  let hasMore = true;
+
+  try {
+    while (hasMore) {
+      const response = await axiosInstance.get(
+        `/states?page=${currentPage}&limit=${limit}`
+      );
+
+      if (response && response.status === 200) {
+        const data: State[] = response.data.data || [];
+
+        allStates = [...allStates, ...data];
+
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          currentPage += 1;
+        }
+      } else {
+        console.log("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+
+    return allStates;
   } catch (error) {
-    console.error("The error is:", error);
-    return [];
+    console.error("Error fetching states:", error);
+    return allStates;
   }
 }
 
-export async function createState(states: { name: string; code: string | null }) {
+export async function createState(states: {
+  name: string;
+  code: string | null;
+}) {
   try {
     const response = await axiosInstance.post(`/states`, states);
 

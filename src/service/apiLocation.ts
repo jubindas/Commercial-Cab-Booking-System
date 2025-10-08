@@ -1,18 +1,45 @@
 import axiosInstance from "@/lib/axios";
 
-export async function getLocation() {
-  try {
-    const response = await axiosInstance.get(`/locations`);
+export interface LocationPayload {
+  id: number;
+  name: string;
+  cityId?: number;
+  districtId?: number;
+}
 
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+export async function getAllLocations(): Promise<LocationPayload[]> {
+  let allLocations: LocationPayload[] = [];
+  let currentPage = 1;
+  const limit = 15; // adjust if API supports a limit
+  let hasMore = true;
+
+  try {
+    while (hasMore) {
+      // Fetch current page
+      const response = await axiosInstance.get(`/locations?page=${currentPage}&limit=${limit}`);
+
+      if (response && response.status === 200) {
+        const data: LocationPayload[] = response.data.data || [];
+
+        // Add to cumulative array
+        allLocations = [...allLocations, ...data];
+
+        // If fewer items than limit, last page reached
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          currentPage += 1; // move to next page
+        }
+      } else {
+        console.log("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+
+    return allLocations;
   } catch (error) {
-    console.error("The error is:", error);
-    return [];
+    console.error("Error fetching locations:", error);
+    return allLocations;
   }
 }
 

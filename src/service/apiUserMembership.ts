@@ -1,16 +1,46 @@
 import axiosInstance from "@/lib/axios";
 
-export async function getUserMemberships(token?: string | null) {
+import type { MembershipData } from "@/table-types/user-membership-types";
+
+export async function getAllUserMemberships(
+  token?: string | null
+): Promise<MembershipData[]> {
+  let allMemberships: MembershipData[] = [];
+  let currentPage = 1;
+  const limit = 15;
+  let hasMore = true;
+
   try {
-    const response = await axiosInstance.get(`/user-memberships`, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
-    return response.data;
+    while (hasMore) {
+      const response = await axiosInstance.get(
+        `/user-memberships?page=${currentPage}&limit=${limit}`,
+        {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        }
+      );
+
+      if (response && response.status === 200) {
+        const data: MembershipData[] = response.data.data || [];
+
+        allMemberships = [...allMemberships, ...data];
+
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          currentPage += 1;
+        }
+      } else {
+        console.warn("Unexpected response:", response);
+        hasMore = false;
+      }
+    }
+
+    return allMemberships;
   } catch (error) {
-    console.log("Error fetching user memberships:", error);
-    throw error;
+    console.error("Error fetching user memberships:", error);
+    return allMemberships;
   }
 }
 

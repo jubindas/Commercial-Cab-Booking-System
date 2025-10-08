@@ -1,26 +1,44 @@
 import axiosInstance from "@/lib/axios";
 
-
 export interface CategoryPayload {
   name: string;
   description?: string;
 }
 
-export async function getCategories() {
+export async function getAllCategories(): Promise<CategoryPayload[]> {
+  let allCategories: CategoryPayload[] = [];
+  let currentPage = 1;
+  const limit = 15;
+  let hasMore = true;
+
   try {
-    const response = await axiosInstance.get("/categories");
-    if (response && response.status === 200) {
-      return response.data.data;
-    } else {
-      console.log("Unexpected response:", response);
-      return [];
+    while (hasMore) {
+      const response = await axiosInstance.get(
+        `/categories?page=${currentPage}&limit=${limit}`
+      );
+
+      if (response && response.status === 200) {
+        const data: CategoryPayload[] = response.data.data || [];
+
+        allCategories = [...allCategories, ...data];
+
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          currentPage += 1;
+        }
+      } else {
+        console.log("Unexpected response:", response);
+        hasMore = false;
+      }
     }
+
+    return allCategories;
   } catch (error) {
     console.error("Error fetching categories:", error);
-    return [];
+    return allCategories;
   }
 }
-
 
 export async function createCategory(data: CategoryPayload) {
   try {
@@ -32,7 +50,6 @@ export async function createCategory(data: CategoryPayload) {
   }
 }
 
-
 export async function updateCategory(id: string, data: CategoryPayload) {
   try {
     const response = await axiosInstance.put(`/categories/${id}`, data);
@@ -42,7 +59,6 @@ export async function updateCategory(id: string, data: CategoryPayload) {
     throw error;
   }
 }
-
 
 export async function deleteCategory(id: string) {
   try {
@@ -54,12 +70,11 @@ export async function deleteCategory(id: string) {
   }
 }
 
-
-
-
 export async function toggleCategoryStatus(id: string, isActive: boolean) {
   try {
-    const response = await axiosInstance.put(`/categories/${id}`, { is_active: isActive });
+    const response = await axiosInstance.put(`/categories/${id}`, {
+      is_active: isActive,
+    });
     return response.data;
   } catch (error) {
     console.error("Error toggling category status:", error);

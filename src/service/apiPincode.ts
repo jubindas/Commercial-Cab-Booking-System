@@ -7,7 +7,7 @@ export interface PincodePayload {
   districtId?: number;
 }
 
-export async function getAllPincodes(): Promise<PincodePayload[]> {
+export async function getPincode(): Promise<PincodePayload[]> {
   let allPincodes: PincodePayload[] = [];
   let currentPage = 1;
   const limit = 15; // adjust if your API supports a limit
@@ -16,7 +16,9 @@ export async function getAllPincodes(): Promise<PincodePayload[]> {
   try {
     while (hasMore) {
       // Fetch current page
-      const response = await axiosInstance.get(`/pin-codes?page=${currentPage}&limit=${limit}`);
+      const response = await axiosInstance.get(
+        `/pin-codes?page=${currentPage}&limit=${limit}`
+      );
 
       if (response && response.status === 200) {
         const data: PincodePayload[] = response.data.data || [];
@@ -42,7 +44,6 @@ export async function getAllPincodes(): Promise<PincodePayload[]> {
     return allPincodes;
   }
 }
-
 
 export async function createPincode(pinCode: {
   location_id: string;

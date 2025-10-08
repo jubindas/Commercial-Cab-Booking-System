@@ -34,7 +34,6 @@ import { createDistrict, updateDistrict } from "@/service/apiDistrict";
 import { toast } from "sonner";
 import type { State } from "@/table-types/state-table-types";
 
-
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
@@ -48,8 +47,6 @@ export default function DistrictDialog({
   initialData,
   id,
 }: Props) {
-
-
   const [selectedState, setSelectedState] = useState("");
 
   const [districtName, setDistrictName] = useState("");
@@ -57,7 +54,6 @@ export default function DistrictDialog({
   const [districtCode, setDistrictCode] = useState("");
 
   const queryClient = useQueryClient();
-
 
   useEffect(() => {
     if (mode === "edit" && initialData) {
@@ -67,7 +63,6 @@ export default function DistrictDialog({
     }
   }, [mode, initialData]);
 
-  
   const { data: states } = useQuery({
     queryKey: ["states"],
     queryFn: getStates,
@@ -98,7 +93,7 @@ export default function DistrictDialog({
   });
 
   const handleSave = () => {
-    if (!selectedState || !districtName ) {
+    if (!selectedState || !districtName) {
       toast.error("Please fill all fields!");
       return;
     }

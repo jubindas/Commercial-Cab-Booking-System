@@ -1,14 +1,9 @@
 import axiosInstance from "@/lib/axios";
 
-export interface CityPayload {
-  id: number;
-  name: string;
-  state?: string;
-  country?: string;
-}
+import type { City } from "@/table-types/city-table-types";
 
-export async function getAllCities(): Promise<CityPayload[]> {
-  let allCities: CityPayload[] = [];
+export async function getCities(): Promise<City[]> {
+  let allCities: City[] = [];
   let currentPage = 1;
   const limit = 15;
   let hasMore = true;
@@ -19,16 +14,24 @@ export async function getAllCities(): Promise<CityPayload[]> {
         `/cities?page=${currentPage}&limit=${limit}`
       );
 
-      if (response && response.status === 200) {
-        const data: CityPayload[] = response.data.data || [];
+      console.log(response.data.data);
+      if (response?.status === 200) {
+        const data: City[] = response.data.data || [];
 
-        allCities = [...allCities, ...data];
+        allCities = [
+          ...allCities,
+          ...data.map((c) => ({
+            id: c.id,
+            name: c.name,
+            district_id: c.district_id || "",
+            district: c.district || "",
+            code: c.code || "",
+            status: c.status || "active",
+          })),
+        ];
 
-        if (data.length < limit) {
-          hasMore = false;
-        } else {
-          currentPage += 1;
-        }
+        hasMore = data.length === limit;
+        currentPage += 1;
       } else {
         console.log("Unexpected response:", response);
         hasMore = false;

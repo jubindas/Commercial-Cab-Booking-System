@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios";
 
 import type { MembershipData } from "@/table-types/user-membership-types";
 
-export async function getAllUserMemberships(
+export async function getUserMemberships(
   token?: string | null
 ): Promise<MembershipData[]> {
   let allMemberships: MembershipData[] = [];

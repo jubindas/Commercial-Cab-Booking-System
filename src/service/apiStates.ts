@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios";
 
 import type { State } from "@/table-types/state-table-types";
 
-export async function getAllStates(): Promise<State[]> {
+export async function getStates(): Promise<State[]> {
   let allStates: State[] = [];
   let currentPage = 1;
   const limit = 15;

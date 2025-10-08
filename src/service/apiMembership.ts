@@ -9,7 +9,7 @@ export interface MembershipPayload {
   discounted_percentage: number | null;
 }
 
-export async function getAllMemberships(): Promise<MembershipPayload[]> {
+export async function getMemberships(): Promise<MembershipPayload[]> {
   let allMemberships: MembershipPayload[] = [];
   let currentPage = 1;
   const limit = 15; // adjust if API supports a limit

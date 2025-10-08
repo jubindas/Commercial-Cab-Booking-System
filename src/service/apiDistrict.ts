@@ -1,44 +1,38 @@
 import axiosInstance from "@/lib/axios";
 
-export interface DistrictPayload {
-  id: number;
-  name: string;
-  state?: string;
-  country?: string;
-}
+import type { District } from "@/table-types/district-table-types";
 
-export async function getAllDistricts(): Promise<DistrictPayload[]> {
-  let allDistricts: DistrictPayload[] = [];
+
+export async function getDistrict(): Promise<District[]> {
+  let allDistricts: District[] = [];
   let currentPage = 1;
-  const limit = 15; // adjust if your API supports a limit
+  const limit = 15;
   let hasMore = true;
 
   try {
     while (hasMore) {
-      // Fetch the current page
       const response = await axiosInstance.get(`/districts?page=${currentPage}&limit=${limit}`);
-
-      if (response && response.status === 200) {
-        const data: DistrictPayload[] = response.data.data || [];
-
-        // Append fetched data
-        allDistricts = [...allDistricts, ...data];
-
-        // If less than limit, no more pages
-        if (data.length < limit) {
-          hasMore = false;
-        } else {
-          currentPage += 1; // go to next page
-        }
+      if (response?.status === 200) {
+        const data: District[] = response.data.data || [];
+        allDistricts = [
+          ...allDistricts,
+          ...data.map(d => ({
+            id: d.id,
+            name: d.name,
+            state_id: d.state_id || "",
+            code: "",
+            status: "active",
+          }))
+        ];
+        hasMore = data.length === limit;
+        currentPage += 1;
       } else {
-        console.log("Unexpected response:", response);
         hasMore = false;
       }
     }
-
     return allDistricts;
-  } catch (error) {
-    console.error("Error fetching districts:", error);
+  } catch (err) {
+    console.error(err);
     return allDistricts;
   }
 }

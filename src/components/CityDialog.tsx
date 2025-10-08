@@ -6,13 +6,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "@/components/ui/input";
-
 import { Label } from "@/components/ui/label";
-
 import { Button } from "@/components/ui/button";
-
 import {
   Select,
   SelectContent,
@@ -22,15 +18,11 @@ import {
 } from "@/components/ui/select";
 
 import { useState, useEffect } from "react";
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
 
 import { getDistrict } from "@/service/apiDistrict";
-
 import { createCity, updateCity } from "@/service/apiCities";
-
 import type { District } from "@/table-types/district-table-types";
 
 interface Props {
@@ -41,10 +33,8 @@ interface Props {
 }
 
 export default function CityDialog({ mode, trigger, initialData, id }: Props) {
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [cityName, setCityName] = useState("");
-
   const [cityCode, setCityCode] = useState("");
 
   const queryClient = useQueryClient();
@@ -57,8 +47,8 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
     }
   }, [mode, initialData]);
 
-  const { data: districts } = useQuery({
-    queryKey: ["district"],
+  const { data: districts = [] } = useQuery<District[]>({
+    queryKey: ["districts"],
     queryFn: getDistrict,
   });
 
@@ -89,13 +79,13 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   });
 
   const handleSave = () => {
-    if (!selectedDistrict || !cityName ) {
+    if (!selectedDistrict || !cityName) {
       console.log("Please fill all required fields");
       return;
     }
 
     const city = {
-      district_id: selectedDistrict,
+      district_id: Number(selectedDistrict),
       name: cityName,
       code: cityCode,
     };
@@ -136,9 +126,9 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
                 <SelectValue placeholder="Select a district" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {districts?.map((district: District) => (
-                  <SelectItem key={district.id} value={district.id}>
-                    {district.name}
+                {districts.map((d) => (
+                  <SelectItem key={d.id} value={String(d.id)}>
+                    {d.name}
                   </SelectItem>
                 ))}
               </SelectContent>

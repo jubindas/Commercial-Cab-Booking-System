@@ -1,35 +1,36 @@
 import axiosInstance from "@/lib/axios";
+import type { Location } from "@/table-types/location-table-types";
 
-export interface LocationPayload {
-  id: number;
-  name: string;
-  cityId?: number;
-  districtId?: number;
-}
-
-export async function getAllLocations(): Promise<LocationPayload[]> {
-  let allLocations: LocationPayload[] = [];
+export async function getLocation(): Promise<Location[]> {
+  let allLocations: Location[] = [];
   let currentPage = 1;
-  const limit = 15; // adjust if API supports a limit
+  const limit = 15;
   let hasMore = true;
 
   try {
     while (hasMore) {
-      // Fetch current page
-      const response = await axiosInstance.get(`/locations?page=${currentPage}&limit=${limit}`);
+      const response = await axiosInstance.get(
+        `/locations?page=${currentPage}&limit=${limit}`
+      );
 
-      if (response && response.status === 200) {
-        const data: LocationPayload[] = response.data.data || [];
+      if (response?.status === 200) {
+        const data = response.data.data || [];
 
-        // Add to cumulative array
-        allLocations = [...allLocations, ...data];
+        // Map API payload to exactly match Location type
+        allLocations = [
+          ...allLocations,
+          ...data.map((loc: Location) => ({
+            id: String(loc.id),
+            city_id: String(loc.city_id || ""),
+            name: loc.name || "",
+            latitude: loc.latitude ?? null,
+            longitude: loc.longitude ?? null,
+            status: loc.status || "active",
+          })),
+        ];
 
-        // If fewer items than limit, last page reached
-        if (data.length < limit) {
-          hasMore = false;
-        } else {
-          currentPage += 1; // move to next page
-        }
+        hasMore = data.length === limit;
+        currentPage += 1;
       } else {
         console.log("Unexpected response:", response);
         hasMore = false;

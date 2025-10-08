@@ -9,6 +9,7 @@ import { useState } from "react";
 import { pullCarColumns } from "@/table-columns/pull-car-columns";
 
 import type { PullCar } from "@/table-types/pull-car-types";
+import PullCarDialog from "@/components/PullCarDialog";
 
 export default function PullCar() {
   const [search, setSearch] = useState("");
@@ -20,21 +21,13 @@ export default function PullCar() {
 
   console.log("data of pullCar ", pullcardata);
 
-  // const filteredPullcar = pullcardata.filter(
-  //   (pullCar: PullCar) =>
-  //     pullCar.name?.toLowerCase().includes(search.toLowerCase()) ||
-  //     pullCar.desc?.toLowerCase().includes(search.toLowerCase())
-  // );
-
-  // console.log("filterd data", filteredPullcar);
-
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           State
         </h1>
-        pull car dialog
+        <PullCarDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

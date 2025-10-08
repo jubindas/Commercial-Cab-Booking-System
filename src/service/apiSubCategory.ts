@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios";
 
 import type { SubCategory } from "@/table-types/sub-category-table-types";
 
-export async function getAllSubcategories(): Promise<SubCategory[]> {
+export async function getSubcategories(): Promise<SubCategory[]> {
   let allSubcategories: SubCategory[] = [];
   let currentPage = 1;
   const limit = 15;

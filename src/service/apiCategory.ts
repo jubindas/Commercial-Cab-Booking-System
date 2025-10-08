@@ -1,11 +1,12 @@
 import axiosInstance from "@/lib/axios";
 
 export interface CategoryPayload {
+  id: number;
   name: string;
   description?: string;
 }
 
-export async function getAllCategories(): Promise<CategoryPayload[]> {
+export async function getCategories(): Promise<CategoryPayload[]> {
   let allCategories: CategoryPayload[] = [];
   let currentPage = 1;
   const limit = 15;
@@ -17,16 +18,20 @@ export async function getAllCategories(): Promise<CategoryPayload[]> {
         `/categories?page=${currentPage}&limit=${limit}`
       );
 
-      if (response && response.status === 200) {
-        const data: CategoryPayload[] = response.data.data || [];
+      if (response?.status === 200) {
+        const data = response.data.data || [];
 
-        allCategories = [...allCategories, ...data];
+   
+        allCategories = [
+          ...allCategories,
+          ...data.map((cat: CategoryPayload) => ({
+            name: cat.name || "",
+            description: cat.description ?? "",
+          })),
+        ];
 
-        if (data.length < limit) {
-          hasMore = false;
-        } else {
-          currentPage += 1;
-        }
+        hasMore = data.length === limit;
+        currentPage += 1;
       } else {
         console.log("Unexpected response:", response);
         hasMore = false;

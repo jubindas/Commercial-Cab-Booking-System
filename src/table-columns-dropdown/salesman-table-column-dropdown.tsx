@@ -36,24 +36,12 @@ export default function SalesmanTableColumnDropdown({ salesman }: Props) {
             variant="ghost"
             className="justify-start text-zinc-200 hover:bg-zinc-800"
             onClick={() =>
-              navigate(`/salesman/view-details/${salesman.id}`, {
-                state: { salesman },
-              })
-            }
-          >
-           History
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="justify-start text-zinc-200 hover:bg-zinc-800"
-            onClick={() =>
               navigate(`/salesman/wallet/${salesman.id}`, {
                 state: { salesman },
               })
             }
           >
-           Wallet
+            Wallet
           </Button>
 
           <Button
@@ -68,12 +56,12 @@ export default function SalesmanTableColumnDropdown({ salesman }: Props) {
             Edit
           </Button>
 
-                    <Button
+          <Button
             variant="ghost"
             className="justify-start text-zinc-200 hover:bg-zinc-800"
             onClick={() => alert(`Disable salesman ${salesman.id}?`)}
           >
-           Disable
+            Disable
           </Button>
 
           <Button
@@ -81,7 +69,7 @@ export default function SalesmanTableColumnDropdown({ salesman }: Props) {
             className="justify-start text-red-400 hover:bg-zinc-800"
             onClick={() => alert(`Delete salesman ${salesman.id}?`)}
           >
-           Delete
+            Delete
           </Button>
         </div>
       </PopoverContent>

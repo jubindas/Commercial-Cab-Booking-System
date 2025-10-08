@@ -12,6 +12,7 @@ import { AuthProvider } from "@/provider/authContext";
 
 import { useAuth } from "./hooks/useAuth";
 import Vendors from "./pages/Vendors";
+import PullCar from "./pages/PullCar";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
@@ -48,8 +49,6 @@ const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const TotalSalesMan = lazy(() => import("@/pages/TotalSalesMan"));
 
 const TotalUsers = lazy(() => import("@/pages/TotalUsers"));
-
-const SaledMembership = lazy(() => import("@/pages/SaledMembership"));
 
 const UserMembership = lazy(() => import("@/pages/UserMembership"));
 
@@ -200,14 +199,7 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "salesman/view-details/:id",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SaledMembership />
-          </Suspense>
-        ),
-      },
+
       {
         path: "user-membership",
         element: (
@@ -227,6 +219,10 @@ const router = createBrowserRouter([
       {
         path: "vendors",
         element: <Vendors />,
+      },
+        {
+        path: "pull-car",
+        element: <PullCar />,
       },
       {
         path: "/view-details/:id",

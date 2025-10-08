@@ -1,16 +1,40 @@
 import { DataTable } from "@/components/data-table";
 
-import { saledMembershipColumns } from "@/table-columns/saled-membership-table-columns";
+import { useQuery } from "@tanstack/react-query";
 
-import { saledMembershipData } from "@/table-datas/saled-membership-data";
+import { getPullCar } from "@/service/apiPullcar";
 
-export default function SaledMembership() {
+import { useState } from "react";
+
+import { pullCarColumns } from "@/table-columns/pull-car-columns";
+
+import type { PullCar } from "@/table-types/pull-car-types";
+
+export default function PullCar() {
+  const [search, setSearch] = useState("");
+
+  const { data: pullcardata } = useQuery({
+    queryKey: ["pulllcar"],
+    queryFn: getPullCar,
+  });
+
+  console.log("data of pullCar ", pullcardata);
+
+  // const filteredPullcar = pullcardata.filter(
+  //   (pullCar: PullCar) =>
+  //     pullCar.name?.toLowerCase().includes(search.toLowerCase()) ||
+  //     pullCar.desc?.toLowerCase().includes(search.toLowerCase())
+  // );
+
+  // console.log("filterd data", filteredPullcar);
+
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-          Saled Membership
+          State
         </h1>
+        pull car dialog
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -31,17 +55,21 @@ export default function SaledMembership() {
           <input
             type="text"
             placeholder="Type to search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
         </div>
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        <DataTable
-          data={saledMembershipData}
-          columns={saledMembershipColumns}
-          enablePagination
-        />
+        {pullcardata && (
+          <DataTable
+            data={pullcardata}
+            columns={pullCarColumns}
+            enablePagination
+          />
+        )}
       </div>
     </div>
   );

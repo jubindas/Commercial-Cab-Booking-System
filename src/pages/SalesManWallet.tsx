@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 export default function SalesManWallet() {
   const [credited, setCredited] = useState(5000);
   const [debited, setDebited] = useState(1500);
@@ -10,6 +11,8 @@ export default function SalesManWallet() {
     { id: 1, name: "Withdraw ₹1000", amount: 1000, status: "pending" },
     { id: 2, name: "Withdraw ₹500", amount: 500, status: "pending" },
   ]);
+
+
 
   const approveRequest = (id: number) => {
     setRequests((prev) =>

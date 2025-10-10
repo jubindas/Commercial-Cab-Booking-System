@@ -4,9 +4,6 @@ import { API_BASE_URL } from "@/lib/db";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 axiosInstance.interceptors.request.use(

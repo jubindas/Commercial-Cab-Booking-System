@@ -1,4 +1,8 @@
 export interface PullCar {
+  image4: string;
+  image3: string;
+  image2: string;
+  image1: string;
   id: number;
   name: string;
   price: number;
@@ -10,5 +14,5 @@ export interface PullCar {
   location_end: string;
   status: string;
   created_at: string;
-  images: string[]
+  images: string[];
 }

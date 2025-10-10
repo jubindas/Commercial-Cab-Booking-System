@@ -65,26 +65,10 @@ export const pullCarColumns: ColumnDef<PullCar>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => (
-      <PullCarTableColumnsDropdown
-        id={row.original.id}
-        rowData={{
-          id: row.original.id,
-          name: row.original.name || "",
-          description: row.original.description || "",
-          price: row.original.price,
-          capacity: row.original.capacity,
-          journey_start_time: row.original.journey_start_time,
-          location_start: row.original.location_start,
-          location_end: row.original.location_end,
-          car_details: row.original.car_details || "",
-          image1: row.original.image1 || null,
-          image2: row.original.image2 || null,
-          image3: row.original.image3 || null,
-          image4: row.original.image4 || null,
-          created_at: row.original.created_at || "",
-        }}
-      />
-    ),
+    cell: ({ row }) => {
+      return (
+        <PullCarTableColumnsDropdown id={row.original.id} row={row.original} />
+      );
+    },
   },
 ];

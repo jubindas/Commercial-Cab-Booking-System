@@ -1,48 +1,14 @@
 import axiosInstance from "@/lib/axios";
-import type { Location } from "@/table-types/location-table-types";
 
-export async function getLocation(): Promise<Location[]> {
-  let allLocations: Location[] = [];
-  let currentPage = 1;
-  const limit = 15;
-  let hasMore = true;
-
+export const getLocation = async () => {
   try {
-    while (hasMore) {
-      const response = await axiosInstance.get(
-        `/locations?page=${currentPage}&limit=${limit}`
-      );
+    const res = await axiosInstance.get("/locations");
 
-      if (response?.status === 200) {
-        const data = response.data.data || [];
-
-        // Map API payload to exactly match Location type
-        allLocations = [
-          ...allLocations,
-          ...data.map((loc: Location) => ({
-            id: String(loc.id),
-            city_id: String(loc.city_id || ""),
-            name: loc.name || "",
-            latitude: loc.latitude ?? null,
-            longitude: loc.longitude ?? null,
-            status: loc.status || "active",
-          })),
-        ];
-
-        hasMore = data.length === limit;
-        currentPage += 1;
-      } else {
-        console.log("Unexpected response:", response);
-        hasMore = false;
-      }
-    }
-
-    return allLocations;
+    return res.data.data;
   } catch (error) {
-    console.error("Error fetching locations:", error);
-    return allLocations;
+    console.log("the err is", error);
   }
-}
+};
 
 export async function createLocation(locations: {
   city_id: string;

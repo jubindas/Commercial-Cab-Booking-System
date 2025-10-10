@@ -1,7 +1,7 @@
 export type MainCategory = {
-  id: string
+  id?: string
   name: string
-  description: string
+  description?: string
   is_active: boolean;
 
 }

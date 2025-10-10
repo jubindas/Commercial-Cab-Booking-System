@@ -1,49 +1,14 @@
 import axiosInstance from "@/lib/axios";
 
-import type { City } from "@/table-types/city-table-types";
-
-export async function getCities(): Promise<City[]> {
-  let allCities: City[] = [];
-  let currentPage = 1;
-  const limit = 15;
-  let hasMore = true;
-
+export const getCities = async () => {
   try {
-    while (hasMore) {
-      const response = await axiosInstance.get(
-        `/cities?page=${currentPage}&limit=${limit}`
-      );
+    const res = await axiosInstance.get("/cities");
 
-      console.log(response.data.data);
-      if (response?.status === 200) {
-        const data: City[] = response.data.data || [];
-
-        allCities = [
-          ...allCities,
-          ...data.map((c) => ({
-            id: c.id,
-            name: c.name,
-            district_id: c.district_id || "",
-            district: c.district || "",
-            code: c.code || "",
-            status: c.status || "active",
-          })),
-        ];
-
-        hasMore = data.length === limit;
-        currentPage += 1;
-      } else {
-        console.log("Unexpected response:", response);
-        hasMore = false;
-      }
-    }
-
-    return allCities;
+    return res.data.data;
   } catch (error) {
-    console.error("Error fetching cities:", error);
-    return allCities;
+    console.log("the err is", error);
   }
-}
+};
 
 export async function createCity(city: {
   district_id: string;

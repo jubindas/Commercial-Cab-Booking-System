@@ -9,42 +9,15 @@ export interface MembershipPayload {
   discounted_percentage: number | null;
 }
 
-export async function getMemberships(): Promise<MembershipPayload[]> {
-  let allMemberships: MembershipPayload[] = [];
-  let currentPage = 1;
-  const limit = 15; // adjust if API supports a limit
-  let hasMore = true;
-
+export const getMemberships = async () => {
   try {
-    while (hasMore) {
-      // Fetch current page
-      const response = await axiosInstance.get(`/memberships?page=${currentPage}&limit=${limit}`);
+    const response = await axiosInstance.get(`/memberships`);
 
-      if (response && response.status === 200) {
-        const data: MembershipPayload[] = response.data.data || [];
-
-        // Append fetched data
-        allMemberships = [...allMemberships, ...data];
-
-        // If fewer items than limit, last page reached
-        if (data.length < limit) {
-          hasMore = false;
-        } else {
-          currentPage += 1; // move to next page
-        }
-      } else {
-        console.log("Unexpected response:", response);
-        hasMore = false;
-      }
-    }
-
-    return allMemberships;
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching memberships:", error);
-    return allMemberships;
   }
-}
-
+};
 
 export async function createMembership(data: MembershipPayload) {
   try {

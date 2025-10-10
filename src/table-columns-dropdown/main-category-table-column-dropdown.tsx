@@ -29,7 +29,7 @@ import { toggleCategoryStatus } from "@/service/apiCategory";
 import MainCategoryDialog from "@/components/MainCategoryDialog";
 
 interface Props {
-  id: string | number;
+  id: string | undefined;
   rowData?: { name: string; description: string; is_active: boolean };
 }
 
@@ -44,7 +44,7 @@ export default function MainCategoryTableColumnDropdown({
       id,
       isActive,
     }: {
-      id: string | number;
+      id: string | undefined;
       isActive: boolean;
     }) => toggleCategoryStatus(String(id), isActive),
     onSuccess: () => {
@@ -114,9 +114,13 @@ export default function MainCategoryTableColumnDropdown({
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() =>
-                    toggleMutation.mutate({ id, isActive: !rowData?.is_active })
-                  }
+                  onClick={() => {
+                    console.log("the active status is", rowData?.is_active);
+                    toggleMutation.mutate({
+                      id,
+                      isActive: !rowData?.is_active,
+                    });
+                  }}
                   disabled={toggleMutation.isPending}
                   className={rowData?.is_active ? "bg-red-500" : "bg-green-500"}
                 >

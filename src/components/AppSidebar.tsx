@@ -66,10 +66,10 @@ const items: MenuItem[] = [
   {
     title: "Sales Man",
     icon: Briefcase,
-    children: [{ title: "Total Sales Man", url: "/total-salesman" }],
+    url: "/total-salesman",
   },
 
-    { title: "Pull Car", url: "/pull-car", icon: Car },
+  { title: "Pull Car", url: "/pull-car", icon: Car },
 
   { title: "Total User", url: "/totaluser", icon: User },
 

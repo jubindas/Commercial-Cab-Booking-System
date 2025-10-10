@@ -1,41 +1,14 @@
 import axiosInstance from "@/lib/axios";
 
-import type { SubCategory } from "@/table-types/sub-category-table-types";
-
-export async function getSubcategories(): Promise<SubCategory[]> {
-  let allSubcategories: SubCategory[] = [];
-  let currentPage = 1;
-  const limit = 15;
-  let hasMore = true;
-
+export const getSubcategories = async () => {
   try {
-    while (hasMore) {
-      const response = await axiosInstance.get(
-        `/sub-categories?page=${currentPage}&limit=${limit}`
-      );
+    const response = await axiosInstance.get(`/sub-categories`);
 
-      if (response && response.status === 200) {
-        const data: SubCategory[] = response.data.data || [];
-
-        allSubcategories = [...allSubcategories, ...data];
-
-        if (data.length < limit) {
-          hasMore = false;
-        } else {
-          currentPage += 1;
-        }
-      } else {
-        console.warn("Unexpected response:", response);
-        hasMore = false;
-      }
-    }
-
-    return allSubcategories;
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching subcategories:", error);
-    return allSubcategories;
   }
-}
+};
 
 export async function createSubcategory(data: {
   name: string;

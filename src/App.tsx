@@ -11,7 +11,9 @@ import { Suspense, lazy, type ReactNode } from "react";
 import { AuthProvider } from "@/provider/authContext";
 
 import { useAuth } from "./hooks/useAuth";
+
 import Vendors from "./pages/Vendors";
+
 import PullCar from "./pages/PullCar";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
@@ -220,7 +222,7 @@ const router = createBrowserRouter([
         path: "vendors",
         element: <Vendors />,
       },
-        {
+      {
         path: "pull-car",
         element: <PullCar />,
       },
@@ -251,6 +253,7 @@ function App() {
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
     </QueryClientProvider>
   );
 }

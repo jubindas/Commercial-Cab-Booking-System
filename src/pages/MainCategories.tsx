@@ -11,7 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import { useState } from "react";
-import type { MainCategory } from "@/table-types/main-category-table-types";
 
 export default function MainCategories() {
   const [search, setSearch] = useState("");
@@ -20,15 +19,13 @@ export default function MainCategories() {
     queryFn: getCategories,
   });
 
+  console.log("the categories are", categories);
+
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
-  const filteredCategories = categories.filter(
-    (category: MainCategory) =>
-      category.name?.toLowerCase().includes(search.toLowerCase()) ||
-      category.description?.toLowerCase().includes(search.toLowerCase())
-  );
+ 
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -67,7 +64,7 @@ export default function MainCategories() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {categories && (
           <DataTable
-            data={filteredCategories}
+            data={categories}
             columns={columns}
             enablePagination
           />

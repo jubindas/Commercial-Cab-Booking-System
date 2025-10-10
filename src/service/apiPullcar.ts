@@ -1,82 +1,55 @@
 import axiosInstance from "@/lib/axios";
 
-import type { PullCar } from "@/table-types/pull-car-types";
-
-
-
-export const getAllPullCars = async (): Promise<PullCar[]> => {
-  let allPullCars: PullCar[] = [];
-  let currentPage = 1;
-  const limit = 15;
-  let hasMore = true;
-
+export const getAllPullCars = async () => {
   try {
-    while (hasMore) {
-      const response = await axiosInstance.get(
-        `/pullcars?page=${currentPage}&limit=${limit}`
-      );
+    const response = await axiosInstance.get(`/pullcars`);
 
-      if (response && response.status === 200) {
-        const data: PullCar[] = response.data.data || [];
-
-        allPullCars = [...allPullCars, ...data];
-
-        if (data.length < limit) {
-          hasMore = false;
-        } else {
-          currentPage += 1;
-        }
-      } else {
-        console.log("Unexpected response:", response);
-        hasMore = false;
-      }
-    }
-    console.log("the cars are", allPullCars);
-
-    return allPullCars;
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching pull cars:", error);
-    return allPullCars;
   }
 };
 
-export const createPullCar = async (payload: {
-  name?: string | null;
-  car_details?: string | null;
-  description?: string | null;
-  price: number;
-  journey_start_time: string;
-  capacity: number;
-  location_start: string;
-  location_end: string;
-  images?: string[] | null;
-}) => {
+export const createPullCar = async (payload: FormData) => {
   try {
-    const response = await axiosInstance.post("/pullcars", payload);
-
+    console.log("Sending payload to /pullcars:", payload);
+    const response = await axiosInstance.post("/pullcars", payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("Pull car created successfully:", response.data);
     return response.data;
-  } catch (error) {
-    console.error("Error creating pull car:", error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("❌ Error creating pull car:", error.response?.data || error);
     throw error;
   }
 };
 
 export const updatePullCar = async (
   id: number,
-  payload: {
-    name?: string | null;
-    car_details?: string | null;
-    description?: string | null;
-    price?: number;
-    journey_start_time?: string;
-    capacity?: number;
-    location_start?: string;
-    location_end?: string;
-    images?: string[] | null;
-  }
+  data:
+    | FormData
+    | {
+        name?: string | null;
+        car_details?: string | null;
+        description?: string | null;
+        price?: number;
+        journey_start_time?: string;
+        capacity?: number;
+        location_start?: string;
+        location_end?: string;
+        images?: string[];
+      }
 ) => {
   try {
-    const response = await axiosInstance.put(`/pullcars/${id}`, payload);
+    console.log("the paylod is", id, data);
+    const response = await axiosInstance.put(`/pullcars/${id}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(`Error updating pull car ${id}:`, error);
@@ -84,12 +57,17 @@ export const updatePullCar = async (
   }
 };
 
-export const deletePullCar = async (id: number) => {
+
+
+export const deletePullCar = async (id: string) => {
+  console.log("Attempting to delete pull car with ID:", id);
   try {
     const response = await axiosInstance.delete(`/pullcars/${id}`);
+    console.log("Backend responded:", response);
+    console.log(" Response data:", response.data);
     return response.data;
   } catch (error) {
-    console.error(`Error deleting pull car ${id}:`, error);
+    console.error("Error deleting pull car:", error);
     throw error;
   }
 };

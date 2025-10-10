@@ -1,53 +1,36 @@
 import { DataTable } from "@/components/data-table";
-
-import { stateColumns } from "@/table-columns/state-table-columns";
-
-import { getStates } from "@/service/apiStates";
-
 import { useQuery } from "@tanstack/react-query";
-
-import StatesDialog from "@/components/StatesDialog";
-
-import LoadingSkeleton from "@/components/LoadingSkeleton";
-
-import type { State } from "@/table-types/state-table-types";
-
+import { salesReferralPullCar } from "@/service/apiSalesman";
 import { useState } from "react";
+import { pullCarColumns } from "@/table-columns/pull-car-columns";
+import type { PullCar } from "@/table-types/pull-car-types";
+import PullCarDialog from "@/components/PullCarDialog";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function State() {
+export default function SalesManReferralPullCar(id: number) {
   const [search, setSearch] = useState("");
 
+  const { token } = useAuth();
+
   const {
-    data: states,
+    data: pullcarReferralData,
     isLoading,
-    isError,
     error,
   } = useQuery({
-    queryKey: ["states"],
-    queryFn: getStates,
+    queryKey: ["salesReferralPullCar"],
+    queryFn: () => salesReferralPullCar(id, token),
+    enabled: !!id && !!token,
   });
 
-  console.log("States data:", states);
-
-  if (isLoading) {
-    return <LoadingSkeleton />;
-  }
-
-  if (isError) {
-    return (
-      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
-    );
-  }
-
-
+  console.log("Salesman Referral PullCar data:", pullcarReferralData);
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-          State
+          Salesman Referral Pull Cars
         </h1>
-        <StatesDialog mode="create" />
+        <PullCarDialog mode="create" />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -76,12 +59,18 @@ export default function State() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {states && (
+        {isLoading ? (
+          <div className="p-6 text-center text-zinc-500">Loading...</div>
+        ) : error ? (
+          <div className="p-6 text-center text-red-500">Error loading data</div>
+        ) : pullcarReferralData ? (
           <DataTable
-            data={states}
-            columns={stateColumns}
+            data={pullcarReferralData as PullCar[]}
+            columns={pullCarColumns}
             enablePagination
           />
+        ) : (
+          <div className="p-6 text-center text-zinc-500">No data available</div>
         )}
       </div>
     </div>

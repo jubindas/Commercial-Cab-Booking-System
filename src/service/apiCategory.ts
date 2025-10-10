@@ -1,51 +1,18 @@
 import axiosInstance from "@/lib/axios";
 
-export interface CategoryPayload {
-  id: number;
-  name: string;
-  description?: string;
-}
+import type { MainCategory } from "@/table-types/main-category-table-types";
 
-export async function getCategories(): Promise<CategoryPayload[]> {
-  let allCategories: CategoryPayload[] = [];
-  let currentPage = 1;
-  const limit = 15;
-  let hasMore = true;
-
+export const getCategories = async () => {
   try {
-    while (hasMore) {
-      const response = await axiosInstance.get(
-        `/categories?page=${currentPage}&limit=${limit}`
-      );
-
-      if (response?.status === 200) {
-        const data = response.data.data || [];
-
-   
-        allCategories = [
-          ...allCategories,
-          ...data.map((cat: CategoryPayload) => ({
-            name: cat.name || "",
-            description: cat.description ?? "",
-          })),
-        ];
-
-        hasMore = data.length === limit;
-        currentPage += 1;
-      } else {
-        console.log("Unexpected response:", response);
-        hasMore = false;
-      }
-    }
-
-    return allCategories;
+    const res = await axiosInstance.get("/categories");
+    console.log("the category response is", res);
+    return res.data.data;
   } catch (error) {
     console.error("Error fetching categories:", error);
-    return allCategories;
   }
-}
+};
 
-export async function createCategory(data: CategoryPayload) {
+export async function createCategory(data: MainCategory) {
   try {
     const response = await axiosInstance.post("/categories", data);
     return response.data;
@@ -55,7 +22,7 @@ export async function createCategory(data: CategoryPayload) {
   }
 }
 
-export async function updateCategory(id: string, data: CategoryPayload) {
+export async function updateCategory(id: string, data: MainCategory) {
   try {
     const response = await axiosInstance.put(`/categories/${id}`, data);
     return response.data;
@@ -77,9 +44,11 @@ export async function deleteCategory(id: string) {
 
 export async function toggleCategoryStatus(id: string, isActive: boolean) {
   try {
+    console.log("the backend data", id, isActive);
     const response = await axiosInstance.put(`/categories/${id}`, {
       is_active: isActive,
     });
+    console.log("the response", response.data);
     return response.data;
   } catch (error) {
     console.error("Error toggling category status:", error);

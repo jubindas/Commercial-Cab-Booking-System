@@ -50,7 +50,11 @@ export default function MainCategoryDialog({
   }, [mode, initialData]);
 
   const mutation = useMutation({
-    mutationFn: (data: { name: string; description?: string }) =>
+    mutationFn: (data: {
+      name: string;
+      description?: string;
+      is_active: boolean;
+    }) =>
       mode === "create"
         ? createCategory(data)
         : updateCategory(String(id), data),
@@ -83,7 +87,12 @@ export default function MainCategoryDialog({
       toast.error("Category name is required!");
       return;
     }
-    mutation.mutate(formData);
+
+    mutation.mutate({
+      name: formData.name,
+      description: formData.description || "",
+      is_active: true,
+    });
   }
 
   return (

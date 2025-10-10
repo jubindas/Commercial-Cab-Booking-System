@@ -1,6 +1,9 @@
 import type { PullCar } from "@/table-types/pull-car-types";
+
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import { MoreVertical } from "lucide-react";
 
 import {
@@ -20,22 +23,25 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import PullCarDialog from "@/components/PullCarDialog";
+
 import { deletePullCar } from "@/service/apiPullcar";
 
 interface Props {
-  id: number;
-  rowData: PullCar;
+  id: string;
+  row: PullCar;
 }
 
-export default function PullCarTableColumnsDropdown({ id, rowData }: Props) {
+export default function PullCarTableColumnsDropdown({ id, row }: Props) {
   const queryClient = useQueryClient();
+
   const [openDialog, setOpenDialog] = useState(false);
 
   const deleteMutation = useMutation({
-    mutationFn: (pullCarId: number) => deletePullCar(pullCarId),
+    mutationFn: (pullCarId: string) => deletePullCar(pullCarId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pullcars"] });
       toast.success("Pull car deleted successfully");
@@ -60,7 +66,7 @@ export default function PullCarTableColumnsDropdown({ id, rowData }: Props) {
             <PullCarDialog
               mode="edit"
               id={id}
-              initialData={rowData}
+              initialData={row}
               trigger={
                 <Button
                   variant="ghost"
@@ -93,7 +99,10 @@ export default function PullCarTableColumnsDropdown({ id, rowData }: Props) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => deleteMutation.mutate(id)}
+              onClick={() => {
+                console.log("the id from dialog", id);
+                deleteMutation.mutate(id);
+              }}
               disabled={deleteMutation.isPending}
               className="bg-red-500"
             >

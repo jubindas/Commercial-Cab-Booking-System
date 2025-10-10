@@ -36,15 +36,7 @@ const District = lazy(() => import("@/pages/District"));
 
 const City = lazy(() => import("@/pages/City"));
 
-const Membership = lazy(() => import("@/pages/Membership"));
-
-const VendorsViewDetails = lazy(() => import("@/pages/VendorsViewDetails"));
-
-const CreatedVendors = lazy(() => import("@/pages/CreatedVendors"));
-
 const VendorProfile = lazy(() => import("@/pages/VendorProfile"));
-
-const HistoryVendors = lazy(() => import("@/pages/HistoryVendors"));
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 
@@ -52,7 +44,9 @@ const TotalSalesMan = lazy(() => import("@/pages/TotalSalesMan"));
 
 const TotalUsers = lazy(() => import("@/pages/TotalUsers"));
 
-const UserMembership = lazy(() => import("@/pages/UserMembership"));
+const PerticulerMembership = lazy(() => import("@/pages/PerticulerMembership"));
+
+const Memberships = lazy(() => import("@/pages/Memberships"));
 
 const SalesManWallet = lazy(() => import("@/pages/SalesManWallet"));
 
@@ -154,18 +148,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "membership",
+        path: "/membership-details/:id",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <Membership />
-          </Suspense>
-        ),
-      },
-      {
-        path: "created-vendor",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <CreatedVendors />
+            <PerticulerMembership />
           </Suspense>
         ),
       },
@@ -174,14 +160,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <VendorProfile />
-          </Suspense>
-        ),
-      },
-      {
-        path: "history",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <HistoryVendors />
           </Suspense>
         ),
       },
@@ -203,10 +181,10 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "user-membership",
+        path: "membership",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <UserMembership />
+            <Memberships />
           </Suspense>
         ),
       },
@@ -227,17 +205,10 @@ const router = createBrowserRouter([
         element: <PullCar />,
       },
       {
-        path: "/view-details/:id",
+        path: "/view-details/pull-cars/:id",
         element: (
           <Suspense fallback={<div>Loading vendor details...</div>}>
-            <VendorsViewDetails
-              vendor={{
-                name: "ABC Travels",
-                phone: "9876543210",
-                idCardImage: "https://example.com/id-card.png",
-                addressProofImage: "https://example.com/address-proof.png",
-              }}
-            />
+            <h1>view pull cars details</h1>
           </Suspense>
         ),
       },

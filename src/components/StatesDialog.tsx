@@ -51,6 +51,7 @@ export default function StatesDialog({
       queryClient.invalidateQueries({ queryKey: ["states"] });
       console.log(`State ${mode === "create" ? "created" : "updated"}:`, data);
       toast.success(`State ${mode === "create" ? "created" : "updated"}`);
+      setFormData({ name: "", code: "" });
     },
     onError: (err) => {
       console.error(`Failed to ${mode} state:`, err);

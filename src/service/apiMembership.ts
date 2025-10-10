@@ -51,3 +51,12 @@ export async function deleteMembership(id: string | number) {
     throw error;
   }
 }
+
+export async function getMembershipById(id:  number) {
+  try {
+    const res = await axiosInstance.get(`/memberships/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log("the error is", error);
+  }
+}

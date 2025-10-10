@@ -1,13 +1,8 @@
 import { DataTable } from "@/components/data-table";
-
 import { useQuery } from "@tanstack/react-query";
-
 import { getAllPullCars } from "@/service/apiPullcar";
-
-import { useState } from "react";
-
+import { useState, useMemo } from "react";
 import { pullCarColumns } from "@/table-columns/pull-car-columns";
-
 import type { PullCar } from "@/table-types/pull-car-types";
 import PullCarDialog from "@/components/PullCarDialog";
 
@@ -19,13 +14,16 @@ export default function PullCar() {
     queryFn: getAllPullCars,
   });
 
-  console.log("data of pullCar ", pullcardata);
+  const sortedData = useMemo(() => {
+    if (!pullcardata) return [];
+    return [...pullcardata].sort((a: PullCar, b: PullCar) => a.id - b.id);
+  }, [pullcardata]);
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-     Pull Car
+          Pull Car
         </h1>
         <PullCarDialog mode="create" />
       </div>
@@ -56,9 +54,9 @@ export default function PullCar() {
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-        {pullcardata && (
+        {sortedData && (
           <DataTable
-            data={pullcardata}
+            data={sortedData}
             columns={pullCarColumns}
             enablePagination
           />

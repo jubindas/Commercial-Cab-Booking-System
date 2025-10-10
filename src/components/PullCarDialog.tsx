@@ -130,6 +130,20 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
     setOpen(false);
   };
 
+  const formatDateForMySQL = (date: Date) => {
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1); 
+    const day = pad(date.getDate());
+
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -160,7 +174,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
       formData.append("price", price.toString());
       formData.append(
         "journey_start_time",
-        journeyStartTime ? journeyStartTime.toISOString() : ""
+        journeyStartTime ? formatDateForMySQL(journeyStartTime) : ""
       );
 
       formData.append("capacity", capacity.toString());
@@ -281,7 +295,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
                   selected={journeyStartTime}
                   onSelect={(date) => {
                     setJourneyStartTime(date);
-                    setCalendarOpen(false); 
+                    setCalendarOpen(false);
                   }}
                   disabled={(date) => date < new Date()}
                   className="rounded-lg border shadow-sm bg-gray-50 p-2"
@@ -378,7 +392,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
                       key={`existing-${index}`}
                       className="relative px-2 py-0.5 bg-purple-100 text-purple-800 text-xs rounded-md shadow-sm flex items-center"
                     >
-                      {url.split("/").pop()} 
+                      {url.split("/").pop()}
                       <button
                         type="button"
                         onClick={() => {

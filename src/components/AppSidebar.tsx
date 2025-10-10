@@ -6,7 +6,6 @@ import {
   MapPin,
   ChevronRight,
   ChevronDown,
-  History,
   Briefcase,
   Car,
   Contact,
@@ -72,8 +71,6 @@ const items: MenuItem[] = [
   { title: "Pull Car", url: "/pull-car", icon: Car },
 
   { title: "Total User", url: "/totaluser", icon: User },
-
-  { title: "History", url: "/history", icon: History },
 ];
 
 export function AppSidebar() {

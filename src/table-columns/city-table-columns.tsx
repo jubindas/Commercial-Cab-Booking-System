@@ -20,9 +20,9 @@ export const cityColumns: ColumnDef<City>[] = [
     ),
   },
   {
-    accessorKey: "district.code",
-    header: "District Code",
-    cell: ({ row }) => row.original.district?.code || "-",
+    accessorKey: "code",
+    header: "City Code",
+    cell: ({ row }) => row.original.code || "-",
   },
 
   {

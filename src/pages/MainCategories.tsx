@@ -12,6 +12,8 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import { useState } from "react";
 
+import type { MainCategory } from "@/table-types/main-category-table-types";
+
 export default function MainCategories() {
   const [search, setSearch] = useState("");
   const { data: categories, isLoading } = useQuery({
@@ -25,6 +27,9 @@ export default function MainCategories() {
     return <LoadingSkeleton />;
   }
 
+    const filteredCategories = categories?.filter((cat: MainCategory) =>
+    cat.name.toLowerCase().includes(search.toLowerCase())
+  );
  
 
   return (
@@ -64,7 +69,7 @@ export default function MainCategories() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {categories && (
           <DataTable
-            data={categories}
+            data={filteredCategories}
             columns={columns}
             enablePagination
           />

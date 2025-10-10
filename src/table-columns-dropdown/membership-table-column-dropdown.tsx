@@ -88,7 +88,7 @@ export default function MembershipTableColumnDropdown({ id, rowData }: Props) {
             <Button
               variant="ghost"
               className="justify-start text-zinc-200 hover:bg-zinc-700"
-              onClick={() => navigate(`/user-membership`)}
+              onClick={() => navigate(`/membership-details/${id}`)}
             >
               View Details
             </Button>

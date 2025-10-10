@@ -39,7 +39,9 @@ export default function State() {
     );
   }
 
-
+  const filteredStates = states?.filter((state: State) =>
+    state.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -78,7 +80,7 @@ export default function State() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {states && (
           <DataTable
-            data={states}
+            data={filteredStates}
             columns={stateColumns}
             enablePagination
           />

@@ -30,8 +30,10 @@ import PullCarDialog from "@/components/PullCarDialog";
 
 import { deletePullCar } from "@/service/apiPullcar";
 
+import { useNavigate } from "react-router-dom";
+
 interface Props {
-  id: string;
+  id: number;
   row: PullCar;
 }
 
@@ -51,6 +53,17 @@ export default function PullCarTableColumnsDropdown({ id, row }: Props) {
       toast.error("Failed to delete pull car");
     },
   });
+
+  const navigate = useNavigate();
+
+
+
+
+  const viewDetails = (id: number)=>{
+
+    navigate(`/view-details/pull-cars/${id}`);
+
+  }
 
   return (
     <>
@@ -79,6 +92,14 @@ export default function PullCarTableColumnsDropdown({ id, row }: Props) {
 
             <Button
               variant="ghost"
+              className="justify-start text-zinc-200 hover:bg-zinc-700"
+              onClick={() => viewDetails(id)}
+            >
+              View Details
+            </Button>
+
+            <Button
+              variant="ghost"
               className="justify-start text-red-500 hover:bg-zinc-700"
               onClick={() => setOpenDialog(true)}
             >
@@ -101,7 +122,7 @@ export default function PullCarTableColumnsDropdown({ id, row }: Props) {
             <AlertDialogAction
               onClick={() => {
                 console.log("the id from dialog", id);
-                deleteMutation.mutate(id);
+                deleteMutation.mutate(id.toString());
               }}
               disabled={deleteMutation.isPending}
               className="bg-red-500"

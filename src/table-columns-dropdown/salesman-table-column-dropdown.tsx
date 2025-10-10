@@ -47,10 +47,7 @@ export default function SalesmanTableColumnDropdown({ salesman }: Props) {
           <Button
             variant="ghost"
             className="justify-start text-zinc-200 hover:bg-zinc-800"
-            onClick={() =>
-              navigate(`/salesman/edit/${salesman.id}`, {
-                state: { salesman },
-              })
+            onClick={() => alert(`edit clickd ${salesman.id}` )
             }
           >
             Edit

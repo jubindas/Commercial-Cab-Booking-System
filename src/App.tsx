@@ -16,6 +16,8 @@ import Vendors from "./pages/Vendors";
 
 import PullCar from "./pages/PullCar";
 
+import ViewPullCarDetails from "./pages/ViewPullCarDetails";
+
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
 const Login = lazy(() => import("@/pages/Login"));
@@ -208,7 +210,7 @@ const router = createBrowserRouter([
         path: "/view-details/pull-cars/:id",
         element: (
           <Suspense fallback={<div>Loading vendor details...</div>}>
-            <h1>view pull cars details</h1>
+            <ViewPullCarDetails />
           </Suspense>
         ),
       },

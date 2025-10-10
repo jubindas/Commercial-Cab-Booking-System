@@ -1,10 +1,17 @@
 import { DataTable } from "@/components/data-table";
+
 import { useQuery } from "@tanstack/react-query";
+
 import { salesReferralPullCar } from "@/service/apiSalesman";
+
 import { useState } from "react";
+
 import { pullCarColumns } from "@/table-columns/pull-car-columns";
+
 import type { PullCar } from "@/table-types/pull-car-types";
+
 import PullCarDialog from "@/components/PullCarDialog";
+
 import { useAuth } from "@/hooks/useAuth";
 
 export default function SalesManReferralPullCar(id: number) {

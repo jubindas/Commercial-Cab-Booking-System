@@ -1,18 +1,26 @@
 import { DataTable } from "@/components/data-table";
+
 import { useQuery } from "@tanstack/react-query";
+
 import { getAllPullCars } from "@/service/apiPullcar";
+
 import { useState, useMemo } from "react";
+
 import { pullCarColumns } from "@/table-columns/pull-car-columns";
+
 import type { PullCar } from "@/table-types/pull-car-types";
+
 import PullCarDialog from "@/components/PullCarDialog";
 
 export default function PullCar() {
-  const [search, setSearch] = useState("");
 
+  const [search, setSearch] = useState("");
   const { data: pullcardata } = useQuery({
     queryKey: ["pullcar"],
     queryFn: getAllPullCars,
   });
+
+  console.log("the pull cars are", pullcardata);
 
   const sortedData = useMemo(() => {
     if (!pullcardata) return [];

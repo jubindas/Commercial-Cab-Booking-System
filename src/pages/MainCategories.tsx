@@ -27,10 +27,9 @@ export default function MainCategories() {
     return <LoadingSkeleton />;
   }
 
-    const filteredCategories = categories?.filter((cat: MainCategory) =>
+  const filteredCategories = categories?.filter((cat: MainCategory) =>
     cat.name.toLowerCase().includes(search.toLowerCase())
   );
- 
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

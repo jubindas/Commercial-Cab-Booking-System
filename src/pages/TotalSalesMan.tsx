@@ -3,6 +3,7 @@ import { DataTable } from "@/components/data-table";
 import {dataSalesmen} from "@/table-datas/total-sales-man-table-datas"
 
 import {salesmanColumns} from "@/table-columns/total-sales-man-table-column"
+
 import SalesManDialog from "@/components/SalesManDialog";
 
 export default function TotalSalesMan() {

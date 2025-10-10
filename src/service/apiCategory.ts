@@ -2,6 +2,11 @@ import axiosInstance from "@/lib/axios";
 
 import type { MainCategory } from "@/table-types/main-category-table-types";
 
+export type CategoryPayload = {
+  id: number;
+  name: string;
+};
+
 export const getCategories = async () => {
   try {
     const res = await axiosInstance.get("/categories");

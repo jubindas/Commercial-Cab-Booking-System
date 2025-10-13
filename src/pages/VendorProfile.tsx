@@ -14,7 +14,7 @@ import {
   CreditCard,
 } from "lucide-react";
 
-const BASE_URL = "https://bhara.eucivi.in/";
+const BASE_URL = "https://api.bhara.co.in/api";
 
 export default function VendorProfile() {
   const { token } = useAuth();

@@ -45,7 +45,7 @@ export default function PullCarTableColumnsDropdown({ id, row }: Props) {
   const deleteMutation = useMutation({
     mutationFn: (pullCarId: string) => deletePullCar(pullCarId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pullcars"] });
+      queryClient.invalidateQueries({ queryKey: ["pullcar"] });
       toast.success("Pull car deleted successfully");
     },
     onError: (err) => {
@@ -56,14 +56,9 @@ export default function PullCarTableColumnsDropdown({ id, row }: Props) {
 
   const navigate = useNavigate();
 
-
-
-
-  const viewDetails = (id: number)=>{
-
+  const viewDetails = (id: number) => {
     navigate(`/view-details/pull-cars/${id}`);
-
-  }
+  };
 
   return (
     <>

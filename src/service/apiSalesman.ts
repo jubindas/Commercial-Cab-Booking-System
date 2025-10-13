@@ -8,7 +8,7 @@ export const createSalesMan = async (data: {
   alternative_phone_number: string | null;
   password: string;
   password_confirmation: string;
-  role: "Admin" | "Salesperson" | "Vendor" | "User" | null;
+  role: string;
   address: string | null;
   id_proof: File | null;
   address_proof: File | null;
@@ -17,7 +17,7 @@ export const createSalesMan = async (data: {
   city_id: number | null;
   location_id: number | null;
   pin_code_id: number | null;
-}): Promise<any> => {
+}) => {
   try {
     const formData = new FormData();
 
@@ -40,23 +40,41 @@ export const createSalesMan = async (data: {
   }
 };
 
-export const salesReferralPullCar = async (
-  id: number,
-  token: string | null
-) => {
+export const getAllSalesmen = async (token: string | null) => {
   try {
-    const response = await axiosInstance.get(
-      `/sales/referrals/pullcars/vendors/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axiosInstance.get(`/salesmen`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching sales referral pull cars:", error);
     throw error;
+  }
+};
+
+export const deleteSalesmen = async (id: string, token: string | null) => {
+  try {
+    const response = await axiosInstance.delete(`/salesmen/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    console.log("the error is", error);
+  }
+};
+
+export const getSalesmenById = async (id: string | undefined) => {
+  try {
+    const response = await axiosInstance.get(`/salesmen/${id}`);
+
+    return response.data;
+  } catch (error) {
+    console.log("the err is", error);
   }
 };

@@ -57,8 +57,6 @@ export const updatePullCar = async (
   }
 };
 
-
-
 export const deletePullCar = async (id: string) => {
   console.log("Attempting to delete pull car with ID:", id);
   try {
@@ -69,5 +67,17 @@ export const deletePullCar = async (id: string) => {
   } catch (error) {
     console.error("Error deleting pull car:", error);
     throw error;
+  }
+};
+
+export const getPullcarById = async (id: string | undefined) => {
+  console.log("the get by id is", id);
+
+  try {
+    const response = await axiosInstance.get(`pullcars/${id}`);
+    console.log("the response is", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("the err is", error);
   }
 };

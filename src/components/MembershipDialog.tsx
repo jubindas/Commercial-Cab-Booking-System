@@ -233,28 +233,6 @@ export default function MembershipDialog({
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="discountedPercentage">Discount Percentage</Label>
-            <Input
-              id="discountedPercentage"
-              type="number"
-              placeholder="Enter Discount Percentage"
-              value={discountedPercentage}
-              onChange={(e) => setDiscountedPercentage(e.target.value)}
-              min={0}
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="grid gap-2">
-            <Label htmlFor="commission">Commission</Label>
-            <Input
-              type="number"
-              placeholder="Enter Discount Percentage"
-              min={0}
-            />
-          </div>
         </div>
 
         <div className="flex justify-end gap-2">

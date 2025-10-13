@@ -45,9 +45,57 @@ import type { City } from "@/table-types/city-table-types";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { createSalesMan } from "@/service/apiSalesman";
+
 import { toast } from "sonner";
 
-export default function SalesManDialog() {
+interface salesmenPaylod {
+  name: string;
+  email: string;
+  phone: string | null;
+  alternative_phone_number: string | null;
+  password: string;
+  password_confirmation: string;
+  role: string;
+  address: string | null;
+  id_proof: File | null;
+  address_proof: File | null;
+  state_id: number | null;
+  district_id: number | null;
+  city_id: number | null;
+  location_id: number | null;
+  pin_code_id: number | null;
+}
+
+type salesManProps = {
+  mode: "create" | "edit";
+  trigger?: React.ReactNode;
+  initialData?: {
+    name: string;
+    email: string;
+    phone: string | null;
+    alternative_phone_number: string | null;
+    password: string;
+    password_confirmation: string;
+    role: string;
+    address: string | null;
+    id_proof: File | null;
+    address_proof: File | null;
+    state_id: number | null;
+    district_id: number | null;
+    city_id: number | null;
+    location_id: number | null;
+    pin_code_id: number | null;
+  };
+  id?: string | number;
+};
+
+export default function SalesManDialog({
+  mode,
+  trigger,
+  initialData,
+  id,
+}: salesManProps) {
+  console.log("the props are", id, mode, initialData, trigger);
   const [open, setOpen] = useState(false);
 
   const [name, setName] = useState("");
@@ -61,10 +109,6 @@ export default function SalesManDialog() {
   const [password, setPassword] = useState("");
 
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
-  const [role, setRole] = useState<
-    "Admin" | "Salesperson" | "Vendor" | "User" | ""
-  >("");
 
   const [address, setAddress] = useState("");
 
@@ -89,58 +133,47 @@ export default function SalesManDialog() {
     queryFn: getLocation,
   });
 
-  console.log("the location is", locations);
-
   const { data: states } = useQuery({
     queryKey: ["states"],
     queryFn: getStates,
   });
-
-  console.log("States data:", states);
 
   const { data: districts } = useQuery<District[]>({
     queryKey: ["districts"],
     queryFn: getDistrict,
   });
 
-  console.log("the district is", districts);
-
   const { data: cities } = useQuery<City[]>({
     queryKey: ["cities"],
     queryFn: getCities,
   });
-
-  console.log("the cities", cities);
 
   const { data: pinCodes } = useQuery({
     queryKey: ["pinCodes"],
     queryFn: getPincode,
   });
 
-  console.log("the pincode", pinCodes);
-
-const createMutation = useMutation({
-  mutationFn: (payload) => createSalesMan(payload),
-  onSuccess: (data) => {
-    console.log("✅ Salesman created:", data);
-    toast.success("Salesman created successfully!");
-    queryClient.invalidateQueries({ queryKey: ["salesmen"] });
-  },
-  onError: (err: any) => {
-    if (err?.response?.data?.errors) {
-      const messages = Object.values(err.response.data.errors)
-        .flat()
-        .join(", ");
-      toast.error(`Validation error: ${messages}`);
-    } else if (err?.response?.data?.message) {
-      toast.error(err.response.data.message);
-    } else {
-      toast.error("Failed to save. Please try again.");
-    }
-    console.error("Salesman save error:", err);
-  },
-});
-
+  const createMutation = useMutation({
+    mutationFn: (payload: salesmenPaylod) => createSalesMan(payload),
+    onSuccess: (data) => {
+      console.log("Salesman created:", data);
+      toast.success("Salesman created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["salesmen"] });
+    },
+    onError: (err: any) => {
+      if (err?.response?.data?.errors) {
+        const messages = Object.values(err.response.data.errors)
+          .flat()
+          .join(", ");
+        toast.error(`Validation error: ${messages}`);
+      } else if (err?.response?.data?.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("Failed to save. Please try again.");
+      }
+      console.error("Salesman save error:", err);
+    },
+  });
 
   const handleSave = () => {
     if (!name || name.length > 255)
@@ -162,7 +195,7 @@ const createMutation = useMutation({
       alternative_phone_number: alternativePhone || null,
       password,
       password_confirmation: passwordConfirmation,
-      role: role || null,
+      role: "Salesperson",
       address: address || null,
       id_proof: idProof,
       address_proof: addressProof,
@@ -247,22 +280,6 @@ const createMutation = useMutation({
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               placeholder="Confirm password"
             />
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Role</Label>
-            <Select value={role} onValueChange={(val) => setRole(val as any)}>
-              <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                <SelectValue placeholder="Select role" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {["Admin", "Salesperson", "Vendor", "User"].map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {r}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
 
           <div className="grid gap-2">

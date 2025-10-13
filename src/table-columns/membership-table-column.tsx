@@ -58,22 +58,7 @@ export const membershipColumns: ColumnDef<Membership>[] = [
       <span className="text-zinc-700">₹{row.getValue("discounted_price")}</span>
     ),
   },
-  {
-    accessorKey: "discounted_percentage",
-    header: "DISCOUNT PERCENTAGE",
-    cell: ({ row }) => (
-      <span className="text-zinc-700">
-        {row.getValue("discounted_percentage") || "0"}%
-      </span>
-    ),
-  },
-  {
-    accessorKey: "comission",
-    header: "COMISSION",
-    cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("comission") || "0"}%</span>
-    ),
-  },
+
   {
     id: "actions",
     header: "Actions",

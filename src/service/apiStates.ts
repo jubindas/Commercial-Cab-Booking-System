@@ -1,31 +1,19 @@
 import axiosInstance from "@/lib/axios";
 
-
-
-
 export const getStates = async () => {
   try {
+    const response = await axiosInstance.get("/states");
 
-
-    const res = await axiosInstance.get("/states");
-    console.log("the res of get state", res);
-
-    return res.data.data;
-
-
+    if (response && response.status === 200) {
+      return response.data.data;
+    } else {
+      console.log("Unexpected response:", response);
+      return null;
+    }
   } catch (error) {
-    console.log("the err is", error);
+    console.log("the error is", error);
   }
 };
-
-
-
-
-
-
-
-
-
 
 export async function createState(states: {
   name: string;
@@ -44,9 +32,6 @@ export async function createState(states: {
     console.log("the err is", error);
   }
 }
-
-
-
 
 export async function deleteStates(id: string) {
   try {

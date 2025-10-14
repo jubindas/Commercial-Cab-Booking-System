@@ -160,7 +160,7 @@ export default function PincodeDialog({
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="location" className="text-zinc-700">
-              Location
+              Location *
             </Label>
             <Select
               value={selectedLocation}
@@ -179,6 +179,20 @@ export default function PincodeDialog({
             </Select>
           </div>
 
+           <div className="grid gap-2">
+            <Label htmlFor="pinCode" className="text-zinc-700">
+              Pin Code *
+            </Label>
+            <Input
+              id="pinCode"
+              placeholder="Enter pin code"
+              value={pinCode}
+              onChange={(e) => setPinCode(e.target.value)}
+              className="bg-zinc-50 text-zinc-900 border border-zinc-300 placeholder:text-zinc-400"
+              required
+            />
+          </div>
+
           <div className="grid gap-2">
             <Label htmlFor="areaName" className="text-zinc-700">
               Area Name
@@ -192,19 +206,7 @@ export default function PincodeDialog({
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="pinCode" className="text-zinc-700">
-              Pin Code
-            </Label>
-            <Input
-              id="pinCode"
-              placeholder="Enter pin code"
-              value={pinCode}
-              onChange={(e) => setPinCode(e.target.value)}
-              className="bg-zinc-50 text-zinc-900 border border-zinc-300 placeholder:text-zinc-400"
-              required
-            />
-          </div>
+         
 
           <div className="grid gap-2">
             <Label htmlFor="fallbackPinCodes" className="text-zinc-700">

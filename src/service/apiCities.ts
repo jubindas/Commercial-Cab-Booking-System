@@ -4,6 +4,10 @@ export const getCities = async () => {
   try {
     const res = await axiosInstance.get("/cities");
 
+    if(res.status !== 200){
+      throw new Error("Something went wrong in fetchong cities, Please try again")
+    }
+
     return res.data.data;
   } catch (error) {
     console.log("the err is", error);

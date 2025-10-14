@@ -43,21 +43,21 @@ const visibleMemberships = membershipData?.filter((membership: Membership) =>
   (visibleSubCategories || []).some(
     (sub: Membership) => sub.id === membership.sub_category?.id
   )
+) || [];
+
+
+
+const filteredMemberships = visibleMemberships.filter(
+  (membership: Membership) => {
+    const searchLower = search.toLowerCase();
+    return (
+      membership.name.toLowerCase().includes(searchLower) ||
+      (membership.description?.toLowerCase().includes(searchLower) ?? false) ||
+      (membership.sub_category?.name.toLowerCase().includes(searchLower) ?? false)
+    );
+  }
 );
 
-
-  const filteredMemberships = visibleMemberships.filter(
-    (membership: Membership) => {
-      const searchLower = search.toLowerCase();
-      return (
-        membership.name.toLowerCase().includes(searchLower) ||
-        (membership.description?.toLowerCase().includes(searchLower) ??
-          false) ||
-        (membership.sub_category?.name.toLowerCase().includes(searchLower) ??
-          false)
-      );
-    }
-  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

@@ -172,7 +172,7 @@ export default function MembershipDialog({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="subCategory">Sub Category</Label>
+            <Label htmlFor="subCategory">Sub Category *</Label>
             <Select value={subCategoryId} onValueChange={setSubCategoryId}>
               <SelectTrigger className="w-full h-[42px] bg-zinc-50 text-zinc-900 border border-zinc-300 rounded-md">
                 <SelectValue placeholder="Select a Subcategory" />
@@ -188,7 +188,7 @@ export default function MembershipDialog({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">Name *</Label>
             <Input
               id="name"
               placeholder="Membership name"

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   Dialog,
@@ -16,7 +16,9 @@ import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { toast } from "sonner";
 
 import {
   Select,
@@ -28,8 +30,6 @@ import {
 
 import { getLocation } from "@/service/apiLocation";
 
-import type { Location } from "@/table-types/location-table-types";
-
 import { getStates } from "@/service/apiStates";
 
 import { getDistrict } from "@/service/apiDistrict";
@@ -38,17 +38,17 @@ import { getCities } from "@/service/apiCities";
 
 import { getPincode } from "@/service/apiPincode";
 
+import { createSalesMan } from "@/service/apiSalesman";
+
+import type { Location } from "@/table-types/location-table-types";
+
 import type { District } from "@/table-types/district-table-types";
 
 import type { City } from "@/table-types/city-table-types";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { Eye, EyeOff } from "lucide-react";
 
-import { createSalesMan } from "@/service/apiSalesman";
-
-import { toast } from "sonner";
-
-interface salesmenPaylod {
+interface SalesmenPayload {
   name: string;
   email: string;
   phone: string | null;
@@ -66,26 +66,10 @@ interface salesmenPaylod {
   pin_code_id: number | null;
 }
 
-type salesManProps = {
+type SalesManProps = {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
-  initialData?: {
-    name: string;
-    email: string;
-    phone: string | null;
-    alternative_phone_number: string | null;
-    password: string;
-    password_confirmation: string;
-    role: string;
-    address: string | null;
-    id_proof: File | null;
-    address_proof: File | null;
-    state_id: number | null;
-    district_id: number | null;
-    city_id: number | null;
-    location_id: number | null;
-    pin_code_id: number | null;
-  };
+  initialData?: SalesmenPayload;
   id?: string | number;
 };
 
@@ -94,8 +78,9 @@ export default function SalesManDialog({
   trigger,
   initialData,
   id,
-}: salesManProps) {
-  console.log("the props are", id, mode, initialData, trigger);
+}: SalesManProps) {
+  console.log("the id is", id);
+
   const [open, setOpen] = useState(false);
 
   const [name, setName] = useState("");
@@ -126,39 +111,58 @@ export default function SalesManDialog({
 
   const [pinCodeId, setPinCodeId] = useState<number | null>(null);
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const queryClient = useQueryClient();
 
   const { data: locations } = useQuery<Location[]>({
     queryKey: ["locations"],
     queryFn: getLocation,
   });
-
   const { data: states } = useQuery({
     queryKey: ["states"],
     queryFn: getStates,
   });
-
   const { data: districts } = useQuery<District[]>({
     queryKey: ["districts"],
     queryFn: getDistrict,
   });
-
   const { data: cities } = useQuery<City[]>({
     queryKey: ["cities"],
     queryFn: getCities,
   });
-
   const { data: pinCodes } = useQuery({
     queryKey: ["pinCodes"],
     queryFn: getPincode,
   });
 
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setName(initialData.name || "");
+      setEmail(initialData.email || "");
+      setPhone(initialData.phone || "");
+      setAlternativePhone(initialData.alternative_phone_number || "");
+      setAddress(initialData.address || "");
+      setStateId(initialData.state_id || null);
+      setDistrictId(initialData.district_id || null);
+      setCityId(initialData.city_id || null);
+      setLocationId(initialData.location_id || null);
+      setPinCodeId(initialData.pin_code_id || null);
+      setPassword("");
+      setPasswordConfirmation("");
+      setIdProof(null);
+      setAddressProof(null);
+    }
+  }, [mode, initialData]);
+
   const createMutation = useMutation({
-    mutationFn: (payload: salesmenPaylod) => createSalesMan(payload),
-    onSuccess: (data) => {
-      console.log("Salesman created:", data);
-      toast.success("Salesman created successfully!");
+    mutationFn: (payload: SalesmenPayload) => createSalesMan(payload),
+    onSuccess: () => {
+      toast.success("Salesman saved successfully!");
       queryClient.invalidateQueries({ queryKey: ["salesmen"] });
+      setOpen(false);
     },
     onError: (err: any) => {
       if (err?.response?.data?.errors) {
@@ -171,24 +175,15 @@ export default function SalesManDialog({
       } else {
         toast.error("Failed to save. Please try again.");
       }
-      console.error("Salesman save error:", err);
+      console.error("Error saving salesman:", err);
     },
   });
 
-  const handleSave = () => {
-    if (!name || name.length > 255)
-      return console.error("Name is required and <= 255 chars");
-    if (!email || !/\S+@\S+\.\S+/.test(email) || email.length > 255)
-      return console.error("Valid email required and <= 255 chars");
-    if (!password || password.length < 8)
-      return console.error("Password required, >= 8 chars");
-    if (password !== passwordConfirmation)
-      return console.error("Password and confirmation must match");
-    if (phone && phone.length > 20) return console.error("Phone max 20 chars");
-    if (alternativePhone && alternativePhone.length > 20)
-      return console.error("Alternative phone max 20 chars");
-
-    const payload = {
+  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!name || !email || !password || password !== passwordConfirmation)
+      return;
+    const payload: SalesmenPayload = {
       name,
       email,
       phone: phone || null,
@@ -205,241 +200,226 @@ export default function SalesManDialog({
       location_id: locationId,
       pin_code_id: pinCodeId,
     };
-
-    console.log("Salesman payload:", payload);
     createMutation.mutate(payload);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-purple-600 text-white hover:bg-purple-700">
-          Add Sales Man
-        </Button>
+        {trigger || (
+          <Button className="bg-purple-700 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg hover:bg-purple-800 transition-all duration-200 tracking-wide">
+            {mode === "edit" ? "Edit Salesman" : "Add Salesman"}
+          </Button>
+        )}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[600px] bg-white text-zinc-900 max-h-[85vh] overflow-y-auto p-6">
-        <DialogHeader>
-          <DialogTitle>Add Sales Man</DialogTitle>
-          <DialogDescription>Fill all required fields below.</DialogDescription>
+      <DialogContent className="sm:max-w-[700px] bg-white rounded-3xl border border-gray-200 shadow-2xl p-10 max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="mb-8">
+          <DialogTitle className="text-3xl font-extrabold text-gray-900 leading-tight tracking-tight">
+            {mode === "edit" ? "Edit Salesman" : "Add New Salesman"}
+          </DialogTitle>
+          <DialogDescription className="text-gray-500 mt-2 text-base">
+            Please complete all required fields and attach ID/Address proofs.
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label>Name</Label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter name"
-            />
-          </div>
+        <form className="space-y-8" onSubmit={handleSave}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <Label className="mb-2">Name *</Label>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter name"
+              />
+            </div>
+            <div>
+              <Label className="mb-2">Email *</Label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter email"
+              />
+            </div>
+            <div>
+              <Label className="mb-2">Phone</Label>
+              <Input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Phone number"
+              />
+            </div>
+            <div>
+              <Label className="mb-2">Alternative Phone</Label>
+              <Input
+                value={alternativePhone}
+                onChange={(e) => setAlternativePhone(e.target.value)}
+                placeholder="Alternative phone"
+              />
+            </div>
+            <div className="flex flex-col gap-1 relative">
+              <Label className="mb-2">Password *</Label>
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+              />
+              <span
+                className="absolute right-3 top-[36px] cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+              </span>
+            </div>
 
-          <div className="grid gap-2">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter email"
-            />
-          </div>
+            <div className="flex flex-col gap-1 relative">
+              <Label className="mb-2">Confirm Password *</Label>
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                value={passwordConfirmation}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                placeholder="Confirm Password"
+              />
+              <span
+                className="absolute right-3 top-[36px] cursor-pointer"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+              </span>
+            </div>
 
-          <div className="grid gap-2">
-            <Label>Phone</Label>
-            <Input
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone number"
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Alternative Phone</Label>
-            <Input
-              value={alternativePhone}
-              onChange={(e) => setAlternativePhone(e.target.value)}
-              placeholder="Alternative phone"
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Password</Label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Confirm Password</Label>
-            <Input
-              type="password"
-              value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-              placeholder="Confirm password"
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label>State</Label>
-            <Select
-              value={stateId !== null ? stateId.toString() : ""}
-              onValueChange={(val) => setStateId(Number(val))}
-            >
-              <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                <SelectValue placeholder="Select State" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {states && states.length > 0 ? (
-                  states.map((s: any) => (
+            <div>
+              <Label className="mb-2">State</Label>
+              <Select
+                value={stateId?.toString() || ""}
+                onValueChange={(val) => setStateId(Number(val))}
+              >
+                <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
+                  <SelectValue placeholder="Select State" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {states?.map((s: any) => (
                     <SelectItem key={s.id} value={s.id.toString()}>
                       {s.name}
                     </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="" disabled>
-                    No states available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label>District</Label>
-            <Select
-              value={districtId !== null ? districtId.toString() : ""}
-              onValueChange={(val) => setDistrictId(Number(val))}
-            >
-              <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                <SelectValue placeholder="Select District" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {districts && districts.length > 0 ? (
-                  districts.map((d: any) => (
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="mb-2">District</Label>
+              <Select
+                value={districtId?.toString() || ""}
+                onValueChange={(val) => setDistrictId(Number(val))}
+              >
+                <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
+                  <SelectValue placeholder="Select District" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {districts?.map((d: any) => (
                     <SelectItem key={d.id} value={d.id.toString()}>
                       {d.name}
                     </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="" disabled>
-                    No districts available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label>City</Label>
-            <Select
-              value={cityId !== null ? cityId.toString() : ""}
-              onValueChange={(val) => setCityId(Number(val))}
-            >
-              <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                <SelectValue placeholder="Select City" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {cities && cities.length > 0 ? (
-                  cities.map((c: any) => (
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="mb-2">City</Label>
+              <Select
+                value={cityId?.toString() || ""}
+                onValueChange={(val) => setCityId(Number(val))}
+              >
+                <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
+                  <SelectValue placeholder="Select City" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {cities?.map((c: any) => (
                     <SelectItem key={c.id} value={c.id.toString()}>
                       {c.name}
                     </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="" disabled>
-                    No cities available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Location</Label>
-            <Select
-              value={locationId !== null ? locationId.toString() : ""}
-              onValueChange={(val) => setLocationId(Number(val))}
-            >
-              <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                <SelectValue placeholder="Select Location" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {locations && locations.length > 0 ? (
-                  locations.map((l: any) => (
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="mb-2">Location</Label>
+              <Select
+                value={locationId?.toString() || ""}
+                onValueChange={(val) => setLocationId(Number(val))}
+              >
+                <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
+                  <SelectValue placeholder="Select Location" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {locations?.map((l: any) => (
                     <SelectItem key={l.id} value={l.id.toString()}>
                       {l.name}
                     </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="" disabled>
-                    No locations available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Pin Code</Label>
-            <Select
-              value={pinCodeId !== null ? pinCodeId.toString() : ""}
-              onValueChange={(val) => setPinCodeId(Number(val))}
-            >
-              <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                <SelectValue placeholder="Select Pin Code" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {pinCodes && pinCodes.length > 0 ? (
-                  pinCodes.map((p: any) => (
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="mb-2">Pin Code</Label>
+              <Select
+                value={pinCodeId?.toString() || ""}
+                onValueChange={(val) => setPinCodeId(Number(val))}
+              >
+                <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
+                  <SelectValue placeholder="Select Pin Code" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {pinCodes?.map((p: any) => (
                     <SelectItem key={p.id} value={p.id.toString()}>
-                      {p.pin_code || ""}
+                      {p.pin_code}
                     </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="" disabled>
-                    No pin codes available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="mb-2">Address</Label>
+              <Input
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Enter address"
+              />
+            </div>
+            <div>
+              <Label className="mb-2">ID Proof</Label>
+              <Input
+                type="file"
+                onChange={(e) => setIdProof(e.target.files?.[0] || null)}
+              />
+            </div>
+            <div>
+              <Label className="mb-2">Address Proof</Label>
+              <Input
+                type="file"
+                onChange={(e) => setAddressProof(e.target.files?.[0] || null)}
+              />
+            </div>
           </div>
 
-          <div className="grid gap-2">
-            <Label>Address</Label>
-            <Input
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Enter address"
-            />
+          <div className="flex justify-end gap-4 pt-6">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="bg-purple-700 text-white hover:bg-purple-800"
+            >
+              Save
+            </Button>
           </div>
-
-          <div className="grid gap-2">
-            <Label>ID Proof</Label>
-            <Input
-              type="file"
-              onChange={(e) => setIdProof(e.target.files?.[0] || null)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label>Address Proof</Label>
-            <Input
-              type="file"
-              onChange={(e) => setAddressProof(e.target.files?.[0] || null)}
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end mt-4">
-          <Button
-            className="bg-purple-600 text-white hover:bg-purple-700"
-            onClick={handleSave}
-          >
-            Create
-          </Button>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

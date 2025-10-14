@@ -128,7 +128,7 @@ export default function DistrictDialog({
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="state" className="text-zinc-700">
-              State
+              State *
             </Label>
             <Select value={selectedState} onValueChange={setSelectedState}>
               <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
@@ -146,7 +146,7 @@ export default function DistrictDialog({
 
           <div className="grid gap-2">
             <Label htmlFor="districtName" className="text-zinc-700">
-              District Name
+              District Name *
             </Label>
             <Input
               id="districtName"

@@ -18,7 +18,9 @@ import PullCar from "./pages/PullCar";
 
 import ViewPullCarDetails from "./pages/ViewPullCarDetails";
 
-import ViewDetailsSalesmen from "./components/ViewDetailsSalesmen";
+import ViewDetailsSalesmen from "./pages/ViewDetailsSalesmen";
+
+import SalesManReferral from "./pages/SalesManReferral";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
@@ -45,8 +47,6 @@ const VendorProfile = lazy(() => import("@/pages/VendorProfile"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 
 const TotalSalesMan = lazy(() => import("@/pages/TotalSalesMan"));
-
-const TotalUsers = lazy(() => import("@/pages/TotalUsers"));
 
 const PerticulerMembership = lazy(() => import("@/pages/PerticulerMembership"));
 
@@ -160,6 +160,15 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/view-details/referrals/:id",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SalesManReferral />
+          </Suspense>
+        ),
+      },
+
+      {
         path: "profile",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
@@ -172,14 +181,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <TotalSalesMan />
-          </Suspense>
-        ),
-      },
-      {
-        path: "totaluser",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <TotalUsers />
           </Suspense>
         ),
       },

@@ -4,9 +4,14 @@ export const getAllPullCars = async () => {
   try {
     const response = await axiosInstance.get(`/pullcars`);
 
-    return response.data.data;
+    if (response && response.status === 200) {
+      return response.data.data;
+    } else {
+      console.log("Unexpected response:", response);
+      return null;
+    }
   } catch (error) {
-    console.error("Error fetching pull cars:", error);
+    console.log("the error is", error);
   }
 };
 
@@ -18,11 +23,16 @@ export const createPullCar = async (payload: FormData) => {
         "Content-Type": "multipart/form-data",
       },
     });
+
+    if (response.status !== 201) {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+
     console.log("Pull car created successfully:", response.data);
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.error("❌ Error creating pull car:", error.response?.data || error);
+    console.error("Error creating pull car:", error.response?.data || error);
     throw error;
   }
 };
@@ -71,8 +81,6 @@ export const deletePullCar = async (id: string) => {
 };
 
 export const getPullcarById = async (id: string | undefined) => {
-  console.log("the get by id is", id);
-
   try {
     const response = await axiosInstance.get(`pullcars/${id}`);
     console.log("the response is", response.data);

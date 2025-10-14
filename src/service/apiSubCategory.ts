@@ -4,9 +4,14 @@ export const getSubcategories = async () => {
   try {
     const response = await axiosInstance.get(`/sub-categories`);
 
-    return response.data.data;
+    if (response && response.status === 200) {
+      return response.data.data;
+    } else {
+      console.log("Unexpected response:", response);
+      return null;
+    }
   } catch (error) {
-    console.error("Error fetching subcategories:", error);
+    console.log("the error is", error);
   }
 };
 

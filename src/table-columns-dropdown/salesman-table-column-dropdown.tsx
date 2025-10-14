@@ -38,8 +38,7 @@ interface Props {
 }
 
 export default function SalesmanTableColumnsDropdown({ id, salesman }: Props) {
-
-  console.log("the row data from now on is", salesman)
+  console.log("the row data from now on is", salesman);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -60,6 +59,10 @@ export default function SalesmanTableColumnsDropdown({ id, salesman }: Props) {
 
   const viewDetails = (id: number) => {
     navigate(`/view-details/salesmen/${id}`);
+  };
+
+  const viewReferrals = (id: number) => {
+    navigate(`/view-details/referrals/${id}`);
   };
 
   return (
@@ -93,6 +96,13 @@ export default function SalesmanTableColumnsDropdown({ id, salesman }: Props) {
               onClick={() => viewDetails(id)}
             >
               View Details
+            </Button>
+            <Button
+              variant="ghost"
+              className="justify-start text-zinc-200 hover:bg-zinc-700"
+              onClick={() => viewReferrals(id)}
+            >
+              Referrals
             </Button>
 
             <Button

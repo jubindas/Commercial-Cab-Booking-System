@@ -9,11 +9,16 @@ export interface PincodePayload {
 
 export const getPincode = async () => {
   try {
-    const res = await axiosInstance.get("/pin-codes");
+    const response = await axiosInstance.get("/pin-codes");
 
-    return res.data.data;
+     if (response && response.status === 200) {
+      return response.data.data;
+    } else {
+      console.log("Unexpected response:", response);
+      return null;
+    }
   } catch (error) {
-    console.error("Error fetching pin codes:", error);
+    console.log("the error is", error);
   }
 };
 

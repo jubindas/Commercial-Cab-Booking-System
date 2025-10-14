@@ -102,7 +102,7 @@ export default function StatesDialog({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">State Name</Label>
+            <Label htmlFor="name">State Name *</Label>
             <Input
               id="name"
               type="text"

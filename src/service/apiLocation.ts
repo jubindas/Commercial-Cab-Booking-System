@@ -4,9 +4,14 @@ export const getLocation = async () => {
   try {
     const res = await axiosInstance.get("/locations");
 
-    return res.data.data;
+    if (res && res.status === 200) {
+      return res.data.data;
+    } else {
+      console.log("Unexpected response:", res);
+      return null;
+    }
   } catch (error) {
-    console.log("the err is", error);
+    console.log("the error is", error);
   }
 };
 

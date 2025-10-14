@@ -139,7 +139,7 @@ export default function LocationDialog({
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="city" className="text-zinc-700">
-              City
+              City *
             </Label>
             <Select value={selectedCity} onValueChange={setSelectedCity}>
               <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
@@ -157,7 +157,7 @@ export default function LocationDialog({
 
           <div className="grid gap-2">
             <Label htmlFor="locationName" className="text-zinc-700">
-              Location Name
+              Location Name *
             </Label>
             <Input
               id="locationName"

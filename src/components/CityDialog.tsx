@@ -124,7 +124,7 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="district" className="text-zinc-700">
-              District
+              District *
             </Label>
             <Select
               value={selectedDistrict}
@@ -145,7 +145,7 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
 
           <div className="grid gap-2">
             <Label htmlFor="cityName" className="text-zinc-700">
-              City Name
+              City Name *
             </Label>
             <Input
               id="cityName"

@@ -33,6 +33,10 @@ export const createSalesMan = async (data: {
       },
     });
 
+    if (response.status !== 201) {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+
     return response.data;
   } catch (error: any) {
     console.error("Error creating salesman:", error.response?.data || error);
@@ -48,10 +52,14 @@ export const getAllSalesmen = async (token: string | null) => {
       },
     });
 
-    return response.data.data;
+    if (response && response.status === 200) {
+      return response.data.data;
+    } else {
+      console.log("Unexpected response:", response);
+      return null;
+    }
   } catch (error) {
-    console.error("Error fetching sales referral pull cars:", error);
-    throw error;
+    console.log("the error is", error);
   }
 };
 
@@ -76,5 +84,22 @@ export const getSalesmenById = async (id: string | undefined) => {
     return response.data;
   } catch (error) {
     console.log("the err is", error);
+  }
+};
+
+export const getSalesmanReferral = async (
+  id: string | undefined,
+  token: string | null
+) => {
+  try {
+    const response = await axiosInstance.get(`/sales/referrals/vendors/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log("the error is ", error);
   }
 };

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import {
-  User,
   Home,
   MapPin,
   ChevronRight,
@@ -11,6 +10,7 @@ import {
   Contact,
   Folder,
   FolderOutput,
+  Users,
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -54,23 +54,21 @@ const items: MenuItem[] = [
 
   { title: "Sub Category", url: "/sub-category", icon: FolderOutput },
 
-  { title: "Membership", url: "/membership", icon: Contact },
-
-  {
-    title: "Vendors",
-    url: "/vendors",
-    icon: Car,
-  },
-
   {
     title: "Sales Man",
     icon: Briefcase,
     url: "/total-salesman",
   },
 
-  { title: "Pull Car", url: "/pull-car", icon: Car },
+  { title: "Membership", url: "/membership", icon: Contact },
 
-  { title: "Total User", url: "/totaluser", icon: User },
+  {
+    title: "Vendors",
+    url: "/vendors",
+    icon: Users,
+  },
+
+  { title: "Pull Car", url: "/pull-car", icon: Car },
 ];
 
 export function AppSidebar() {

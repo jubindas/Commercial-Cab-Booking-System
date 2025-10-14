@@ -25,6 +25,12 @@ import { createPullCar, updatePullCar } from "@/service/apiPullcar";
 
 import type { PullCar } from "@/table-types/pull-car-types";
 
+import { Textarea } from "./ui/textarea";
+
+
+
+
+
 interface Props {
   id?: number;
   initialData?: PullCar;
@@ -32,7 +38,11 @@ interface Props {
   mode: "edit" | "create";
 }
 
+
 export default function PullCarDialog({ initialData, mode, trigger }: Props) {
+
+
+
   const [open, setOpen] = useState(false);
 
   const [name, setName] = useState("");
@@ -46,7 +56,9 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
   );
 
   const [price, setPrice] = useState<string>("");
+
   const [capacity, setCapacity] = useState<string>("");
+
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   const [locationStart, setLocationStart] = useState("");
@@ -58,6 +70,9 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
   const [images, setImages] = useState<File[]>([]);
 
   const [existingImages, setExistingImages] = useState<string[]>([]);
+
+
+  
 
   useEffect(() => {
     if (mode === "edit" && initialData && open) {
@@ -102,7 +117,6 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => {
-      // Axios-specific error handling
       if (err?.response?.data?.errors) {
         const messages = Object.values(err.response.data.errors)
           .flat()
@@ -113,7 +127,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
       } else {
         toast.error("Failed to save pull car. Please try again.");
       }
-      console.error("❌ Pull car save error:", err);
+      console.error("Pull car save error:", err);
     },
   });
 
@@ -159,7 +173,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
         return;
       }
 
-      const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+      const MAX_FILE_SIZE = 2 * 1024 * 1024; 
       for (const file of images) {
         if (file.size > MAX_FILE_SIZE) {
           toast.error(`File ${file.name} exceeds 2MB size limit`);
@@ -253,7 +267,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
               <Label className="block font-semibold text-gray-700 mb-2">
                 Description
               </Label>
-              <Input
+              <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe the car and journey"

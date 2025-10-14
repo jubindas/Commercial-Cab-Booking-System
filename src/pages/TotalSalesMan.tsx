@@ -10,16 +10,21 @@ import { getAllSalesmen } from "@/service/apiSalesman";
 
 import { useAuth } from "@/hooks/useAuth";
 
+import LoadingSkeleton from "@/components/LoadingSkeleton";
+
 export default function TotalSalesMan() {
   const { token } = useAuth();
 
-  const { data: salesmanData } = useQuery({
+  const { data: salesmanData, isLoading } = useQuery({
     queryKey: ["salesmen"],
     queryFn: () => getAllSalesmen(token),
   });
 
+  console.log("the salesman data is", salesmanData);
 
-  console.log("the salesman data is", salesmanData)
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

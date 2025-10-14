@@ -18,7 +18,7 @@ export default function SalesManReferral() {
           onClick={() => setActiveTab("membership")}
           className={`flex items-center gap-3 p-6 rounded-xl shadow-lg cursor-pointer transition-transform transform hover:scale-105 ${
             activeTab === "membership"
-              ? "bg-blue-500 text-white"
+              ? "bg-purple-500 text-white"
               : "bg-white text-gray-800"
           }`}
         >
@@ -33,7 +33,7 @@ export default function SalesManReferral() {
           onClick={() => setActiveTab("pullcars")}
           className={`flex items-center gap-3 p-6 rounded-xl shadow-lg cursor-pointer transition-transform transform hover:scale-105 ${
             activeTab === "pullcars"
-              ? "bg-blue-500 text-white"
+              ? "bg-purple-500 text-white"
               : "bg-white text-gray-800"
           }`}
         >

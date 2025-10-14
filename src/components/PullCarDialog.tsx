@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 
 import {
   Dialog,
@@ -15,33 +16,20 @@ import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 
-import { Calendar } from "@/components/ui/calendar";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 
-import { createPullCar, updatePullCar } from "@/service/apiPullcar";
-
-import type { PullCar } from "@/table-types/pull-car-types";
+import { createPullCar } from "@/service/apiPullcar";
 
 import { Textarea } from "./ui/textarea";
 
 
-
-
-
 interface Props {
-  id?: number;
-  initialData?: PullCar;
   trigger?: React.ReactNode;
-  mode: "edit" | "create";
 }
 
-
-export default function PullCarDialog({ initialData, mode, trigger }: Props) {
-
-
+export default function PullCarDialog({ trigger }: Props) {
 
   const [open, setOpen] = useState(false);
 
@@ -51,71 +39,25 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
 
   const [description, setDescription] = useState("");
 
-  const [journeyStartTime, setJourneyStartTime] = useState<Date | undefined>(
-    new Date()
-  );
-
   const [price, setPrice] = useState<string>("");
 
   const [capacity, setCapacity] = useState<string>("");
-
-  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const [locationStart, setLocationStart] = useState("");
 
   const [locationEnd, setLocationEnd] = useState("");
 
-  const queryClient = useQueryClient();
-
   const [images, setImages] = useState<File[]>([]);
 
-  const [existingImages, setExistingImages] = useState<string[]>([]);
-
-
-  
-
-  useEffect(() => {
-    if (mode === "edit" && initialData && open) {
-      setName(initialData.name || "");
-      setCarDetails(initialData.car_details || "");
-      setDescription(initialData.description || "");
-      setPrice(initialData.price?.toString() || "");
-      setJourneyStartTime(
-        initialData.journey_start_time
-          ? new Date(initialData.journey_start_time)
-          : undefined
-      );
-      setCapacity(initialData.capacity?.toString() || "");
-      setLocationStart(initialData.location_start || "");
-      setLocationEnd(initialData.location_end || "");
-
-      const arrayImages = [
-        initialData.image1,
-        initialData.image2,
-        initialData.image3,
-        initialData.image4,
-      ].filter((img): img is string => !!img);
-
-      setExistingImages(arrayImages);
-      setImages([]);
-    }
-  }, [mode, initialData, open]);
+  const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: (payload: FormData) =>
-      mode === "edit" && initialData
-        ? updatePullCar(initialData.id, payload)
-        : createPullCar(payload),
+    mutationFn: (payload: FormData) => createPullCar(payload),
     onSuccess: () => {
-      toast.success(
-        mode === "edit"
-          ? "Pull car updated successfully"
-          : "Pull car created successfully"
-      );
+      toast.success("Pull car created successfully");
       queryClient.invalidateQueries({ queryKey: ["pullcar"] });
       resetForm();
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => {
       if (err?.response?.data?.errors) {
         const messages = Object.values(err.response.data.errors)
@@ -136,7 +78,6 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
     setCarDetails("");
     setDescription("");
     setPrice("");
-    setJourneyStartTime(undefined);
     setCapacity("");
     setLocationStart("");
     setLocationEnd("");
@@ -144,74 +85,35 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
     setOpen(false);
   };
 
-  const formatDateForMySQL = (date: Date) => {
-    const pad = (n: number) => n.toString().padStart(2, "0");
-
-    const year = date.getFullYear();
-    const month = pad(date.getMonth() + 1); 
-    const day = pad(date.getDate());
-
-    const hours = pad(date.getHours());
-    const minutes = pad(date.getMinutes());
-    const seconds = pad(date.getSeconds());
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
-
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      if (
-        !name ||
-        !price ||
-        !locationStart ||
-        !locationEnd ||
-        !journeyStartTime
-      ) {
-        toast.error("Please fill all required fields");
+    if (!name || !price || !locationStart || !locationEnd) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    const MAX_FILE_SIZE = 2 * 1024 * 1024;
+    for (const file of images) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`File ${file.name} exceeds 2MB size limit`);
         return;
       }
-
-      const MAX_FILE_SIZE = 2 * 1024 * 1024; 
-      for (const file of images) {
-        if (file.size > MAX_FILE_SIZE) {
-          toast.error(`File ${file.name} exceeds 2MB size limit`);
-          return;
-        }
-      }
-
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("car_details", carDetails);
-      formData.append("description", description);
-      formData.append("price", price.toString());
-      formData.append(
-        "journey_start_time",
-        journeyStartTime ? formatDateForMySQL(journeyStartTime) : ""
-      );
-
-      formData.append("capacity", capacity.toString());
-
-      formData.append("location_start", locationStart);
-      formData.append("location_end", locationEnd);
-
-      images.forEach((file) => formData.append("images[]", file));
-
-      if (mode === "edit") {
-        existingImages.forEach((url) => formData.append("images[]", url));
-      }
-
-      console.log("FormData ready to send:");
-      for (const pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
-
-      createMutation.mutate(formData);
-    } catch (err) {
-      console.error("Unexpected error while preparing data:", err);
-      toast.error("An unexpected error occurred. Please try again.");
     }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("car_details", carDetails);
+    formData.append("description", description);
+    formData.append("price", price.toString());
+    formData.append("journey_start_time", "2005-01-01 00:00:00"); // static date
+    formData.append("capacity", capacity.toString());
+    formData.append("location_start", locationStart);
+    formData.append("location_end", locationEnd);
+
+    images.forEach((file) => formData.append("images[]", file));
+
+    createMutation.mutate(formData);
   };
 
   const isLoading = createMutation.isPending;
@@ -220,8 +122,8 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="bg-purple-700 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg hover:bg-purple-800 transition-all duration-200 tracking-wide">
-            {mode === "edit" ? "Edit Pull Car" : "Add Pull Car"}
+          <Button className="bg-purple-600 text-white hover:bg-purple-700">
+            Add Pull Car
           </Button>
         )}
       </DialogTrigger>
@@ -229,7 +131,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
       <DialogContent className="sm:max-w-[700px] bg-white rounded-3xl border border-gray-200 shadow-2xl p-10 max-h-[85vh] overflow-y-auto">
         <DialogHeader className="mb-8">
           <DialogTitle className="text-3xl font-extrabold text-gray-900 leading-tight tracking-tight">
-            {mode === "edit" ? "Edit Pull Car" : "Add New Pull Car"}
+            Add New Pull Car
           </DialogTitle>
           <DialogDescription className="text-gray-500 mt-2 text-base">
             Please complete all required fields and upload high-quality car
@@ -241,7 +143,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <Label className="block font-semibold text-gray-700 mb-2">
-                Name
+                Name *
               </Label>
               <Input
                 value={name}
@@ -289,46 +191,9 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
               />
             </div>
 
-            <div className="flex flex-col">
-              <Label className="block font-semibold text-gray-700 mb-2">
-                Journey Start Date
-              </Label>
-
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setCalendarOpen(!calendarOpen)}
-                className="w-full mb-2 bg-white border-gray-300 text-gray-700 hover:bg-purple-50 hover:border-purple-500 transition-all duration-200"
-              >
-                {calendarOpen ? "Close Calendar" : "Select Date"}
-              </Button>
-
-              {calendarOpen && (
-                <Calendar
-                  mode="single"
-                  selected={journeyStartTime}
-                  onSelect={(date) => {
-                    setJourneyStartTime(date);
-                    setCalendarOpen(false);
-                  }}
-                  disabled={(date) => date < new Date()}
-                  className="rounded-lg border shadow-sm bg-gray-50 p-2"
-                />
-              )}
-
-              {journeyStartTime && (
-                <p className="text-sm text-gray-600 mt-1">
-                  Selected Date:{" "}
-                  <span className="font-medium text-purple-700">
-                    {journeyStartTime.toDateString()}
-                  </span>
-                </p>
-              )}
-            </div>
-
             <div>
               <Label className="block font-semibold text-gray-700 mb-2">
-                Capacity
+                Seat Capacity
               </Label>
               <Input
                 type="number"
@@ -342,7 +207,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
 
             <div>
               <Label className="block font-semibold text-gray-700 mb-2">
-                Start Location
+                Start Location *
               </Label>
               <Input
                 value={locationStart}
@@ -354,7 +219,7 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
 
             <div>
               <Label className="block font-semibold text-gray-700 mb-2">
-                End Location
+                End Location *
               </Label>
               <Input
                 value={locationEnd}
@@ -363,6 +228,8 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
                 className="w-full rounded-lg border-gray-300 bg-gray-50 py-2 px-3 text-gray-900 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-100 transition"
               />
             </div>
+
+            {/* Images upload */}
             <div className="flex flex-col">
               <Label className="block font-semibold text-gray-700 mb-1 text-sm">
                 Car Images (Max 4)
@@ -389,39 +256,14 @@ export default function PullCarDialog({ initialData, mode, trigger }: Props) {
                   const files = e.target.files
                     ? Array.from(e.target.files)
                     : [];
-                  const totalFiles = [...images, ...files].slice(0, 4); // max 4
+                  const totalFiles = [...images, ...files].slice(0, 4);
                   setImages(totalFiles);
-                  console.log(
-                    "📸 Selected Files:",
-                    totalFiles.map((f) => f.name)
-                  );
                 }}
                 className="hidden"
               />
 
-              {[...existingImages, ...images].length > 0 && (
+              {images.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {existingImages.map((url, index) => (
-                    <div
-                      key={`existing-${index}`}
-                      className="relative px-2 py-0.5 bg-purple-100 text-purple-800 text-xs rounded-md shadow-sm flex items-center"
-                    >
-                      {url.split("/").pop()}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = existingImages.filter(
-                            (_, i) => i !== index
-                          );
-                          setExistingImages(updated);
-                        }}
-                        className="ml-1 text-purple-600 hover:text-purple-900 font-bold text-xs"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-
                   {images.map((file, index) => (
                     <div
                       key={`new-${index}`}

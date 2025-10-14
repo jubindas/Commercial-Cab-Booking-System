@@ -15,4 +15,5 @@ export interface PullCar {
   status: string;
   created_at: string;
   images: string[];
+  is_active: boolean
 }

@@ -4,9 +4,7 @@ import {
   FaCar,
   FaMoneyBillWave,
   FaUsers,
-  FaClock,
   FaMapMarkerAlt,
-  FaCalendarAlt,
   FaFileAlt,
 } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
@@ -47,8 +45,8 @@ export default function ViewPullCarDetails() {
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center min-h-screen text-zinc-600">
-        Loading pull car details...
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
 
@@ -91,17 +89,6 @@ export default function ViewPullCarDetails() {
             value={`${car.capacity} Seats`}
           />
 
-          <DetailCard
-            icon={<FaCalendarAlt className="text-purple-500 text-2xl" />}
-            label="Journey Date"
-            value={car.journey_start_time}
-          />
-
-          <DetailCard
-            icon={<FaClock className="text-yellow-500 text-2xl" />}
-            label="Journey Time"
-            value={car.journey_start_time}
-          />
 
           <DetailCard
             icon={<FaMapMarkerAlt className="text-red-400 text-2xl" />}

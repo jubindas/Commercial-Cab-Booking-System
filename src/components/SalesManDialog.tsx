@@ -207,8 +207,8 @@ export default function SalesManDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="bg-purple-700 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg hover:bg-purple-800 transition-all duration-200 tracking-wide">
-            {mode === "edit" ? "Edit Salesman" : "Add Salesman"}
+          <Button className="bg-purple-600 text-white hover:bg-purple-700">
+                {mode === "edit" ? "Edit Salesman" : "Add Salesman"}
           </Button>
         )}
       </DialogTrigger>

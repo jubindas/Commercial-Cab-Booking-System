@@ -12,10 +12,11 @@ import type { PullCar } from "@/table-types/pull-car-types";
 
 import PullCarDialog from "@/components/PullCarDialog";
 
-export default function PullCar() {
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+export default function PullCar() {
   const [search, setSearch] = useState("");
-  const { data: pullcardata } = useQuery({
+  const { data: pullcardata, isLoading } = useQuery({
     queryKey: ["pullcar"],
     queryFn: getAllPullCars,
   });
@@ -27,13 +28,17 @@ export default function PullCar() {
     return [...pullcardata].sort((a: PullCar, b: PullCar) => a.id - b.id);
   }, [pullcardata]);
 
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Pull Car
         </h1>
-        <PullCarDialog mode="create" />
+        <PullCarDialog />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

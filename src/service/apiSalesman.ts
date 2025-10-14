@@ -92,11 +92,41 @@ export const getSalesmanReferral = async (
   token: string | null
 ) => {
   try {
-    const response = await axiosInstance.get(`/sales/referrals/vendors/${id}`, {
+    const response = await axiosInstance.get(`/sales/referrals/vendors`, {
+      params: { sales_user_id: id },
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    if (response.status !== 200) {
+      throw new Error("something went wrong , Try again");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log("the error is ", error);
+  }
+};
+
+export const getSalesmanReferralPullcar = async (
+  id: string | undefined,
+  token: string | null
+) => {
+  try {
+    const response = await axiosInstance.get(
+      `/sales/referrals/pullcars/vendors`,
+      {
+        params: { sales_user_id: id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error("something went wrong , Try again");
+    }
 
     return response.data;
   } catch (error) {

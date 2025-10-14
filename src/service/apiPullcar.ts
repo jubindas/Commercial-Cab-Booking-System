@@ -60,6 +60,11 @@ export const updatePullCar = async (
         "Content-Type": "multipart/form-data",
       },
     });
+
+    if (response.status !== 200) {
+      throw new Error("somethimg went wrong, try again later");
+    }
+
     return response.data;
   } catch (error) {
     console.error(`Error updating pull car ${id}:`, error);
@@ -67,12 +72,18 @@ export const updatePullCar = async (
   }
 };
 
-export const deletePullCar = async (id: string) => {
+export const disablePullCar = async (id: string, isActive: boolean) => {
   console.log("Attempting to delete pull car with ID:", id);
   try {
-    const response = await axiosInstance.delete(`/pullcars/${id}`);
+    const response = await axiosInstance.put(`/pullcars/${id}`, {
+      is_active: isActive,
+    });
     console.log("Backend responded:", response);
     console.log(" Response data:", response.data);
+
+    if (response.status !== 200) {
+      throw new Error("something went wrong, Try again");
+    }
     return response.data;
   } catch (error) {
     console.error("Error deleting pull car:", error);

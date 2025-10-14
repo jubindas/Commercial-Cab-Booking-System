@@ -9,7 +9,7 @@ export const columns: ColumnDef<MainCategory>[] = [
     accessorKey: "id",
     header: "ID",
     cell: ({ row }) => {
-      console.log(row.original.stauts, "for id ", row.original.id);
+      console.log(row.original.is_active, "for id ", row.original.id);
 
       return (
         <span

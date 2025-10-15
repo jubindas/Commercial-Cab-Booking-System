@@ -20,7 +20,12 @@ export default function ReferralMembership() {
     enabled: !!id && !!token,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className=" mt-25 min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   if (!referralMembership) return <div>No data found</div>;
 
   const { count, membership_counts = [], vendors = [] } = referralMembership;
@@ -28,7 +33,7 @@ export default function ReferralMembership() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">
-      Membership Referral Summary
+        Membership Referral Summary
       </h1>
 
       <div className="mb-8 flex justify-center">

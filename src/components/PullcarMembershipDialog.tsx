@@ -32,7 +32,7 @@ import { useAuth } from "@/hooks/useAuth";
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
-  id: string;
+  id?: string;
   initialData?: {
     name: string;
     price: string;

@@ -39,7 +39,7 @@ export const createPullCarsMembership = async (
 };
 
 export const updatePullCarsMembership = async (
-  id: string,
+  id: string | undefined,
   data: PullCarMembership,
   token: string | null
 ) => {

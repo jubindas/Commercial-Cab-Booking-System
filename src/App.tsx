@@ -53,7 +53,6 @@ const PerticulerMembership = lazy(() => import("@/pages/PerticulerMembership"));
 
 const Memberships = lazy(() => import("@/pages/Memberships"));
 
-const SalesManWallet = lazy(() => import("@/pages/SalesManWallet"));
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -191,14 +190,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <Memberships />
-          </Suspense>
-        ),
-      },
-      {
-        path: "salesman/wallet/:id",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <SalesManWallet />
           </Suspense>
         ),
       },

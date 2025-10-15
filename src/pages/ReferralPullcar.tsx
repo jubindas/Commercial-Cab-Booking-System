@@ -15,18 +15,21 @@ export default function ReferralPullcar() {
     enabled: !!id && !!token,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className=" mt-25 min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   if (!referralPullcar) return <div>No data found</div>;
 
   const { count, pullcar_counts = [], vendors = [] } = referralPullcar;
 
   return (
     <div className="p-6">
-
       <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">
         Pullcar Referral Summary
       </h1>
-
 
       <div className="mb-8 flex justify-center">
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 w-60 text-center shadow-sm">
@@ -35,9 +38,7 @@ export default function ReferralPullcar() {
         </div>
       </div>
 
- 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
         <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
           <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">
             Pullcar Counts
@@ -58,7 +59,9 @@ export default function ReferralPullcar() {
           {vendors.length > 0 ? (
             <DataTable data={vendors} columns={cityColumns} />
           ) : (
-            <p className="text-gray-500 text-center">No vendor data available.</p>
+            <p className="text-gray-500 text-center">
+              No vendor data available.
+            </p>
           )}
         </div>
       </div>

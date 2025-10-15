@@ -30,8 +30,6 @@ import type { TotalSalesMan } from "@/table-types/total-sales-man-table-type";
 
 import { deleteSalesmen } from "@/service/apiSalesman";
 
-import SalesManDialog from "@/components/SalesManDialog";
-
 interface Props {
   id: number;
   salesman: TotalSalesMan;
@@ -76,20 +74,6 @@ export default function SalesmanTableColumnsDropdown({ id, salesman }: Props) {
 
         <PopoverContent className="w-32 bg-zinc-800 border border-zinc-700 p-2">
           <div className="flex flex-col">
-            <SalesManDialog
-              mode="edit"
-              id={id}
-              initialData={salesman}
-              trigger={
-                <Button
-                  variant="ghost"
-                  className="justify-start text-zinc-200 hover:bg-zinc-700"
-                >
-                  Edit
-                </Button>
-              }
-            />
-
             <Button
               variant="ghost"
               className="justify-start text-zinc-200 hover:bg-zinc-700"

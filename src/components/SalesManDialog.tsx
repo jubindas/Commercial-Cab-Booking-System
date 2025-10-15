@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -67,18 +67,11 @@ interface SalesmenPayload {
 }
 
 type SalesManProps = {
-  mode: "create" | "edit";
   trigger?: React.ReactNode;
-  initialData?: SalesmenPayload;
   id?: string | number;
 };
 
-export default function SalesManDialog({
-  mode,
-  trigger,
-  initialData,
-  id,
-}: SalesManProps) {
+export default function SalesManDialog({ trigger, id }: SalesManProps) {
   console.log("the id is", id);
 
   const [open, setOpen] = useState(false);
@@ -138,25 +131,6 @@ export default function SalesManDialog({
     queryFn: getPincode,
   });
 
-  useEffect(() => {
-    if (mode === "edit" && initialData) {
-      setName(initialData.name || "");
-      setEmail(initialData.email || "");
-      setPhone(initialData.phone || "");
-      setAlternativePhone(initialData.alternative_phone_number || "");
-      setAddress(initialData.address || "");
-      setStateId(initialData.state_id || null);
-      setDistrictId(initialData.district_id || null);
-      setCityId(initialData.city_id || null);
-      setLocationId(initialData.location_id || null);
-      setPinCodeId(initialData.pin_code_id || null);
-      setPassword("");
-      setPasswordConfirmation("");
-      setIdProof(null);
-      setAddressProof(null);
-    }
-  }, [mode, initialData]);
-
   const createMutation = useMutation({
     mutationFn: (payload: SalesmenPayload) => createSalesMan(payload),
     onSuccess: () => {
@@ -208,7 +182,7 @@ export default function SalesManDialog({
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">
-                {mode === "edit" ? "Edit Salesman" : "Add Salesman"}
+            Add Salesman
           </Button>
         )}
       </DialogTrigger>
@@ -216,7 +190,7 @@ export default function SalesManDialog({
       <DialogContent className="sm:max-w-[700px] bg-white rounded-3xl border border-gray-200 shadow-2xl p-10 max-h-[85vh] overflow-y-auto">
         <DialogHeader className="mb-8">
           <DialogTitle className="text-3xl font-extrabold text-gray-900 leading-tight tracking-tight">
-            {mode === "edit" ? "Edit Salesman" : "Add New Salesman"}
+            Add New Salesman
           </DialogTitle>
           <DialogDescription className="text-gray-500 mt-2 text-base">
             Please complete all required fields and attach ID/Address proofs.

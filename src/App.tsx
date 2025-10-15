@@ -21,6 +21,7 @@ import ViewPullCarDetails from "./pages/ViewPullCarDetails";
 import ViewDetailsSalesmen from "./pages/ViewDetailsSalesmen";
 
 import SalesManReferral from "./pages/SalesManReferral";
+import PullcarMembership from "./pages/PullcarMembership";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
@@ -213,6 +214,10 @@ const router = createBrowserRouter([
       {
         path: "vendors",
         element: <Vendors />,
+      },
+      {
+        path: "pull-car-membership",
+        element: <PullcarMembership />,
       },
       {
         path: "pull-car",

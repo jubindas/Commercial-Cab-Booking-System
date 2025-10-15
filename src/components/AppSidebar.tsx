@@ -68,6 +68,8 @@ const items: MenuItem[] = [
     icon: Users,
   },
 
+  { title: "Pull Car Membership", url: "/pull-car-membership", icon: Car },
+
   { title: "Pull Car", url: "/pull-car", icon: Car },
 ];
 

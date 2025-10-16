@@ -46,8 +46,6 @@ import type { District } from "@/table-types/district-table-types";
 
 import type { City } from "@/table-types/city-table-types";
 
-import { Eye, EyeOff } from "lucide-react";
-
 interface SalesmenPayload {
   name: string;
   email: string;
@@ -84,10 +82,6 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
 
   const [alternativePhone, setAlternativePhone] = useState("");
 
-  const [password, setPassword] = useState("");
-
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
   const [address, setAddress] = useState("");
 
   const [idProof, setIdProof] = useState<File | null>(null);
@@ -103,10 +97,6 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
   const [locationId, setLocationId] = useState<number | null>(null);
 
   const [pinCodeId, setPinCodeId] = useState<number | null>(null);
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -156,13 +146,7 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !password ||
-      password !== passwordConfirmation
-    ) {
+    if (!name || !email || !phone) {
       toast("enter all the fields");
       return;
     }
@@ -172,8 +156,8 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
       email,
       phone: phone,
       alternative_phone_number: alternativePhone || null,
-      password,
-      password_confirmation: passwordConfirmation,
+      password: "password",
+      password_confirmation: "password",
       role: "Salesperson",
       address: address || null,
       id_proof: idProof,
@@ -242,37 +226,6 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 onChange={(e) => setAlternativePhone(e.target.value)}
                 placeholder="Alternative phone"
               />
-            </div>
-            <div className="flex flex-col gap-1 relative">
-              <Label className="mb-2">Password *</Label>
-              <Input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-              />
-              <span
-                className="absolute right-3 top-[36px] cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-1 relative">
-              <Label className="mb-2">Confirm Password *</Label>
-              <Input
-                type={showConfirmPassword ? "text" : "password"}
-                value={passwordConfirmation}
-                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                placeholder="Confirm Password"
-              />
-              <span
-                className="absolute right-3 top-[36px] cursor-pointer"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                {showConfirmPassword ? <Eye size={16} /> : <EyeOff size={16} />}
-              </span>
             </div>
 
             <div>

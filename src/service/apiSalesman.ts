@@ -91,6 +91,7 @@ export const getSalesmanReferral = async (
   id: string | undefined,
   token: string | null
 ) => {
+  console.log("the salesman id is", id, token);
   try {
     console.log("the id is ", id);
     const response = await axiosInstance.get(`/sales/referrals/vendors`, {

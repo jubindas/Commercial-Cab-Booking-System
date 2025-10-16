@@ -22,6 +22,7 @@ import ViewDetailsSalesmen from "./pages/ViewDetailsSalesmen";
 
 import SalesManReferral from "./pages/SalesManReferral";
 import PullcarMembership from "./pages/PullcarMembership";
+import UserMembership from "./pages/UserMembership";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
@@ -52,7 +53,6 @@ const TotalSalesMan = lazy(() => import("@/pages/TotalSalesMan"));
 const PerticulerMembership = lazy(() => import("@/pages/PerticulerMembership"));
 
 const Memberships = lazy(() => import("@/pages/Memberships"));
-
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -219,6 +219,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading vendor details...</div>}>
             <ViewPullCarDetails />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/user-membership",
+        element: (
+          <Suspense fallback={<div>Loading vendor details...</div>}>
+            <UserMembership />
           </Suspense>
         ),
       },

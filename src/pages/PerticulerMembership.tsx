@@ -23,6 +23,7 @@ export default function PerticulerMembership() {
     enabled: !!id,
   });
 
+
   if (isLoading)
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -47,7 +48,6 @@ export default function PerticulerMembership() {
         </div>
       </div>
 
-      
       <div className="bg-white mt-6 shadow-md rounded-xl p-6 hover:shadow-xl transition">
         <h2 className="text-2xl font-bold text-gray-700 mb-4 flex items-center gap-2">
           <TagIcon className="w-6 h-6 text-purple-500" /> Sub-category Info
@@ -70,7 +70,6 @@ export default function PerticulerMembership() {
           </span>
         </p>
       </div>
-
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="bg-white shadow-md rounded-xl p-5 flex items-center gap-3 hover:shadow-xl transition">
@@ -128,9 +127,6 @@ export default function PerticulerMembership() {
         </div>
       </div>
 
-    
-
-   
       <div className="mt-6 flex justify-end">
         <button
           onClick={() => window.history.back()}

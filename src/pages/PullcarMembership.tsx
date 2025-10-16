@@ -16,6 +16,8 @@ export default function PullcarMembership() {
     queryFn: getAllPullCarsMembership,
   });
 
+  console.log("the pull car membership is", data);
+
   if (isLoading) return <LoadingSkeleton />;
 
   return (

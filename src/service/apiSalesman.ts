@@ -4,7 +4,7 @@ import axiosInstance from "@/lib/axios";
 export const createSalesMan = async (data: {
   name: string;
   email: string;
-  phone: string | null;
+  phone: string;
   alternative_phone_number: string | null;
   password: string;
   password_confirmation: string;
@@ -92,6 +92,7 @@ export const getSalesmanReferral = async (
   token: string | null
 ) => {
   try {
+    console.log("the id is ", id);
     const response = await axiosInstance.get(`/sales/referrals/vendors`, {
       params: { sales_user_id: id },
       headers: {
@@ -131,5 +132,50 @@ export const getSalesmanReferralPullcar = async (
     return response.data;
   } catch (error) {
     console.log("the error is ", error);
+  }
+};
+
+export const createVendors = async (data: {
+  name: string;
+  email: string;
+  phone: string | null;
+  alternative_phone_number: string | null;
+  password: string;
+  password_confirmation: string;
+  role: string;
+  address: string | null;
+  id_proof: File | null;
+  address_proof: File | null;
+  state_id: number | null;
+  district_id: number | null;
+  city_id: number | null;
+  location_id: number | null;
+  pin_code_id: number | null;
+  referral_code: string | null;
+  current_membership_id: number | null;
+}) => {
+  try {
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        formData.append(key, value as any);
+      }
+    });
+
+    const response = await axiosInstance.post("/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status !== 201) {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error creating Vendor:", error.response?.data || error);
+    throw error;
   }
 };

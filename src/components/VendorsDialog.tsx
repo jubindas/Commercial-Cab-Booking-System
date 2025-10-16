@@ -38,7 +38,7 @@ import { getCities } from "@/service/apiCities";
 
 import { getPincode } from "@/service/apiPincode";
 
-import { createSalesMan } from "@/service/apiSalesman";
+import { createVendors } from "@/service/apiSalesman";
 
 import type { Location } from "@/table-types/location-table-types";
 
@@ -48,10 +48,10 @@ import type { City } from "@/table-types/city-table-types";
 
 import { Eye, EyeOff } from "lucide-react";
 
-interface SalesmenPayload {
+interface VendorPayload {
   name: string;
   email: string;
-  phone: string;
+  phone: string | null;
   alternative_phone_number: string | null;
   password: string;
   password_confirmation: string;
@@ -64,15 +64,11 @@ interface SalesmenPayload {
   city_id: number | null;
   location_id: number | null;
   pin_code_id: number | null;
+  referral_code: string | null;
+  current_membership_id: number | null;
 }
 
-type SalesManProps = {
-  trigger?: React.ReactNode;
-  id?: string | number;
-};
-
-export default function SalesManDialog({ trigger, id }: SalesManProps) {
-  console.log("the id is", id);
+export default function VendorDialog() {
 
   const [open, setOpen] = useState(false);
 
@@ -108,6 +104,12 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [referralCode, setReferralCode] = useState("");
+  
+  const [currentMembershipId, setCurrentMembershipId] = useState<number | null>(
+    null
+  );
+
   const queryClient = useQueryClient();
 
   const { data: locations } = useQuery<Location[]>({
@@ -132,11 +134,10 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
   });
 
   const createMutation = useMutation({
-    mutationFn: (payload: SalesmenPayload) => createSalesMan(payload),
+    mutationFn: (payload: VendorPayload) => createVendors(payload),
     onSuccess: () => {
-      toast.success("Salesman saved successfully!");
-      queryClient.invalidateQueries({ queryKey: ["salesmen"] });
-
+      toast.success("Vendor saved successfully!");
+      queryClient.invalidateQueries({ queryKey: ["vendors_new"] });
       setOpen(false);
     },
     onError: (err: any) => {
@@ -150,31 +151,23 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
       } else {
         toast.error("Failed to save. Please try again.");
       }
-      console.error("Error saving salesman:", err);
+      console.error("Error saving vendor:", err);
     },
   });
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !password ||
-      password !== passwordConfirmation
-    ) {
-      toast("enter all the fields");
+    if (!name || !email || !password || password !== passwordConfirmation)
       return;
-    }
 
-    const payload: SalesmenPayload = {
+    const payload: VendorPayload = {
       name,
       email,
-      phone: phone,
+      phone: phone || null,
       alternative_phone_number: alternativePhone || null,
       password,
       password_confirmation: passwordConfirmation,
-      role: "Salesperson",
+      role: "Vendor",
       address: address || null,
       id_proof: idProof,
       address_proof: addressProof,
@@ -183,7 +176,11 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
       city_id: cityId,
       location_id: locationId,
       pin_code_id: pinCodeId,
+      referral_code: referralCode || null,
+      current_membership_id: currentMembershipId,
     };
+
+    console.log("the paylod is", payload);
 
     createMutation.mutate(payload);
   };
@@ -191,17 +188,15 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger || (
-          <Button className="bg-purple-600 text-white hover:bg-purple-700">
-            Add Salesman
-          </Button>
-        )}
+        <Button className="bg-purple-600 text-white hover:bg-purple-700">
+          Add Vendor
+        </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[700px] bg-white rounded-3xl border border-gray-200 shadow-2xl p-10 max-h-[85vh] overflow-y-auto">
         <DialogHeader className="mb-8">
           <DialogTitle className="text-3xl font-extrabold text-gray-900 leading-tight tracking-tight">
-            Add New Salesman
+            Add New Vendor
           </DialogTitle>
           <DialogDescription className="text-gray-500 mt-2 text-base">
             Please complete all required fields and attach ID/Address proofs.
@@ -210,6 +205,7 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
 
         <form className="space-y-8" onSubmit={handleSave}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Name & Email */}
             <div>
               <Label className="mb-2">Name *</Label>
               <Input
@@ -227,6 +223,8 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 placeholder="Enter email"
               />
             </div>
+
+            {/* Phone fields */}
             <div>
               <Label className="mb-2">Phone</Label>
               <Input
@@ -243,6 +241,8 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 placeholder="Alternative phone"
               />
             </div>
+
+            {/* Password fields */}
             <div className="flex flex-col gap-1 relative">
               <Label className="mb-2">Password *</Label>
               <Input
@@ -275,6 +275,7 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
               </span>
             </div>
 
+            {/* State/District/City/Location/Pin */}
             <div>
               <Label className="mb-2">State</Label>
               <Select
@@ -365,6 +366,26 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <Label className="mb-2">Referral Code</Label>
+              <Input
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value)}
+                placeholder="Enter referral code"
+              />
+            </div>
+
+            <div>
+              <Label className="mb-2">Current Membership ID</Label>
+              <Input
+                type="number"
+                value={currentMembershipId ?? ""}
+                onChange={(e) => setCurrentMembershipId(Number(e.target.value))}
+                placeholder="Enter membership ID"
+              />
+            </div>
+
+            {/* Address / Files */}
             <div>
               <Label className="mb-2">Address</Label>
               <Input

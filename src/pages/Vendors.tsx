@@ -15,6 +15,7 @@ import {
   Search,
   Filter,
 } from "lucide-react";
+import VendorDialog from "@/components/VendorsDialog";
 
 interface State {
   id: number;
@@ -182,7 +183,7 @@ const Vendors: React.FC = () => {
     queryKey: ["vendors_new"],
     queryFn: async () => {
       const response = await axios.get<VendorsResponse>(
-        `https://bhara.eucivi.in/api/vendors`
+        `https://api.bhara.co.in/api/vendors`
       );
       console.log(response.data);
       return response.data;
@@ -273,14 +274,17 @@ const Vendors: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Vendors Directory
-          </h1>
-          <p className="text-gray-600">
-            Total vendors: {vendorData.length} | Showing:{" "}
-            {filteredVendors.length}
-          </p>
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Vendors Directory
+            </h1>
+            <p className="text-gray-600">
+              Total vendors: {vendorData.length} | Showing:{" "}
+              {filteredVendors.length}
+            </p>
+          </div>
+          <VendorDialog />
         </div>
 
         <div className="bg-white rounded-lg shadow p-4 mb-6">

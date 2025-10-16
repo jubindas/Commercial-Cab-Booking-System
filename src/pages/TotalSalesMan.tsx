@@ -32,7 +32,7 @@ export default function TotalSalesMan() {
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Total Sales Man
         </h1>
-        <SalesManDialog mode="create" />
+        <SalesManDialog />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

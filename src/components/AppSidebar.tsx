@@ -11,6 +11,7 @@ import {
   Folder,
   FolderOutput,
   Users,
+  Star
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -71,6 +72,11 @@ const items: MenuItem[] = [
   { title: "Pull Car Membership", url: "/pull-car-membership", icon: Car },
 
   { title: "Pull Car", url: "/pull-car", icon: Car },
+  {
+    title: "User Membership",
+    url: "/user-membership",
+    icon: Star ,
+  },
 ];
 
 export function AppSidebar() {

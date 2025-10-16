@@ -1,13 +1,6 @@
-import { DataTable } from "@/components/data-table";
-
 import { useAuth } from "@/hooks/useAuth";
-
 import { getSalesmanReferral } from "@/service/apiSalesman";
-
-import { cityColumns } from "@/table-columns/city-table-columns";
-
 import { useQuery } from "@tanstack/react-query";
-
 import { useParams } from "react-router-dom";
 
 export default function ReferralMembership() {
@@ -20,12 +13,15 @@ export default function ReferralMembership() {
     enabled: !!id && !!token,
   });
 
+  console.log("the membership", referralMembership);
+
   if (isLoading)
     return (
-      <div className=" mt-25 min-h-screen">
+      <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
+
   if (!referralMembership) return <div>No data found</div>;
 
   const { count, membership_counts = [], vendors = [] } = referralMembership;
@@ -49,7 +45,39 @@ export default function ReferralMembership() {
             Membership Counts
           </h2>
           {membership_counts.length > 0 ? (
-            <DataTable data={membership_counts} columns={cityColumns} />
+            <table className="min-w-full table-auto border-collapse border border-gray-300">
+              <thead className="bg-blue-100">
+                <tr>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    Membership ID
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    Membership Name
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    Vendor Count
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {membership_counts.map((item, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.membership_id}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.membership_name}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.vendor_count}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <p className="text-gray-500 text-center">
               No membership data available.
@@ -62,10 +90,45 @@ export default function ReferralMembership() {
             Vendors
           </h2>
           {vendors.length > 0 ? (
-            <DataTable data={vendors} columns={cityColumns} />
+            <table className="min-w-full table-auto border-collapse border border-gray-300">
+              <thead className="bg-blue-100">
+                <tr>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    Vendor ID
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    Name
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    Email
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">
+                    Phone
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {vendors.map((vendor, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">
+                      {vendor.id}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {vendor.name}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {vendor.email}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {vendor.phone}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <p className="text-gray-500 text-center">
-              No membership data available.
+              No vendor data available.
             </p>
           )}
         </div>

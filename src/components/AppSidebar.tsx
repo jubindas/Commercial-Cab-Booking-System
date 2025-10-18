@@ -11,7 +11,8 @@ import {
   Folder,
   FolderOutput,
   Users,
-  Star
+  Star,
+  User,
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -55,13 +56,12 @@ const items: MenuItem[] = [
 
   { title: "Sub Category", url: "/sub-category", icon: FolderOutput },
 
+  { title: "Membership", url: "/membership", icon: Contact },
   {
     title: "Sales Man",
     icon: Briefcase,
     url: "/total-salesman",
   },
-
-  { title: "Membership", url: "/membership", icon: Contact },
 
   {
     title: "Vendors",
@@ -72,10 +72,12 @@ const items: MenuItem[] = [
   { title: "Pull Car Membership", url: "/pull-car-membership", icon: Car },
 
   { title: "Pull Car", url: "/pull-car", icon: Car },
+
+  { title: "User", url: "/user", icon: User },
   {
     title: "User Membership",
     url: "/user-membership",
-    icon: Star ,
+    icon: Star,
   },
 ];
 

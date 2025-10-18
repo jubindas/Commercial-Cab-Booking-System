@@ -21,7 +21,9 @@ import ViewPullCarDetails from "./pages/ViewPullCarDetails";
 import ViewDetailsSalesmen from "./pages/ViewDetailsSalesmen";
 
 import SalesManReferral from "./pages/SalesManReferral";
+
 import PullcarMembership from "./pages/PullcarMembership";
+
 import UserMembership from "./pages/UserMembership";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
@@ -227,6 +229,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading vendor details...</div>}>
             <UserMembership />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/user",
+        element: (
+          <Suspense fallback={<div> Loading user .key. </div>}>
+            <h1>hi</h1>
           </Suspense>
         ),
       },

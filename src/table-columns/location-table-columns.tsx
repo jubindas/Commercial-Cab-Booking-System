@@ -24,16 +24,17 @@ export const columns: ColumnDef<Location>[] = [
     header: "LATITUDE",
     cell: ({ row }) => (
       <span className="font-medium text-zinc-800">
-        {row.getValue("latitude")}
+        {row.getValue("latitude") || "N/A"}
       </span>
     ),
   },
+
   {
     accessorKey: "longitude",
     header: "LONGITUDE",
     cell: ({ row }) => (
       <span className="font-medium text-zinc-800">
-        {row.getValue("longitude")}
+        {row.getValue("longitude") || "N/A"}
       </span>
     ),
   },

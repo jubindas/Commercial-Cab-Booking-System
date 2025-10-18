@@ -1,3 +1,4 @@
+import axiosInstance from "@/lib/axios";
 import { API_BASE_URL } from "@/lib/db";
 import axios from "axios";
 
@@ -26,13 +27,6 @@ export async function userLogin(email: string, password: string) {
   }
 }
 
-
-
-
-
-
-
-
 export async function vendorMe(token: string | null) {
   try {
     const response = await axios.get(`${API_BASE_URL}/me`, {
@@ -47,3 +41,17 @@ export async function vendorMe(token: string | null) {
     throw error;
   }
 }
+
+export const getAllUsers = async () => {
+  try {
+    const response = await axiosInstance.get("/users");
+
+    if (response && response.status !== 200) {
+      throw new Error("something went wrong please try again");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log("the error is", error);
+  }
+};

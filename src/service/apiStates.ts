@@ -5,7 +5,7 @@ export const getStates = async () => {
     const response = await axiosInstance.get("/states");
 
     if (response && response.status === 200) {
-      return response.data.data;
+      return response.data;
     } else {
       console.log("Unexpected response:", response);
       return null;

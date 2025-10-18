@@ -25,6 +25,7 @@ import SalesManReferral from "./pages/SalesManReferral";
 import PullcarMembership from "./pages/PullcarMembership";
 
 import UserMembership from "./pages/UserMembership";
+import User from "./pages/User";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
@@ -236,7 +237,7 @@ const router = createBrowserRouter([
         path: "/user",
         element: (
           <Suspense fallback={<div> Loading user .key. </div>}>
-            <h1>hi</h1>
+            <User />
           </Suspense>
         ),
       },

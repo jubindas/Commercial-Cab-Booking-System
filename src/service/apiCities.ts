@@ -8,7 +8,7 @@ export const getCities = async () => {
       throw new Error("Something went wrong in fetchong cities, Please try again")
     }
 
-    return res.data.data;
+    return res.data;
   } catch (error) {
     console.log("the err is", error);
   }

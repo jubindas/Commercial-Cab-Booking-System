@@ -18,7 +18,7 @@ export const getCategories = async () => {
       );
     }
 
-    return res.data.data;
+    return res.data;
   } catch (error) {
     console.error("Error fetching categories:", error);
   }

@@ -5,7 +5,7 @@ export const getDistrict = async () => {
     const res = await axiosInstance.get("/districts");
 
     if (res && res.status === 200) {
-      return res.data.data;
+      return res.data;
     } else {
       console.log("Unexpected response:", res);
       return null;

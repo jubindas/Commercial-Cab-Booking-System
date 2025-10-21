@@ -13,13 +13,23 @@ import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { useState, useEffect } from "react";
 
@@ -58,6 +68,9 @@ export default function PincodeDialog({
   const [pinCode, setPinCode] = useState("");
 
   const [fallbackPinCodes, setFallbackPinCodes] = useState("");
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -159,27 +172,61 @@ export default function PincodeDialog({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="location" className="text-zinc-700">
-              Location *
-            </Label>
-            <Select
-              value={selectedLocation}
-              onValueChange={setSelectedLocation}
-            >
-              <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
-                <SelectValue placeholder="Select a location" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {locations?.map((loc: Location) => (
-                  <SelectItem key={loc.id} value={loc.id}>
-                    {loc.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid gap-2">
+              <Label htmlFor="state" className="text-zinc-700">
+                Location *
+              </Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between bg-white"
+                  >
+                    {value
+                      ? locations?.find((s: Location) => String(s.id) === value)
+                          ?.name
+                      : "Select state..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-130 p-0 bg-white">
+                  <Command>
+                    <CommandInput placeholder="Search state... here" />
+                    <CommandList>
+                      <CommandEmpty>No state found.</CommandEmpty>
+                      <CommandGroup>
+                        {locations?.map((s: Location) => (
+                          <CommandItem
+                            key={s.id}
+                            value={s.name.toLowerCase()}
+                            onSelect={() => {
+                              setValue(String(s.id));
+                              setSelectedLocation(String(s.id));
+                              setOpen(false);
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === String(s.id)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {s.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
-           <div className="grid gap-2">
+          <div className="grid gap-2">
             <Label htmlFor="pinCode" className="text-zinc-700">
               Pin Code *
             </Label>
@@ -205,8 +252,6 @@ export default function PincodeDialog({
               className="bg-zinc-50 text-zinc-900 border border-zinc-300 placeholder:text-zinc-400"
             />
           </div>
-
-         
 
           <div className="grid gap-2">
             <Label htmlFor="fallbackPinCodes" className="text-zinc-700">

@@ -15,13 +15,23 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Button } from "@/components/ui/button";
 
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { useState, useEffect } from "react";
 
@@ -48,25 +58,30 @@ export default function SubCategoriesDialog({
 }: Props) {
   const queryClient = useQueryClient();
 
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialg] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [subCategoryName, setSubCategoryName] = useState("");
   const [subCategoryDescription, setSubCategoryDescription] = useState("");
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
   console.log("📊 Current state:", {
-    open,
+    openDialog,
     selectedCategory,
     subCategoryName,
     subCategoryDescription,
   });
 
-  const { data: categories } = useQuery<Array<{ id: number; name: string }>>({
+  const { data: categories, isError } = useQuery<
+    Array<{ id: number; name: string }>
+  >({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
 
   useEffect(() => {
-    if (open) {
+    if (openDialog) {
       if (mode === "edit" && initialData) {
         setSelectedCategory(String(initialData.category_id));
         setSubCategoryName(initialData.name);
@@ -77,7 +92,7 @@ export default function SubCategoriesDialog({
         setSubCategoryDescription("");
       }
     }
-  }, [open, mode, initialData]);
+  }, [openDialog, mode, initialData]);
 
   const mutation = useMutation({
     mutationFn: (data: {
@@ -98,7 +113,7 @@ export default function SubCategoriesDialog({
       setSelectedCategory("");
       setSubCategoryName("");
       setSubCategoryDescription("");
-      setOpen(false);
+      setOpenDialg(false);
     },
     onError: (err) => {
       console.error("Mutation error:", err);
@@ -139,11 +154,15 @@ export default function SubCategoriesDialog({
 
   const handleDialogOpenChange = (isOpen: boolean) => {
     console.log("Dialog open state changed to:", isOpen);
-    setOpen(isOpen);
+    setOpenDialg(isOpen);
   };
 
+  if (isError) {
+    return <div>error</div>;
+  }
+
   return (
-    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+    <Dialog open={openDialog} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">
@@ -166,27 +185,59 @@ export default function SubCategoriesDialog({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="category" className="text-zinc-700">
-              Main Category *
-            </Label>
-            <Select
-              value={selectedCategory}
-              onValueChange={(val) => {
-                console.log("the value is", val);
-                setSelectedCategory(val);
-              }}
-            >
-              <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {categories?.map((cat: CategoryPayload, idx) => (
-                  <SelectItem key={idx} value={String(cat.id)}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid gap-2">
+              <Label htmlFor="state" className="text-zinc-700">
+                Main Category *
+              </Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between bg-white"
+                  >
+                    {value
+                      ? categories?.find(
+                          (s: CategoryPayload) => String(s.id) === value
+                        )?.name
+                      : "Select state..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-130 p-0 bg-white">
+                  <Command>
+                    <CommandInput placeholder="Search state... here" />
+                    <CommandList>
+                      <CommandEmpty>No state found.</CommandEmpty>
+                      <CommandGroup>
+                        {categories?.map((s: CategoryPayload) => (
+                          <CommandItem
+                            key={s.id}
+                            value={s.name.toLowerCase()}
+                            onSelect={() => {
+                              setValue(String(s.id));
+                              setSelectedCategory(String(s.id));
+                              setOpen(false);
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === String(s.id)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {s.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
           <div className="grid gap-2">
@@ -221,7 +272,7 @@ export default function SubCategoriesDialog({
             variant="outline"
             onClick={() => {
               console.log("❌ Cancel clicked");
-              setOpen(false);
+              setOpenDialg(false);
             }}
           >
             Cancel

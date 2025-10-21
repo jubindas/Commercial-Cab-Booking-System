@@ -13,13 +13,24 @@ import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 
+
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { useState, useEffect } from "react";
 
@@ -32,8 +43,6 @@ import { getCities } from "@/service/apiCities";
 import { createLocation, updateLocation } from "@/service/apiLocation";
 
 import type { City } from "@/table-types/city-table-types";
-
-
 
 interface Props {
   mode: "create" | "edit";
@@ -53,8 +62,8 @@ export default function LocationDialog({
   initialData,
   id,
 }: Props) {
-
-
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const [selectedCity, setSelectedCity] = useState("");
 
@@ -84,7 +93,7 @@ export default function LocationDialog({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: (locationData: any) => {
       if (mode === "create") return createLocation(locationData);
-      return updateLocation(String(id), locationData); 
+      return updateLocation(String(id), locationData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations"] });
@@ -138,21 +147,57 @@ export default function LocationDialog({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="city" className="text-zinc-700">
-              City *
-            </Label>
-            <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
-                <SelectValue placeholder="Select a city" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {cities?.map((city: City) => (
-                  <SelectItem key={city.id} value={city.id}>
-                    {city.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid gap-2">
+              <Label htmlFor="state" className="text-zinc-700">
+                City *
+              </Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between bg-white"
+                  >
+                    {value
+                      ? cities?.find((s: City) => String(s.id) === value)?.name
+                      : "Select state..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-130 p-0 bg-white">
+                  <Command>
+                    <CommandInput placeholder="Search state... here" />
+                    <CommandList>
+                      <CommandEmpty>No state found.</CommandEmpty>
+                      <CommandGroup>
+                        {cities?.map((s: City) => (
+                          <CommandItem
+                            key={s.id}
+                            value={s.name.toLowerCase()}
+                            onSelect={() => {
+                              setValue(String(s.id));
+                              setSelectedCity(String(s.id));
+                              setOpen(false);
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === String(s.id)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {s.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
           <div className="grid gap-2">

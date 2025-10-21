@@ -17,13 +17,23 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Button } from "@/components/ui/button";
 
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -63,6 +73,9 @@ export default function MembershipDialog({
   const [price, setPrice] = useState<string>("");
   const [discountedPrice, setDiscountedPrice] = useState<string>("");
   const [discountedPercentage, setDiscountedPercentage] = useState<string>("");
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const { data: subCategories } = useQuery({
     queryKey: ["subcategories"],
@@ -172,19 +185,59 @@ export default function MembershipDialog({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="subCategory">Sub Category *</Label>
-            <Select value={subCategoryId} onValueChange={setSubCategoryId}>
-              <SelectTrigger className="w-full h-[42px] bg-zinc-50 text-zinc-900 border border-zinc-300 rounded-md">
-                <SelectValue placeholder="Select a Subcategory" />
-              </SelectTrigger>
-              <SelectContent className="w-[600px] bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {subCategories?.map((sub: SubCategory) => (
-                  <SelectItem key={sub.id} value={String(sub.id)}>
-                    {sub.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid gap-2">
+              <Label htmlFor="state" className="text-zinc-700">
+                Sub Category *
+              </Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between bg-white"
+                  >
+                    {value
+                      ? subCategories?.find(
+                          (s: SubCategory) => String(s.id) === value
+                        )?.name
+                      : "Select state..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-130 p-0 bg-white">
+                  <Command>
+                    <CommandInput placeholder="Search state... here" />
+                    <CommandList>
+                      <CommandEmpty>No state found.</CommandEmpty>
+                      <CommandGroup>
+                        {subCategories?.map((s: SubCategory) => (
+                          <CommandItem
+                            key={s.id}
+                            value={s.name.toLowerCase()}
+                            onSelect={() => {
+                              setValue(String(s.id));
+                              setSubCategoryId(String(s.id));
+                              setOpen(false);
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === String(s.id)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {s.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
           <div className="grid gap-2">
@@ -232,7 +285,6 @@ export default function MembershipDialog({
               min={0}
             />
           </div>
-
         </div>
 
         <div className="flex justify-end gap-2">

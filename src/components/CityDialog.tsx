@@ -13,13 +13,23 @@ import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { useState, useEffect } from "react";
 
@@ -44,6 +54,9 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [cityName, setCityName] = useState("");
   const [cityCode, setCityCode] = useState("");
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -123,24 +136,58 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="district" className="text-zinc-700">
-              District *
-            </Label>
-            <Select
-              value={selectedDistrict}
-              onValueChange={setSelectedDistrict}
-            >
-              <SelectTrigger className="w-full bg-zinc-50 text-zinc-900 border border-zinc-300 h-[38px] px-3 rounded-md">
-                <SelectValue placeholder="Select a district" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
-                {districts.map((d) => (
-                  <SelectItem key={d.id} value={String(d.id)}>
-                    {d.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid gap-2">
+              <Label htmlFor="state" className="text-zinc-700">
+                District *
+              </Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between bg-white"
+                  >
+                    {value
+                      ? districts?.find((s: District) => String(s.id) === value)
+                          ?.name
+                      : "Select state..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-130 p-0 bg-white">
+                  <Command>
+                    <CommandInput placeholder="Search state... here" />
+                    <CommandList>
+                      <CommandEmpty>No state found.</CommandEmpty>
+                      <CommandGroup>
+                        {districts?.map((s: District) => (
+                          <CommandItem
+                            key={s.id}
+                            value={s.name.toLowerCase()}
+                            onSelect={() => {
+                              setValue(String(s.id));
+                              setSelectedDistrict(String(s.id));
+                              setOpen(false);
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === String(s.id)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {s.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
           <div className="grid gap-2">

@@ -28,6 +28,24 @@ import {
   SelectValue,
 } from "./ui/select";
 
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import { getLocation } from "@/service/apiLocation";
 
 import { getStates } from "@/service/apiStates";
@@ -69,7 +87,7 @@ interface VendorPayload {
 }
 
 export default function VendorDialog() {
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialg] = useState(false);
 
   const [name, setName] = useState("");
 
@@ -103,6 +121,9 @@ export default function VendorDialog() {
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
   const [referralCode, setReferralCode] = useState("");
 
   const [currentMembershipId, setCurrentMembershipId] = useState<number | null>(
@@ -132,12 +153,23 @@ export default function VendorDialog() {
     queryFn: getPincode,
   });
 
+  const filteredDistricts = districts?.filter(
+    (d: any) => d.state_id === stateId
+  );
+  const filteredCities = cities?.filter(
+    (c: any) => c.district_id === districtId
+  );
+  const filteredLocations = locations?.filter((l: any) => l.city_id === cityId);
+  const filteredPinCodes = pinCodes?.filter(
+    (p: any) => p.location_id === locationId
+  );
+
   const createMutation = useMutation({
     mutationFn: (payload: VendorPayload) => createVendors(payload),
     onSuccess: () => {
       toast.success("Vendor saved successfully!");
       queryClient.invalidateQueries({ queryKey: ["vendors_new"] });
-      setOpen(false);
+      setOpenDialg(false);
     },
     onError: (err: any) => {
       if (err?.response?.data?.errors) {
@@ -185,7 +217,7 @@ export default function VendorDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialg}>
       <DialogTrigger asChild>
         <Button className="bg-purple-600 text-white hover:bg-purple-700">
           Add Vendor
@@ -226,23 +258,31 @@ export default function VendorDialog() {
               <Label className="mb-2">Phone</Label>
               <Input
                 type="number"
-                min="0"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val.length <= 10) {
+                    setPhone(val);
+                  }
+                }}
                 placeholder="Phone number"
-                maxLength={10}
               />
             </div>
             <div>
               <Label className="mb-2">Alternative Phone</Label>
               <Input
+                type="number"
                 value={alternativePhone}
-                onChange={(e) => setAlternativePhone(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val.length <= 10) {
+                    setAlternativePhone(val);
+                  }
+                }}
                 placeholder="Alternative phone"
               />
             </div>
 
-            {/* Password fields */}
             <div className="flex flex-col gap-1 relative">
               <Label className="mb-2">Password *</Label>
               <Input
@@ -275,25 +315,60 @@ export default function VendorDialog() {
               </span>
             </div>
 
-            {/* State/District/City/Location/Pin */}
-            <div>
-              <Label className="mb-2">State</Label>
-              <Select
-                value={stateId?.toString() || ""}
-                onValueChange={(val) => setStateId(Number(val))}
-              >
-                <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select State" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  {states?.map((s: any) => (
-                    <SelectItem key={s.id} value={s.id.toString()}>
-                      {s.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid gap-2">
+              <div className="grid gap-2">
+                <Label htmlFor="state" className="text-zinc-700">
+                  Sub Category *
+                </Label>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-full justify-between bg-white"
+                    >
+                      {value
+                        ? states?.find((s: any) => String(s.id) === value)?.name
+                        : "Select state..."}
+                      <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-70 p-0 bg-white">
+                    <Command>
+                      <CommandInput placeholder="Search state... here" />
+                      <CommandList>
+                        <CommandEmpty>No state found.</CommandEmpty>
+                        <CommandGroup>
+                          {states?.map((s: any) => (
+                            <CommandItem
+                              key={s.id}
+                              value={s.name.toLowerCase()}
+                              onSelect={() => {
+                                setValue(String(s.id));
+                                setStateId(s.id);
+                                setOpen(false);
+                              }}
+                            >
+                              <CheckIcon
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  value === String(s.id)
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {s.name}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
+
             <div>
               <Label className="mb-2">District</Label>
               <Select
@@ -304,7 +379,7 @@ export default function VendorDialog() {
                   <SelectValue placeholder="Select District" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {districts?.map((d: any) => (
+                  {filteredDistricts?.map((d: any) => (
                     <SelectItem key={d.id} value={d.id.toString()}>
                       {d.name}
                     </SelectItem>
@@ -322,7 +397,7 @@ export default function VendorDialog() {
                   <SelectValue placeholder="Select City" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {cities?.map((c: any) => (
+                  {filteredCities?.map((c: any) => (
                     <SelectItem key={c.id} value={c.id.toString()}>
                       {c.name}
                     </SelectItem>
@@ -340,7 +415,7 @@ export default function VendorDialog() {
                   <SelectValue placeholder="Select Location" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {locations?.map((l: any) => (
+                  {filteredLocations?.map((l: any) => (
                     <SelectItem key={l.id} value={l.id.toString()}>
                       {l.name}
                     </SelectItem>
@@ -358,7 +433,7 @@ export default function VendorDialog() {
                   <SelectValue placeholder="Select Pin Code" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {pinCodes?.map((p: any) => (
+                  {filteredPinCodes?.map((p: any) => (
                     <SelectItem key={p.id} value={p.id.toString()}>
                       {p.pin_code}
                     </SelectItem>
@@ -366,6 +441,7 @@ export default function VendorDialog() {
                 </SelectContent>
               </Select>
             </div>
+
             <div>
               <Label className="mb-2">Referral Code</Label>
               <Input
@@ -414,7 +490,7 @@ export default function VendorDialog() {
             <Button
               variant="outline"
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => setOpenDialg(false)}
             >
               Cancel
             </Button>

@@ -133,6 +133,7 @@ export default function SubCategoriesDialog({
       category_id: Number(selectedCategory),
     };
 
+    console.log("the sub category paylod is", payload);
     mutation.mutate(payload);
   };
 
@@ -171,6 +172,7 @@ export default function SubCategoriesDialog({
             <Select
               value={selectedCategory}
               onValueChange={(val) => {
+                console.log("the value is", val);
                 setSelectedCategory(val);
               }}
             >
@@ -179,7 +181,7 @@ export default function SubCategoriesDialog({
               </SelectTrigger>
               <SelectContent className="bg-zinc-50 text-zinc-900 border border-zinc-300">
                 {categories?.map((cat: CategoryPayload, idx) => (
-                  <SelectItem key={idx} value={String(idx)}>
+                  <SelectItem key={idx} value={String(cat.id)}>
                     {cat.name}
                   </SelectItem>
                 ))}

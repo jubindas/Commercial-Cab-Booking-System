@@ -9,19 +9,23 @@ import { userColumns } from "@/table-columns/users-table-columns";
 import { useQuery } from "@tanstack/react-query";
 
 import type { User } from "@/table-types/user-table-types";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function User() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { data } = useQuery({
+
+  const { data, isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: getAllUsers,
   });
 
-  console.log("the users are", data)
+  console.log("the users are", data);
 
   const users: User[] = Array.isArray(data) ? data : [];
 
   const userData = users.filter((user: User) => user.role === "User");
+
+  console.log("the filterd data is", userData);
 
   const filteredData = userData.filter((user: User) => {
     const searchLower = searchTerm.toLowerCase();
@@ -33,6 +37,12 @@ export default function User() {
   });
 
   console.log("Filtered users:", filteredData);
+
+
+  
+    if (isLoading) {
+      return <LoadingSkeleton />;
+    }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -70,7 +80,7 @@ export default function User() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {data && (
           <DataTable
-            data={data}
+            data={filteredData}
             columns={userColumns}
             enablePagination
           />

@@ -69,7 +69,6 @@ interface VendorPayload {
 }
 
 export default function VendorDialog() {
-
   const [open, setOpen] = useState(false);
 
   const [name, setName] = useState("");
@@ -105,7 +104,7 @@ export default function VendorDialog() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [referralCode, setReferralCode] = useState("");
-  
+
   const [currentMembershipId, setCurrentMembershipId] = useState<number | null>(
     null
   );
@@ -205,7 +204,6 @@ export default function VendorDialog() {
 
         <form className="space-y-8" onSubmit={handleSave}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Name & Email */}
             <div>
               <Label className="mb-2">Name *</Label>
               <Input
@@ -224,13 +222,15 @@ export default function VendorDialog() {
               />
             </div>
 
-            {/* Phone fields */}
             <div>
               <Label className="mb-2">Phone</Label>
               <Input
+                type="number"
+                min="0"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone number"
+                maxLength={10}
               />
             </div>
             <div>

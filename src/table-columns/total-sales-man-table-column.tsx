@@ -37,7 +37,6 @@ export const salesmanColumns: ColumnDef<TotalSalesMan>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      console.log("row is", row.original);
       return (
         <SalesmanTableColumnDropdown
           id={row.original.id}

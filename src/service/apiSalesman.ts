@@ -53,7 +53,7 @@ export const getAllSalesmen = async (token: string | null) => {
     });
 
     if (response && response.status === 200) {
-      return response.data;
+      return response.data.data;
     } else {
       console.log("Unexpected response:", response);
       return null;

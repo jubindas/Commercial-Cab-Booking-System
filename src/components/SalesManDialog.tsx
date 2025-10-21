@@ -214,9 +214,12 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
             <div>
               <Label className="mb-2">Phone</Label>
               <Input
+                type="number"
+                min="0"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone number"
+                maxLength={10}
               />
             </div>
             <div>

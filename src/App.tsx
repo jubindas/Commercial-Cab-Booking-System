@@ -3,59 +3,34 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
 import { Suspense, lazy, type ReactNode } from "react";
-
 import { AuthProvider } from "@/provider/authContext";
-
 import { useAuth } from "./hooks/useAuth";
 
-import Vendors from "./pages/Vendors";
-
-import PullCar from "./pages/PullCar";
-
-import ViewPullCarDetails from "./pages/ViewPullCarDetails";
-
-import ViewDetailsSalesmen from "./pages/ViewDetailsSalesmen";
-
-import SalesManReferral from "./pages/SalesManReferral";
-
-import PullcarMembership from "./pages/PullcarMembership";
-
-import UserMembership from "./pages/UserMembership";
-import User from "./pages/User";
-
 const RootLayout = lazy(() => import("@/components/RootLayout"));
-
 const Login = lazy(() => import("@/pages/Login"));
-
 const Location = lazy(() => import("@/pages/Location"));
-
 const Pincode = lazy(() => import("@/pages/Pincode"));
-
 const MainCategories = lazy(() => import("@/pages/MainCategories"));
-
 const SubCategories = lazy(() => import("@/pages/SubCategories"));
-
 const Vendor = lazy(() => import("@/pages/Vendor"));
-
 const State = lazy(() => import("@/pages/State"));
-
 const District = lazy(() => import("@/pages/District"));
-
 const City = lazy(() => import("@/pages/City"));
-
 const VendorProfile = lazy(() => import("@/pages/VendorProfile"));
-
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
-
 const TotalSalesMan = lazy(() => import("@/pages/TotalSalesMan"));
-
 const PerticulerMembership = lazy(() => import("@/pages/PerticulerMembership"));
-
 const Memberships = lazy(() => import("@/pages/Memberships"));
+const SalesManReferral = lazy(() => import("@/pages/SalesManReferral"));
+const ViewDetailsSalesmen = lazy(() => import("@/pages/ViewDetailsSalesmen"));
+const Vendors = lazy(() => import("@/pages/Vendors"));
+const PullCar = lazy(() => import("@/pages/PullCar"));
+const ViewPullCarDetails = lazy(() => import("@/pages/ViewPullCarDetails"));
+const PullcarMembership = lazy(() => import("@/pages/PullcarMembership"));
+const UserMembership = lazy(() => import("@/pages/UserMembership"));
+const User = lazy(() => import("@/pages/User"));
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { token } = useAuth();
@@ -63,11 +38,12 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
   return children;
 }
 
+
 const router = createBrowserRouter([
   {
     path: "login",
     element: (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Loading login...</div>}>
         <Login />
       </Suspense>
     ),
@@ -93,7 +69,7 @@ const router = createBrowserRouter([
       {
         path: "location",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading location...</div>}>
             <Location />
           </Suspense>
         ),
@@ -101,7 +77,7 @@ const router = createBrowserRouter([
       {
         path: "pincode",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading pincode...</div>}>
             <Pincode />
           </Suspense>
         ),
@@ -109,7 +85,7 @@ const router = createBrowserRouter([
       {
         path: "main-category",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading main categories...</div>}>
             <MainCategories />
           </Suspense>
         ),
@@ -117,7 +93,7 @@ const router = createBrowserRouter([
       {
         path: "sub-category",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading subcategories...</div>}>
             <SubCategories />
           </Suspense>
         ),
@@ -125,7 +101,7 @@ const router = createBrowserRouter([
       {
         path: "membership-vendor",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading vendor membership...</div>}>
             <Vendor />
           </Suspense>
         ),
@@ -133,7 +109,7 @@ const router = createBrowserRouter([
       {
         path: "state",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading states...</div>}>
             <State />
           </Suspense>
         ),
@@ -141,7 +117,7 @@ const router = createBrowserRouter([
       {
         path: "district",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading districts...</div>}>
             <District />
           </Suspense>
         ),
@@ -149,32 +125,31 @@ const router = createBrowserRouter([
       {
         path: "city",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading cities...</div>}>
             <City />
           </Suspense>
         ),
       },
       {
-        path: "/membership-details/:id",
+        path: "membership-details/:id",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading membership details...</div>}>
             <PerticulerMembership />
           </Suspense>
         ),
       },
       {
-        path: "/view-details/referrals/:id",
+        path: "view-details/referrals/:id",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading referral details...</div>}>
             <SalesManReferral />
           </Suspense>
         ),
       },
-
       {
         path: "profile",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading profile...</div>}>
             <VendorProfile />
           </Suspense>
         ),
@@ -182,61 +157,71 @@ const router = createBrowserRouter([
       {
         path: "total-salesman",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading total salesmen...</div>}>
             <TotalSalesMan />
           </Suspense>
         ),
       },
-
       {
         path: "membership",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading memberships...</div>}>
             <Memberships />
           </Suspense>
         ),
       },
       {
-        path: "/view-details/salesmen/:id",
+        path: "view-details/salesmen/:id",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading salesman details...</div>}>
             <ViewDetailsSalesmen />
           </Suspense>
         ),
       },
-
       {
         path: "vendors",
-        element: <Vendors />,
+        element: (
+          <Suspense fallback={<div>Loading vendors...</div>}>
+            <Vendors />
+          </Suspense>
+        ),
       },
       {
         path: "pull-car-membership",
-        element: <PullcarMembership />,
+        element: (
+          <Suspense fallback={<div>Loading pull car membership...</div>}>
+            <PullcarMembership />
+          </Suspense>
+        ),
       },
       {
         path: "pull-car",
-        element: <PullCar />,
+        element: (
+          <Suspense fallback={<div>Loading pull cars...</div>}>
+            <PullCar />
+          </Suspense>
+        ),
       },
       {
-        path: "/view-details/pull-cars/:id",
+        path: "view-details/pull-cars/:id",
         element: (
-          <Suspense fallback={<div>Loading vendor details...</div>}>
+          <Suspense fallback={<div>Loading pull car details...</div>}>
             <ViewPullCarDetails />
           </Suspense>
         ),
       },
       {
-        path: "/user-membership",
+        path: "user-membership",
         element: (
-          <Suspense fallback={<div>Loading vendor details...</div>}>
+          <Suspense fallback={<div>Loading user memberships...</div>}>
             <UserMembership />
           </Suspense>
         ),
       },
       {
-        path: "/user",
+        path: "user",
         element: (
-          <Suspense fallback={<div> Loading user .key. </div>}>
+          <Suspense fallback={<div>Loading users...</div>}>
             <User />
           </Suspense>
         ),
@@ -253,7 +238,6 @@ function App() {
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
-      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
     </QueryClientProvider>
   );
 }

@@ -13,6 +13,7 @@ import {
   Calendar,
   CreditCard,
 } from "lucide-react";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 const BASE_URL = "https://api.bhara.co.in/api";
 
@@ -29,8 +30,10 @@ export default function VendorProfile() {
     enabled: !!token,
   });
 
-  if (isLoading)
-    return <p className="text-center mt-10 text-zinc-600">Loading profile...</p>;
+
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
   if (isError || !vendor)
     return (
       <p className="text-center text-red-500 mt-10">

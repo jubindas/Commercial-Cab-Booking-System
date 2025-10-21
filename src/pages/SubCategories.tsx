@@ -15,7 +15,6 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useState } from "react";
 
 export default function SubCategories() {
-
   const [search, setSearch] = useState("");
 
   const {
@@ -28,8 +27,9 @@ export default function SubCategories() {
     queryFn: getSubcategories,
   });
 
+  console.log("the sub category is", subCategories);
   if (isLoading) {
-    return  <LoadingSkeleton />;
+    return <LoadingSkeleton />;
   }
 
   if (isError) {
@@ -42,7 +42,6 @@ export default function SubCategories() {
     (sub: SubCategory) => sub.category?.is_active === 1
   );
 
- 
   const filteredSubCategories = activeSubCategory.filter((sub: SubCategory) => {
     const searchLower = search.toLowerCase();
     return (
@@ -74,7 +73,7 @@ export default function SubCategories() {
           <span className="font-medium">Entries</span>
         </div>
 
-         <div className="flex items-center gap-2 text-sm text-zinc-700">
+        <div className="flex items-center gap-2 text-sm text-zinc-700">
           <span className="font-medium">Search:</span>
           <input
             type="text"

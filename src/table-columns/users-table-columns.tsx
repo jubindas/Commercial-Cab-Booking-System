@@ -1,4 +1,6 @@
+import UserColumnDropdown from "@/table-columns-dropdown/UserColumnDropdown";
 import type { User } from "@/table-types/user-table-types";
+
 import type { ColumnDef } from "@tanstack/react-table";
 
 export const userColumns: ColumnDef<User>[] = [
@@ -17,7 +19,7 @@ export const userColumns: ColumnDef<User>[] = [
   {
     header: "Phone",
     accessorKey: "phone",
-    accessorFn: (row)=> row.phone || "N/A"
+    accessorFn: (row) => row.phone || "N/A",
   },
   {
     header: "Alt. Phone",
@@ -46,5 +48,13 @@ export const userColumns: ColumnDef<User>[] = [
   {
     header: "Approved",
     accessorFn: (row) => (row.is_approved ? "Yes" : "No"),
+  },
+
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => (
+      <UserColumnDropdown id={row.original.id} user={row.original} />
+    ),
   },
 ];

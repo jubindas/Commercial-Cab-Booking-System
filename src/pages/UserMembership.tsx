@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/data-table";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import { useAuth } from "@/hooks/useAuth";
 
@@ -12,12 +13,17 @@ export default function UserMembership() {
   
   const { token } = useAuth();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["user-membership"],
     queryFn: () => getUserMembership(token),
   });
 
   console.log("the membership data is", data);
+
+  
+    if (isLoading) {
+      return <LoadingSkeleton />;
+    }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

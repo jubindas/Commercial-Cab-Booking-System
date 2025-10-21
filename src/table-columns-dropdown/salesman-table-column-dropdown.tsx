@@ -35,8 +35,7 @@ interface Props {
   salesman: TotalSalesMan;
 }
 
-export default function SalesmanTableColumnsDropdown({ id, salesman }: Props) {
-  console.log("the row data from now on is", salesman);
+export default function SalesmanTableColumnsDropdown({ id }: Props) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);

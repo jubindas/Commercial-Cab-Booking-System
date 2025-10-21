@@ -60,7 +60,7 @@ export default function ReferralMembership() {
                 </tr>
               </thead>
               <tbody>
-                {membership_counts.map((item, index) => (
+                {membership_counts.map((item: any, index: any) => (
                   <tr
                     key={index}
                     className="hover:bg-gray-50 transition-colors"
@@ -108,7 +108,7 @@ export default function ReferralMembership() {
                 </tr>
               </thead>
               <tbody>
-                {vendors.map((vendor, index) => (
+                {vendors.map((vendor: any, index: any) => (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="border border-gray-300 px-4 py-2">
                       {vendor.id}

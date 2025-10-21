@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataTable } from "@/components/data-table";
 
 import { stateColumns } from "@/table-columns/state-table-columns";
@@ -18,7 +19,7 @@ export default function State() {
   const [search, setSearch] = useState("");
 
   const {
-    data: states,
+    data: statesData,
     isLoading,
     isError,
     error,
@@ -27,7 +28,10 @@ export default function State() {
     queryFn: getStates,
   });
 
-  console.log("States data:", states);
+
+  const states = statesData?.slice().sort((a: any, b: any) =>
+  a.name.localeCompare(b.name)
+);
 
   if (isLoading) {
     return <LoadingSkeleton />;

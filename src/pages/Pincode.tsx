@@ -14,40 +14,38 @@ import { useState } from "react";
 
 import type { Pincode } from "@/table-types/pincode-table-types";
 
-
 export default function Pincode() {
+  const [search, setSearch] = useState("");
 
-const [search, setSearch] = useState("")
+  const { data: pincode, isLoading } = useQuery({
+    queryKey: ["pincodes"],
+    queryFn: getPincode,
+  });
 
+  console.log("the ass data is", pincode);
 
-const {data: pincode, isLoading } = useQuery({
-  queryKey: ["pincodes"],
-  queryFn: getPincode
-})
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
-
-if(isLoading){
-  return  <LoadingSkeleton />
-}
-
-
-const filteredPincodes = pincode.filter(
-  (pincode: Pincode) =>
-    pincode.area_name?.toLowerCase().includes(search.toLowerCase()) ||
-    pincode.pin_code?.toString().toLowerCase().includes(search.toLowerCase()) ||
-    pincode.status?.toLowerCase().includes(search.toLowerCase())
-);
+  const filteredPincodes = pincode.filter(
+    (pincode: Pincode) =>
+      pincode.area_name?.toLowerCase().includes(search.toLowerCase()) ||
+      pincode.pin_code
+        ?.toString()
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      pincode.status?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
-     
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-        Pin Code
+          Pin Code
         </h1>
         <PincodeDialog mode="create" />
       </div>
-
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div className="flex items-center gap-2 text-sm text-zinc-700">
@@ -62,7 +60,7 @@ const filteredPincodes = pincode.filter(
           <span className="font-medium">Entries</span>
         </div>
 
-     <div className="flex items-center gap-2 text-sm text-zinc-700">
+        <div className="flex items-center gap-2 text-sm text-zinc-700">
           <span className="font-medium">Search:</span>
           <input
             type="text"
@@ -74,13 +72,14 @@ const filteredPincodes = pincode.filter(
         </div>
       </div>
 
-
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
-       {pincode && <DataTable
-          data={filteredPincodes}
-          columns={pincodeColumns}
-          enablePagination
-        />}
+        {pincode && (
+          <DataTable
+            data={filteredPincodes}
+            columns={pincodeColumns}
+            enablePagination
+          />
+        )}
       </div>
     </div>
   );

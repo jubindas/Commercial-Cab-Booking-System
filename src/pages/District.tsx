@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataTable } from "@/components/data-table";
 
 import { disctrictColumns } from "@/table-columns/district-table-columns";
@@ -15,11 +16,10 @@ import { useState } from "react";
 import type { District } from "@/table-types/district-table-types";
 
 export default function District() {
-  
   const [search, setSearch] = useState("");
 
   const {
-    data: district,
+    data: districtData,
     isLoading,
     isError,
     error,
@@ -27,6 +27,10 @@ export default function District() {
     queryKey: ["district"],
     queryFn: getDistrict,
   });
+
+  const district = districtData
+    ?.slice()
+    .sort((a: any, b: any) => a.name.localeCompare(b.name));
 
   console.log("the districts arw", district);
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataTable } from "@/components/data-table";
 
 import LocationDialog from "@/components/LocationDialog";
@@ -17,21 +18,25 @@ import type { Location } from "@/table-types/location-table-types";
 export default function Location() {
   const [search, setSearch] = useState("");
 
-  const { data: location, isLoading } = useQuery({
+  const { data: locationData, isLoading } = useQuery({
     queryKey: ["locations"],
     queryFn: getLocation,
   });
+
+  const location = locationData
+    ?.slice()
+    .sort((a: any, b: any) => a.name.localeCompare(b.name));
 
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
- const filteredLocations = (location || []).filter((loc: Location) =>
-  loc.name.toLowerCase().includes(search.toLowerCase()) ||
-  loc.city_id.toString().toLowerCase().includes(search.toLowerCase()) ||
-  loc.status.toLowerCase().includes(search.toLowerCase())
-);
-
+  const filteredLocations = (location || []).filter(
+    (loc: Location) =>
+      loc.name.toLowerCase().includes(search.toLowerCase()) ||
+      loc.city_id.toString().toLowerCase().includes(search.toLowerCase()) ||
+      loc.status.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

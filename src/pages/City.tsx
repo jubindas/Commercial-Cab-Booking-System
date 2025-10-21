@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataTable } from "@/components/data-table";
 
 import { cityColumns } from "@/table-columns/city-table-columns";
@@ -15,25 +16,27 @@ import { useState } from "react";
 import type { City } from "@/table-types/city-table-types";
 
 export default function City() {
-
   const [search, setSearch] = useState("");
 
-  const { data: city, isLoading } = useQuery({
+  const { data: cityData, isLoading } = useQuery({
     queryKey: ["cities"],
     queryFn: getCities,
   });
 
+  const city = cityData
+    ?.slice()
+    .sort((a: any, b: any) => a.name.localeCompare(b.name));
 
-  if(isLoading){
-    return  <LoadingSkeleton />
+  if (isLoading) {
+    return <LoadingSkeleton />;
   }
 
-   const filteredCities = city.filter(
-      (city: City) =>
-        city.name?.toLowerCase().includes(search.toLowerCase()) ||
-        city.code?.toLowerCase().includes(search.toLowerCase()) ||
-        city.status?.includes(search)
-    );
+  const filteredCities = city.filter(
+    (city: City) =>
+      city.name?.toLowerCase().includes(search.toLowerCase()) ||
+      city.code?.toLowerCase().includes(search.toLowerCase()) ||
+      city.status?.includes(search)
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
@@ -57,7 +60,7 @@ export default function City() {
           <span className="font-medium">Entries</span>
         </div>
 
-       <div className="flex items-center gap-2 text-sm text-zinc-700">
+        <div className="flex items-center gap-2 text-sm text-zinc-700">
           <span className="font-medium">Search:</span>
           <input
             type="text"
@@ -71,7 +74,11 @@ export default function City() {
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {city && (
-          <DataTable data={filteredCities} columns={cityColumns} enablePagination />
+          <DataTable
+            data={filteredCities}
+            columns={cityColumns}
+            enablePagination
+          />
         )}
       </div>
     </div>

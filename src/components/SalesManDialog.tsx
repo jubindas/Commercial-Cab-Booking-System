@@ -275,7 +275,7 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
             <div className="grid gap-2">
               <div className="grid gap-2">
                 <Label htmlFor="state" className="text-zinc-700">
-                  Sub Category *
+                  State *
                 </Label>
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
@@ -287,13 +287,13 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                     >
                       {value
                         ? states?.find((s: any) => String(s.id) === value)?.name
-                        : "Select state..."}
+                        : "Select State..."}
                       <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-70 p-0 bg-white">
                     <Command>
-                      <CommandInput placeholder="Search state... here" />
+                      <CommandInput placeholder="Search State..." />
                       <CommandList>
                         <CommandEmpty>No state found.</CommandEmpty>
                         <CommandGroup>
@@ -408,14 +408,14 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
               />
             </div>
             <div>
-              <Label className="mb-2">ID Proof</Label>
+              <Label className="mb-2">ID Proof (Only jpg, png)</Label>
               <Input
                 type="file"
                 onChange={(e) => setIdProof(e.target.files?.[0] || null)}
               />
             </div>
             <div>
-              <Label className="mb-2">Address Proof</Label>
+              <Label className="mb-2">Address Proof (Only jpg, png)</Label>
               <Input
                 type="file"
                 onChange={(e) => setAddressProof(e.target.files?.[0] || null)}
@@ -425,17 +425,11 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
 
           <div className="flex justify-end gap-4 pt-6">
             <Button
-              variant="outline"
-              type="button"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
               type="submit"
-              className="bg-purple-700 text-white hover:bg-purple-800"
+              className="bg-purple-700 text-white hover:bg-purple-800 disabled:opacity-50"
+              disabled={createMutation.isPending}
             >
-              Save
+              {createMutation.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

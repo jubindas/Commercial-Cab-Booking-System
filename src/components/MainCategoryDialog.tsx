@@ -38,6 +38,8 @@ export default function MainCategoryDialog({
 }: Props) {
   const queryClient = useQueryClient();
 
+  const [openDialog, setOpenDialg] = useState(false);
+
   const [formData, setFormData] = useState({ name: "", description: "" });
 
   useEffect(() => {
@@ -68,6 +70,7 @@ export default function MainCategoryDialog({
         data
       );
       setFormData({ name: "", description: "" });
+      setOpenDialg(false);
     },
     onError: (err) => {
       console.error(`Failed to ${mode} category:`, err);
@@ -96,7 +99,7 @@ export default function MainCategoryDialog({
   }
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialg}>
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">

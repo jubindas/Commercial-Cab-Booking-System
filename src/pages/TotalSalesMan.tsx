@@ -26,6 +26,10 @@ export default function TotalSalesMan() {
     return <LoadingSkeleton />;
   }
 
+   const sortedSalesmen = [...(salesmanData || [])].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
   return (
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
@@ -61,7 +65,7 @@ export default function TotalSalesMan() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {salesmanData && (
           <DataTable
-            data={salesmanData}
+            data={sortedSalesmen }
             columns={salesmanColumns}
             enablePagination
           />

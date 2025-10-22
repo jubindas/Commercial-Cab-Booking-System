@@ -67,6 +67,8 @@ export default function MembershipDialog({
 }: Props) {
   const queryClient = useQueryClient();
 
+   const [openDialog, setOpenDialg] = useState(false);
+
   const [subCategoryId, setSubCategoryId] = useState<string>("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -123,6 +125,7 @@ export default function MembershipDialog({
         setPrice("");
         setDiscountedPrice("");
         setDiscountedPercentage("");
+          setOpenDialg(false)
       }
     },
     onError: (err) => {
@@ -162,7 +165,7 @@ export default function MembershipDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog  open={openDialog} onOpenChange={setOpenDialg}>
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">
@@ -201,13 +204,13 @@ export default function MembershipDialog({
                       ? subCategories?.find(
                           (s: SubCategory) => String(s.id) === value
                         )?.name
-                      : "Select state..."}
+                      : "Select Sub Category..."}
                     <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-130 p-0 bg-white">
                   <Command>
-                    <CommandInput placeholder="Search state... here" />
+                    <CommandInput placeholder="Search Sub Category..." />
                     <CommandList>
                       <CommandEmpty>No state found.</CommandEmpty>
                       <CommandGroup>

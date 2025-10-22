@@ -36,6 +36,8 @@ export default function StatesDialog({
 }: Props) {
   const queryClient = useQueryClient();
 
+  const [openDialog, setOpenDialg] = useState(false)
+
   const [formData, setFormData] = useState({ name: "", code: "" });
 
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function StatesDialog({
       console.log(`State ${mode === "create" ? "created" : "updated"}:`, data);
       toast.success(`State ${mode === "create" ? "created" : "updated"}`);
       setFormData({ name: "", code: "" });
+        setOpenDialg(false)
     },
     onError: (err) => {
       console.error(`Failed to ${mode} state:`, err);
@@ -79,7 +82,7 @@ export default function StatesDialog({
   }
 
   return (
-    <Dialog>
+    <Dialog  open={openDialog} onOpenChange={setOpenDialg}>
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">

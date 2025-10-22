@@ -55,6 +55,8 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   const [cityName, setCityName] = useState("");
   const [cityCode, setCityCode] = useState("");
 
+  const [openDialog, setOpenDialg] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
@@ -89,6 +91,7 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
       setSelectedDistrict("");
       setCityName("");
       setCityCode("");
+      setOpenDialg(false);
     },
     onError: (err) => {
       console.error(
@@ -115,7 +118,7 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialg}>
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">
@@ -151,13 +154,13 @@ export default function CityDialog({ mode, trigger, initialData, id }: Props) {
                     {value
                       ? districts?.find((s: District) => String(s.id) === value)
                           ?.name
-                      : "Select state..."}
+                      : "Select District..."}
                     <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-130 p-0 bg-white">
                   <Command>
-                    <CommandInput placeholder="Search state... here" />
+                    <CommandInput placeholder="Search District..." />
                     <CommandList>
                       <CommandEmpty>No state found.</CommandEmpty>
                       <CommandGroup>

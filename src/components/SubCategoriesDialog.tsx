@@ -201,13 +201,13 @@ export default function SubCategoriesDialog({
                       ? categories?.find(
                           (s: CategoryPayload) => String(s.id) === value
                         )?.name
-                      : "Select state..."}
+                      : "Select Main Category..."}
                     <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-130 p-0 bg-white">
                   <Command>
-                    <CommandInput placeholder="Search state... here" />
+                    <CommandInput placeholder="Search Main Category..." />
                     <CommandList>
                       <CommandEmpty>No state found.</CommandEmpty>
                       <CommandGroup>

@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 
 import { Button } from "@/components/ui/button";
 
-
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -63,7 +62,10 @@ export default function LocationDialog({
   id,
 }: Props) {
   const [open, setOpen] = useState(false);
+
   const [value, setValue] = useState("");
+
+  const [openDialog, setOpenDialg] = useState(false);
 
   const [selectedCity, setSelectedCity] = useState("");
 
@@ -106,6 +108,7 @@ export default function LocationDialog({
       setLocationName("");
       setLatitude("");
       setLongitude("");
+      setOpenDialg(false);
     },
     onError: (err) => {
       console.error("Failed to save location:", err);
@@ -128,7 +131,7 @@ export default function LocationDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialg}>
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">
@@ -161,13 +164,13 @@ export default function LocationDialog({
                   >
                     {value
                       ? cities?.find((s: City) => String(s.id) === value)?.name
-                      : "Select state..."}
+                      : "Select City..."}
                     <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-130 p-0 bg-white">
                   <Command>
-                    <CommandInput placeholder="Search state... here" />
+                    <CommandInput placeholder="Search City..." />
                     <CommandList>
                       <CommandEmpty>No state found.</CommandEmpty>
                       <CommandGroup>

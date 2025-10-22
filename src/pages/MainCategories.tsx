@@ -4,7 +4,7 @@ import { columns } from "@/table-columns/main-category-table-columns";
 
 import MainCategoryDialog from "@/components/MainCategoryDialog";
 
-import { getCategories } from "@/service/apiCategory";
+import { getCategories, type CategoryPayload } from "@/service/apiCategory";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -27,7 +27,18 @@ export default function MainCategories() {
     return <LoadingSkeleton />;
   }
 
-  const filteredCategories = categories?.filter((cat: MainCategory) =>
+  const sortedData = [...(categories || [])].sort(
+    (
+      a: CategoryPayload & { created_at?: string },
+      b: CategoryPayload & { created_at?: string }
+    ) =>
+      new Date(b.created_at || 0).getTime() -
+      new Date(a.created_at || 0).getTime()
+  );
+
+  console.log(sortedData);
+
+  const filteredCategories = sortedData?.filter((cat: MainCategory) =>
     cat.name.toLowerCase().includes(search.toLowerCase())
   );
 

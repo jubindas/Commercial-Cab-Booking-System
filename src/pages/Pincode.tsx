@@ -15,6 +15,7 @@ import { useState } from "react";
 import type { Pincode } from "@/table-types/pincode-table-types";
 
 export default function Pincode() {
+  
   const [search, setSearch] = useState("");
 
   const { data: pincode, isLoading } = useQuery({

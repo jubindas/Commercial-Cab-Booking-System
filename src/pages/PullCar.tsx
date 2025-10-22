@@ -10,7 +10,7 @@ import { pullCarColumns } from "@/table-columns/pull-car-columns";
 
 import type { PullCar } from "@/table-types/pull-car-types";
 
-import PullCarDialog from "@/components/PullCarDialog";
+//import PullCarDialog from "@/components/PullCarDialog";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
@@ -38,7 +38,7 @@ export default function PullCar() {
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
           Pull Car
         </h1>
-        <PullCarDialog />
+       {/* <PullCarDialog /> */}
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

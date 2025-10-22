@@ -63,6 +63,8 @@ export default function PincodeDialog({
 }: Props) {
   const [selectedLocation, setSelectedLocation] = useState("");
 
+   const [openDialog, setOpenDialg] = useState(false);
+
   const [areaName, setAreaName] = useState("");
 
   const [pinCode, setPinCode] = useState("");
@@ -103,6 +105,7 @@ export default function PincodeDialog({
       setAreaName("");
       setPinCode("");
       setFallbackPinCodes("");
+        setOpenDialg(false)
     },
     onError: (err) => {
       console.error("Failed to save pincode:", err);
@@ -151,7 +154,7 @@ export default function PincodeDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog  open={openDialog} onOpenChange={setOpenDialg}>
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">
@@ -187,13 +190,13 @@ export default function PincodeDialog({
                     {value
                       ? locations?.find((s: Location) => String(s.id) === value)
                           ?.name
-                      : "Select state..."}
+                      : "Select Location..."}
                     <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-130 p-0 bg-white">
                   <Command>
-                    <CommandInput placeholder="Search state... here" />
+                    <CommandInput placeholder="Search Location..." />
                     <CommandList>
                       <CommandEmpty>No state found.</CommandEmpty>
                       <CommandGroup>

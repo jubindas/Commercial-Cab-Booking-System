@@ -38,18 +38,29 @@ export default function SubCategories() {
     );
   }
 
-  const activeSubCategory = subCategories?.filter(
+  const sortedSubCategories = [...(subCategories || [])].sort(
+    (
+      a: SubCategory & { created_at?: string },
+      b: SubCategory & { created_at?: string }
+    ) =>
+      new Date(b.created_at || 0).getTime() -
+      new Date(a.created_at || 0).getTime()
+  );
+
+  const activeSubCategory = sortedSubCategories?.filter(
     (sub: SubCategory) => sub.category?.is_active === 1
   );
 
-  const filteredSubCategories = activeSubCategory.filter((sub: SubCategory) => {
-    const searchLower = search.toLowerCase();
-    return (
-      sub.name.toLowerCase().includes(searchLower) ||
-      (sub.description?.toLowerCase().includes(searchLower) ?? false) ||
-      (sub.category?.name.toLowerCase().includes(searchLower) ?? false)
-    );
-  });
+  const filteredSubCategories = activeSubCategory?.filter(
+    (sub: SubCategory) => {
+      const searchLower = search.toLowerCase();
+      return (
+        sub.name.toLowerCase().includes(searchLower) ||
+        (sub.description?.toLowerCase().includes(searchLower) ?? false) ||
+        (sub.category?.name.toLowerCase().includes(searchLower) ?? false)
+      );
+    }
+  );
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

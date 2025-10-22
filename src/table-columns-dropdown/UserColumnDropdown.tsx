@@ -40,16 +40,9 @@ export default function UserColumnDropdown({ id, user }: props) {
 
             <Button
               variant="ghost"
-              className="justify-start text-zinc-200 hover:bg-zinc-700"
-            >
-              Approve
-            </Button>
-
-            <Button
-              variant="ghost"
               className="justify-start text-red-400 hover:bg-red-500 hover:text-zinc-800"
             >
-              Delete
+              Disable
             </Button>
           </div>
         </PopoverContent>

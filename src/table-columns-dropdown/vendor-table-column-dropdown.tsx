@@ -10,9 +10,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-import type { Vendor } from "@/table-types/vendor-table-types";
-
-const BASE_URL = "https://bhara.eucivi.in/";
+import type { Vendor } from "@/table-types/vendors-table-types";
 
 type Props = {
   vendor: Vendor;
@@ -42,26 +40,7 @@ export default function VendorTableColumnDropdown({ vendor, status }: Props) {
           <Button
             variant="ghost"
             className="justify-start text-zinc-200 hover:bg-zinc-800"
-            onClick={() =>
-              navigate(`/view-details/${vendor.id}`, {
-                state: {
-                  vendor: {
-                    id: vendor.id,
-                    name: vendor.name,
-                    email: vendor.email,
-                    phone: vendor.phone,
-                    alternativePhone: vendor.alternative_phone_number,
-                    address: vendor.address,
-                    idCardImage: vendor.id_proof
-                      ? BASE_URL + vendor.id_proof
-                      : "",
-                    addressProofImage: vendor.address_proof
-                      ? BASE_URL + vendor.address_proof
-                      : "",
-                  },
-                },
-              })
-            }
+            onClick={() => navigate(`/vendor/view-details/${vendor.id}`)}
           >
             View Details
           </Button>

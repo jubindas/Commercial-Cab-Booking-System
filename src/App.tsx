@@ -4,32 +4,56 @@ import {
   Navigate,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { Suspense, lazy, type ReactNode } from "react";
+
 import { AuthProvider } from "@/provider/authContext";
+
 import { useAuth } from "./hooks/useAuth";
+import VendorsDirectory from "./pages/VendorsDirectory";
+import VendorsViewDetails from "./pages/VendorsViewDetails";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
+
 const Login = lazy(() => import("@/pages/Login"));
+
 const Location = lazy(() => import("@/pages/Location"));
+
 const Pincode = lazy(() => import("@/pages/Pincode"));
+
 const MainCategories = lazy(() => import("@/pages/MainCategories"));
+
 const SubCategories = lazy(() => import("@/pages/SubCategories"));
-const Vendor = lazy(() => import("@/pages/Vendor"));
+
 const State = lazy(() => import("@/pages/State"));
+
 const District = lazy(() => import("@/pages/District"));
+
 const City = lazy(() => import("@/pages/City"));
+
 const VendorProfile = lazy(() => import("@/pages/VendorProfile"));
+
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
+
 const TotalSalesMan = lazy(() => import("@/pages/TotalSalesMan"));
+
 const PerticulerMembership = lazy(() => import("@/pages/PerticulerMembership"));
+
 const Memberships = lazy(() => import("@/pages/Memberships"));
+
 const SalesManReferral = lazy(() => import("@/pages/SalesManReferral"));
+
 const ViewDetailsSalesmen = lazy(() => import("@/pages/ViewDetailsSalesmen"));
-const Vendors = lazy(() => import("@/pages/Vendors"));
+
+
 const PullCar = lazy(() => import("@/pages/PullCar"));
+
 const ViewPullCarDetails = lazy(() => import("@/pages/ViewPullCarDetails"));
+
 const PullcarMembership = lazy(() => import("@/pages/PullcarMembership"));
+
 const UserMembership = lazy(() => import("@/pages/UserMembership"));
+
 const User = lazy(() => import("@/pages/User"));
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -37,7 +61,6 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
   if (!token) return <Navigate to="/login" replace />;
   return children;
 }
-
 
 const router = createBrowserRouter([
   {
@@ -95,14 +118,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading subcategories...</div>}>
             <SubCategories />
-          </Suspense>
-        ),
-      },
-      {
-        path: "membership-vendor",
-        element: (
-          <Suspense fallback={<div>Loading vendor membership...</div>}>
-            <Vendor />
           </Suspense>
         ),
       },
@@ -182,10 +197,19 @@ const router = createBrowserRouter([
         path: "vendors",
         element: (
           <Suspense fallback={<div>Loading vendors...</div>}>
-            <Vendors />
+            <VendorsDirectory />
           </Suspense>
         ),
       },
+      {
+        path: "vendor/view-details/:id",
+        element: (
+          <Suspense fallback={<div>Loading vendors...</div>}>
+            <VendorsViewDetails />
+          </Suspense>
+        ),
+      },
+
       {
         path: "pull-car-membership",
         element: (

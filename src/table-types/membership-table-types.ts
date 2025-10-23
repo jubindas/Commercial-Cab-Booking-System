@@ -28,4 +28,9 @@ export interface Membership {
   updated_at: string;
   is_membership_approved?: boolean;
   commission_amount?: string;
+    user: {
+    name: string;
+    email: string;
+    phone: string;
+  };
 }

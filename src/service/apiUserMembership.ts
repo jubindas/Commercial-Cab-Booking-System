@@ -19,8 +19,8 @@ export const getUserMembership = async (token: string | null) => {
 };
 
 export async function toggleUserMembershipApproval(
-  id: number,
-  isApproved: boolean,
+  id: string,
+  isApproved: boolean | undefined,
   token: string | null
 ) {
   if (isApproved) {
@@ -52,3 +52,27 @@ export async function toggleUserMembershipApproval(
   }
 }
 
+export async function rejectUserMembership(id: string, token: string | null) {
+  if (!token) throw new Error("Missing authorization token");
+
+  try {
+    const response = await axiosInstance.post(
+      `/admin/memberships/reject/user/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Something went wrong while rejecting membership");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error rejecting membership:", error);
+    throw error;
+  }
+}

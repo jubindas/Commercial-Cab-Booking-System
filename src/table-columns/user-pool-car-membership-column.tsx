@@ -1,3 +1,4 @@
+import UserPoolCarMembershipDropdown from "@/table-columns-dropdown/UserPoolCarMembershipDropdown";
 import type { ColumnDef } from "@tanstack/react-table";
 
 interface UserMembership {
@@ -82,11 +83,13 @@ export const userPoolCarMembershipColumns: ColumnDef<UserMembership>[] = [
     ),
   },
   {
-    accessorKey: "purchased_at",
-    header: "Purchased On",
-    cell: ({ row }) => {
-      const date = new Date(row.original.purchased_at);
-      return <span>{date.toLocaleDateString()}</span>;
-    },
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => (
+      <UserPoolCarMembershipDropdown
+        id={row.original.id.toString()}
+        rowData={row.original}
+      />
+    ),
   },
 ];

@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MoreVertical } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,35 +16,44 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
-
 import {
-  toggleUserMembershipApproval,
-  rejectUserMembership,
-} from "@/service/apiUserMembership";
-
+  togglePoolUserMembershipApproval,
+  rejectPoolUserMembership,
+} from "@/service/apiUserPoolcarMembership";
 import { useAuth } from "@/hooks/useAuth";
 
-import type { Membership } from "@/table-types/membership-table-types";
+interface UserMembership {
+  id: number;
+  name: string;
+  price: string;
+  payment_method: string;
+  status: string;
+  is_membership_approved: boolean;
+  purchased_at: string;
+  user: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+}
 
 interface Props {
   id: string;
-  rowData: Membership;
+  rowData: UserMembership;
 }
 
-export default function UserMembershipActionDropdown({ id, rowData }: Props) {
+export default function UserPoolCarMembershipDropdown({ id, rowData }: Props) {
   const { token } = useAuth();
   const queryClient = useQueryClient();
 
   const approveMutation = useMutation({
     mutationFn: () =>
-      toggleUserMembershipApproval(id, rowData.is_membership_approved, token),
+      togglePoolUserMembershipApproval(id, rowData.is_membership_approved, token),
     onSuccess: () => {
       toast.success("Membership approved successfully!");
-      queryClient.invalidateQueries({ queryKey: ["user-membership"] });
+      queryClient.invalidateQueries({ queryKey: ["user-membership-pool-car"] });
     },
     onError: (err: any) => {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
@@ -55,10 +61,10 @@ export default function UserMembershipActionDropdown({ id, rowData }: Props) {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: () => rejectUserMembership(id, token),
+    mutationFn: () => rejectPoolUserMembership(id, token),
     onSuccess: () => {
       toast.success("Membership rejected successfully!");
-      queryClient.invalidateQueries({ queryKey: ["user-membership"] });
+      queryClient.invalidateQueries({ queryKey: ["user-membership-pool-car"] });
     },
     onError: (err: any) => {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
@@ -68,25 +74,17 @@ export default function UserMembershipActionDropdown({ id, rowData }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          className="h-8 w-8 p-0 text-zinc-800 hover:text-zinc-800"
-        >
-          <MoreVertical className="h-5 w-5" />
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <MoreVertical className="h-4 w-4 text-zinc-800" />
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent
-        align="end"
-        className="w-36 bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-xl p-2"
-      >
+      <PopoverContent className="w-36 bg-zinc-800 border border-zinc-700 p-2">
         <div className="flex flex-col space-y-1">
-          <Button
-            variant="ghost"
-            className="justify-start text-blue-400 hover:bg-blue-500 hover:text-white"
-          >
+          <Button variant="ghost" className="justify-start text-white">
             View Details
           </Button>
+
           {!rowData.is_membership_approved && (
             <AlertDialog>
               <AlertDialogTrigger asChild>

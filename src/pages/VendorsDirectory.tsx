@@ -21,6 +21,7 @@ export default function VendorsDirectory() {
     queryFn: getAllvendors,
   });
 
+
   const [searchTerm, setSearchTerm] = useState("");
 
   let filteredData =

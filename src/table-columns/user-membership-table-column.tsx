@@ -99,12 +99,8 @@ export const membershipColumns: ColumnDef<Membership>[] = [
     header: "Actions",
     cell: ({ row }) => (
       <UserMembershipActionDropdown
-        id={row.original.id}
-        token={localStorage.getItem("token")}
-        rowData={{
-          is_membership_approved: row.original.is_membership_approved ?? false,
-          name: row.original.membership?.name ?? "N/A",
-        }}
+        id={row.original.id.toString()}
+        rowData={row.original}
       />
     ),
   },

@@ -14,11 +14,9 @@ import type { Vendor } from "@/table-types/vendors-table-types";
 
 type Props = {
   vendor: Vendor;
-  status?: "Active" | "Inactive";
 };
 
-export default function VendorTableColumnDropdown({ vendor, status }: Props) {
-  const isActive = status === "Active";
+export default function VendorTableColumnDropdown({ vendor }: Props) {
   const navigate = useNavigate();
 
   return (
@@ -51,20 +49,6 @@ export default function VendorTableColumnDropdown({ vendor, status }: Props) {
             onClick={() => alert(`Verification for ${vendor.id}`)}
           >
             Verification
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="justify-start text-zinc-200 hover:bg-zinc-800"
-            onClick={() =>
-              alert(
-                `${vendor.id} is now ${
-                  isActive ? "Inactive (Disabled)" : "Active (Enabled)"
-                }`
-              )
-            }
-          >
-            {isActive ? "Disable" : "Enable"}
           </Button>
         </div>
       </PopoverContent>

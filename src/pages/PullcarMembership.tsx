@@ -4,7 +4,7 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import PullcarMembershipDialog from "@/components/PullcarMembershipDialog";
 
-import { getAllPullCarsMembership } from "@/service/apiPullcarMembership";
+import { getAllPullCars } from "@/service/apiPullcarMembership";
 
 import { pullCarMembershipColumns } from "@/table-columns/pull-car-membership-columns";
 
@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function PullcarMembership() {
   const { data, isLoading } = useQuery({
     queryKey: ["pullcar-memberships"],
-    queryFn: getAllPullCarsMembership,
+    queryFn: getAllPullCars,
   });
 
   console.log("the pull car membership is", data);
@@ -24,7 +24,7 @@ export default function PullcarMembership() {
     <div className="min-h-screen p-6 bg-zinc-100">
       <div className="flex flex-col mt-10 md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <h1 className="text-3xl font-bold text-zinc-700 tracking-tight">
-          Pull Car Membership
+          Pool Car Membership
         </h1>
         <PullcarMembershipDialog mode="create" />
       </div>

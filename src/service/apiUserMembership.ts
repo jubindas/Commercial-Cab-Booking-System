@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios";
 
 export const getUserMembership = async (token: string | null) => {
   try {
-    const response = await axiosInstance.get("/user-memberships", {
+    const response = await axiosInstance.get("/admin/memberships/all/user", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -17,3 +17,38 @@ export const getUserMembership = async (token: string | null) => {
     console.log("the error is", error);
   }
 };
+
+export async function toggleUserMembershipApproval(
+  id: number,
+  isApproved: boolean,
+  token: string | null
+) {
+  if (isApproved) {
+    console.log("Membership is already approved");
+    return { message: "Membership is already approved" };
+  }
+
+  if (!token) throw new Error("Missing authorization token");
+
+  try {
+    const response = await axiosInstance.post(
+      `/admin/memberships/approve/user/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Something went wrong while approving membership");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error approving membership:", error);
+    throw error;
+  }
+}
+

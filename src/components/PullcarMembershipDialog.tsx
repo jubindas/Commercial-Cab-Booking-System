@@ -111,7 +111,7 @@ export default function PullcarMembershipDialog({
       <DialogTrigger asChild>
         {trigger || (
           <Button className="bg-purple-600 text-white hover:bg-purple-700">
-            Pull Car Membership
+            Pool Car Membership
           </Button>
         )}
       </DialogTrigger>
@@ -176,8 +176,9 @@ export default function PullcarMembershipDialog({
           <Button
             className="bg-blue-600 text-white hover:bg-blue-700"
             onClick={handleSave}
+            disabled={createPullCar.isPending}
           >
-            Save
+            {createPullCar.isPending ? "Saving..." : "Save"}
           </Button>
         </div>
       </DialogContent>

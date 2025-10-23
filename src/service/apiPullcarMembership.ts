@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios";
 
 import type { PullCarMembership } from "@/table-types/pullcar-memberships-types";
 
-export const getAllPullCarsMembership = async () => {
+export const getAllPullCars = async () => {
   try {
     const response = await axiosInstance.get("/pullcar-memberships");
 
@@ -95,3 +95,4 @@ export const disablePullCarMembership = async (
     console.log("the error is", error);
   }
 };
+

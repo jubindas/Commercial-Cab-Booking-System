@@ -12,6 +12,7 @@ import { AuthProvider } from "@/provider/authContext";
 import { useAuth } from "./hooks/useAuth";
 import VendorsDirectory from "./pages/VendorsDirectory";
 import VendorsViewDetails from "./pages/VendorsViewDetails";
+import UserPoolCarMembership from "./pages/UserPoolCarMembership";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
@@ -44,7 +45,6 @@ const Memberships = lazy(() => import("@/pages/Memberships"));
 const SalesManReferral = lazy(() => import("@/pages/SalesManReferral"));
 
 const ViewDetailsSalesmen = lazy(() => import("@/pages/ViewDetailsSalesmen"));
-
 
 const PullCar = lazy(() => import("@/pages/PullCar"));
 
@@ -211,7 +211,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "pull-car-membership",
+        path: "pool-car-membership",
         element: (
           <Suspense fallback={<div>Loading pull car membership...</div>}>
             <PullcarMembership />
@@ -219,7 +219,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "pull-car",
+        path: "pool-car",
         element: (
           <Suspense fallback={<div>Loading pull cars...</div>}>
             <PullCar />
@@ -235,6 +235,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/users/pool-car-membership",
+        element: (
+          <Suspense fallback={<div>Loading user memberships...</div>}>
+            <UserPoolCarMembership />
+          </Suspense>
+        ),
+      },
+      {
         path: "user-membership",
         element: (
           <Suspense fallback={<div>Loading user memberships...</div>}>
@@ -242,6 +250,7 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+
       {
         path: "user",
         element: (

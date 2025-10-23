@@ -9,6 +9,8 @@ export interface MembershipPayload {
   discounted_percentage: number | null;
 }
 
+
+
 export const getMemberships = async () => {
   try {
     const response = await axiosInstance.get(`/memberships`);

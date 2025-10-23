@@ -16,7 +16,6 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
 
-  
   const [showPassword, setShowPassword] = useState(false);
 
   const [password, setPassword] = useState("");
@@ -24,6 +23,10 @@ export default function Login() {
   const mutation = useMutation({
     mutationFn: () => userLogin(email, password),
     onSuccess: (data) => {
+      if (data.user.role !== "Admin") {
+        alert("You are not authorized to access this page");
+        return;
+      }
       console.log("Login success:", data);
       login(data.user, data.token);
       console.log("Navigating to /");

@@ -1,10 +1,13 @@
 import { MoreVertical } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,11 +18,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
+
 import PullcarMembershipDialog from "@/components/PullcarMembershipDialog";
+
 import { disablePullCarMembership } from "@/service/apiPullcarMembership";
+
 import type { PullCarMembership } from "@/table-types/pullcar-memberships-types";
+
 import { useAuth } from "@/hooks/useAuth";
 
 interface Props {
@@ -29,7 +38,6 @@ interface Props {
 
 export default function PullCarMembershipDropdown({ id, rowData }: Props) {
   const queryClient = useQueryClient();
-
   const { token } = useAuth();
 
   const toggleMutation = useMutation({
@@ -58,7 +66,8 @@ export default function PullCarMembershipDropdown({ id, rowData }: Props) {
       </PopoverTrigger>
 
       <PopoverContent className="w-36 bg-zinc-800 border border-zinc-700 p-2">
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-1">
+          {/* Edit Membership */}
           <PullcarMembershipDialog
             mode="edit"
             id={id}

@@ -4,4 +4,5 @@ export type PullCarMembership = {
   description: string;
   price: string;
   is_active: boolean;
+  is_membership_approved: boolean;
 };

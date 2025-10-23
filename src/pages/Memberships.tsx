@@ -52,7 +52,8 @@ export default function Membership() {
   );
 
   const filteredMemberships = sortedMemberships.filter(
-    (membership: Membership) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (membership: any) => {
       const searchLower = search.toLowerCase();
       return (
         membership.name.toLowerCase().includes(searchLower) ||

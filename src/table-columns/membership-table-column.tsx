@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ColumnDef } from "@tanstack/react-table";
-
-import type { Membership } from "@/table-types/membership-table-types";
 
 import MembershipTableColumnDropdown from "@/table-columns-dropdown/membership-table-column-dropdown";
 
-export const membershipColumns: ColumnDef<Membership>[] = [
+export const membershipColumns: ColumnDef<any>[] = [
   {
     accessorKey: "id",
     header: "ID",

@@ -4,74 +4,45 @@ import type { PullCarMembership } from "@/table-types/pullcar-memberships-types"
 
 import PullCarMembershipDropdown from "@/table-columns-dropdown/pull-car-membership-column-dropdown";
 
+const ellipsisStyle = {
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  display: "block",
+  maxWidth: "150px",
+};
+
 export const pullCarMembershipColumns: ColumnDef<PullCarMembership>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: ({ row }) => (
-      <span
-        className={
-          row.original.is_active ? "text-zinc-800" : "text-red-700 line-through"
-        }
-      >
-        {row.getValue("id")}
-      </span>
-    ),
+    cell: ({ row }) => <span>{row.getValue("id")}</span>,
   },
   {
     accessorKey: "name",
-    header: "Membership Name",
+    header: "Name",
     cell: ({ row }) => (
-      <span
-        className={`font-medium ${
-          row.original.is_active ? "text-zinc-800" : "text-red-700 line-through"
-        }`}
-      >
-        {row.original.name}
-      </span>
+      <span style={ellipsisStyle}>{row.original.name ?? "N/A"}</span>
     ),
   },
   {
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span
-        className={
-          row.original.is_active
-            ? "text-zinc-700 block max-w-15 truncate"
-            : "text-red-700 italic block max-w-15 truncate"
-        }
-      >
-        {row.original.description || "No description"}
-      </span>
+      <span style={ellipsisStyle}>{row.original.description ?? "N/A"}</span>
     ),
   },
   {
     accessorKey: "price",
     header: "Price",
     cell: ({ row }) => (
-      <span
-        className={
-          row.original.is_active ? "text-zinc-700" : "text-red-700 line-through"
-        }
-      >
-        {row.original.price || "-"}
-      </span>
+      <span style={ellipsisStyle}>{row.original.price ?? "N/A"}</span>
     ),
   },
   {
-    accessorKey: "is_active",
     header: "Status",
     cell: ({ row }) => (
-      <span
-        className={
-          row.original.is_active
-            ? "text-green-600 font-semibold"
-            : "text-red-600 font-semibold"
-        }
-      >
-        {row.original.is_active ? "Active" : "Inactive"}
-      </span>
+      <span>{row.original.is_active ? "Active" : "Disactive"}</span>
     ),
   },
   {

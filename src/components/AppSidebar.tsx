@@ -12,7 +12,6 @@ import {
   FolderOutput,
   Users,
   Star,
-  User,
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -57,28 +56,24 @@ const items: MenuItem[] = [
   { title: "Sub Category", url: "/sub-category", icon: FolderOutput },
 
   { title: "Membership", url: "/membership", icon: Contact },
-  {
-    title: "Sales Man",
-    icon: Briefcase,
-    url: "/total-salesman",
-  },
+
+  { title: "Sales Man", url: "/total-salesman", icon: Briefcase },
+
+  { title: "Vendors", url: "/vendors", icon: Users },
+
+  // { title: "Pool Car", url: "/pool-car", icon: Car },
+
+  // { title: "User", url: "/user", icon: User },
+
+  { title: "Pool Car Membership", url: "/pool-car-membership", icon: Car },
 
   {
-    title: "Vendors",
-    url: "/vendors",
-    icon: Users,
+    title: "User Pool Car Membership",
+    url: "/users/pool-car-membership",
+    icon: Car,
   },
 
-  { title: "Pull Car Membership", url: "/pull-car-membership", icon: Car },
-
-  { title: "Pull Car", url: "/pull-car", icon: Car },
-
-  { title: "User", url: "/user", icon: User },
-  {
-    title: "User Membership",
-    url: "/user-membership",
-    icon: Star,
-  },
+  { title: "User Membership", url: "/user-membership", icon: Star },
 ];
 
 export function AppSidebar() {

@@ -66,7 +66,6 @@ import type { City } from "@/table-types/city-table-types";
 
 interface SalesmenPayload {
   name: string;
-  email: string;
   phone: string;
   alternative_phone_number: string | null;
   password: string;
@@ -94,8 +93,6 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
 
   const [name, setName] = useState("");
 
-  const [email, setEmail] = useState("");
-
   const [phone, setPhone] = useState("");
 
   const [alternativePhone, setAlternativePhone] = useState("");
@@ -115,6 +112,12 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
   const [locationId, setLocationId] = useState<number | null>(null);
 
   const [pinCodeId, setPinCodeId] = useState<number | null>(null);
+
+  const [idProofPreview, setIdProofPreview] = useState<string | null>(null);
+
+  const [addressProofPreview, setAddressProofPreview] = useState<string | null>(
+    null
+  );
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -178,14 +181,13 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!name || !email || !phone) {
+    if (!name || !phone) {
       toast("enter all the fields");
       return;
     }
 
     const payload: SalesmenPayload = {
       name,
-      email,
       phone: phone,
       alternative_phone_number: alternativePhone || null,
       password: "password",
@@ -234,15 +236,7 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 placeholder="Enter name"
               />
             </div>
-            <div>
-              <Label className="mb-2">Email *</Label>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email"
-              />
-            </div>
+
             <div>
               <Label className="mb-2">Phone</Label>
               <Input
@@ -333,17 +327,33 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 onValueChange={(val) => setDistrictId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select District" />
+                  <SelectValue
+                    placeholder={
+                      !stateId ? "Select the state first" : "Select District"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredDistricts?.map((d: any) => (
-                    <SelectItem key={d.id} value={d.id.toString()}>
-                      {d.name}
-                    </SelectItem>
-                  ))}
+                  {!stateId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the state first
+                    </div>
+                  ) : filteredDistricts && filteredDistricts.length > 0 ? (
+                    filteredDistricts.map((d: any) => (
+                      <SelectItem key={d.id} value={d.id.toString()}>
+                        {d.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No districts available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
+
             <div>
               <Label className="mb-2">City</Label>
               <Select
@@ -351,17 +361,33 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 onValueChange={(val) => setCityId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select City" />
+                  <SelectValue
+                    placeholder={
+                      !districtId ? "Select the district first" : "Select City"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredCities?.map((c: any) => (
-                    <SelectItem key={c.id} value={c.id.toString()}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
+                  {!districtId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the district first
+                    </div>
+                  ) : filteredCities && filteredCities.length > 0 ? (
+                    filteredCities.map((c: any) => (
+                      <SelectItem key={c.id} value={c.id.toString()}>
+                        {c.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No cities available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
+
             <div>
               <Label className="mb-2">Location</Label>
               <Select
@@ -369,14 +395,29 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 onValueChange={(val) => setLocationId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select Location" />
+                  <SelectValue
+                    placeholder={
+                      !cityId ? "Select the city first" : "Select Location"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredLocations?.map((l: any) => (
-                    <SelectItem key={l.id} value={l.id.toString()}>
-                      {l.name}
-                    </SelectItem>
-                  ))}
+                  {!cityId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the city first
+                    </div>
+                  ) : filteredLocations && filteredLocations.length > 0 ? (
+                    filteredLocations.map((l: any) => (
+                      <SelectItem key={l.id} value={l.id.toString()}>
+                        {l.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No locations available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -387,14 +428,31 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
                 onValueChange={(val) => setPinCodeId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select Pin Code" />
+                  <SelectValue
+                    placeholder={
+                      !locationId
+                        ? "Select the location first"
+                        : "Select Pin Code"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredPinCodes?.map((p: any) => (
-                    <SelectItem key={p.id} value={p.id.toString()}>
-                      {p.pin_code}
-                    </SelectItem>
-                  ))}
+                  {!locationId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the location first
+                    </div>
+                  ) : filteredPinCodes && filteredPinCodes.length > 0 ? (
+                    filteredPinCodes.map((p: any) => (
+                      <SelectItem key={p.id} value={p.id.toString()}>
+                        {p.pin_code}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No pin codes available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -411,15 +469,48 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
               <Label className="mb-2">ID Proof (Only jpg, png)</Label>
               <Input
                 type="file"
-                onChange={(e) => setIdProof(e.target.files?.[0] || null)}
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setIdProof(file);
+                  if (file) {
+                    setIdProofPreview(URL.createObjectURL(file));
+                  } else {
+                    setIdProofPreview(null);
+                  }
+                }}
               />
+              {idProofPreview && (
+                <img
+                  src={idProofPreview}
+                  alt="ID Preview"
+                  className="mt-2 h-32 w-32 object-cover rounded-md border"
+                />
+              )}
             </div>
+
             <div>
               <Label className="mb-2">Address Proof (Only jpg, png)</Label>
               <Input
                 type="file"
-                onChange={(e) => setAddressProof(e.target.files?.[0] || null)}
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setAddressProof(file);
+                  if (file) {
+                    setAddressProofPreview(URL.createObjectURL(file));
+                  } else {
+                    setAddressProofPreview(null);
+                  }
+                }}
               />
+              {addressProofPreview && (
+                <img
+                  src={addressProofPreview}
+                  alt="Address Preview"
+                  className="mt-2 h-32 w-32 object-cover rounded-md border"
+                />
+              )}
             </div>
           </div>
 

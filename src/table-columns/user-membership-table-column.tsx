@@ -18,19 +18,10 @@ export const membershipColumns: ColumnDef<Membership>[] = [
   },
   {
     accessorKey: "membership.name",
-    header: "Membership Name",
+    header: "Membership",
     cell: ({ row }) => (
       <span style={ellipsisStyle}>
         {row.original.membership?.name ?? "N/A"}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "sub_category.name",
-    header: "Sub Category",
-    cell: ({ row }) => (
-      <span style={ellipsisStyle}>
-        {row.original.sub_category?.name ?? "N/A"}
       </span>
     ),
   },
@@ -54,7 +45,6 @@ export const membershipColumns: ColumnDef<Membership>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
-
       const statusColor =
         status === "active"
           ? "bg-green-100 text-green-800"
@@ -73,14 +63,13 @@ export const membershipColumns: ColumnDef<Membership>[] = [
       );
     },
   },
-
   {
     accessorKey: "payment_method",
     header: "Pay Method",
     cell: ({ row }) => <span>{row.getValue("payment_method")}</span>,
   },
   {
-    header: "Membership Approved",
+    header: "Approval",
     cell: ({ row }) => (
       <span>
         {row.original.is_membership_approved ? "Approved" : "Pending"}
@@ -88,10 +77,10 @@ export const membershipColumns: ColumnDef<Membership>[] = [
     ),
   },
   {
-    accessorKey: "notes",
-    header: "Notes",
+    id: "user",
+    header: "User",
     cell: ({ row }) => (
-      <span style={ellipsisStyle}>{row.getValue("notes") ?? "N/A"}</span>
+      <span style={ellipsisStyle}>{row.original.user.email}</span>
     ),
   },
   {

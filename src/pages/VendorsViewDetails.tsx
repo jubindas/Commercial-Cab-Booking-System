@@ -52,6 +52,8 @@ export default function VendorsViewDetails() {
 
   const vendor = data;
 
+  console.log("Vendor Data:", vendor);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-100 via-white to-zinc-50 py-16 px-8">
       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl border border-zinc-200 overflow-hidden">

@@ -3,7 +3,6 @@ import axiosInstance from "@/lib/axios";
 
 export const createSalesMan = async (data: {
   name: string;
-  email: string;
   phone: string;
   alternative_phone_number: string | null;
   password: string;
@@ -22,7 +21,7 @@ export const createSalesMan = async (data: {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
+      if (value !== null && value !== undefined && value !== "") {
         formData.append(key, value as any);
       }
     });
@@ -138,7 +137,6 @@ export const getSalesmanReferralPullcar = async (
 
 export const createVendors = async (data: {
   name: string;
-  email: string;
   phone: string | null;
   alternative_phone_number: string | null;
   password: string;
@@ -153,13 +151,12 @@ export const createVendors = async (data: {
   location_id: number | null;
   pin_code_id: number | null;
   referral_code: string | null;
-  current_membership_id: number | null;
 }) => {
   try {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
+      if (value !== null && value !== undefined && value !== "") {
         formData.append(key, value as any);
       }
     });

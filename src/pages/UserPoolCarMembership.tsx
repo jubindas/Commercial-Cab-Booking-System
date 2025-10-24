@@ -7,16 +7,21 @@ import { useAuth } from "@/hooks/useAuth";
 import { DataTable } from "@/components/data-table";
 
 import { userPoolCarMembershipColumns } from "@/table-columns/user-pool-car-membership-column";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function UserPoolCarMembership() {
   const { token } = useAuth();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["user-membership-pool-car"],
     queryFn: () => getAllUserMembership(token),
   });
 
   console.log(data);
+
+    if (isLoading) {
+      return <LoadingSkeleton />;
+    }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

@@ -11,15 +11,6 @@ export const membershipColumns: ColumnDef<any>[] = [
       <span className="text-zinc-700">{row.getValue("id")}</span>
     ),
   },
-  {
-    accessorKey: "sub_category",
-    header: "Sub Category",
-    cell: ({ row }) => (
-      <span className="text-zinc-700 block max-w-25 truncate">
-        {row.original.sub_category?.name || "-"}
-      </span>
-    ),
-  },
 
   {
     accessorKey: "name",
@@ -27,6 +18,15 @@ export const membershipColumns: ColumnDef<any>[] = [
     cell: ({ row }) => (
       <span className="text-zinc-700 block max-w-25 truncate">
         {row.getValue("name")}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "sub_category",
+    header: "Sub Category",
+    cell: ({ row }) => (
+      <span className="text-zinc-700 block max-w-25 truncate">
+        {row.original.sub_category?.name || "-"}
       </span>
     ),
   },

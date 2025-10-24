@@ -10,8 +10,11 @@ import { Suspense, lazy, type ReactNode } from "react";
 import { AuthProvider } from "@/provider/authContext";
 
 import { useAuth } from "./hooks/useAuth";
+
 import VendorsDirectory from "./pages/VendorsDirectory";
+
 import VendorsViewDetails from "./pages/VendorsViewDetails";
+
 import UserPoolCarMembership from "./pages/UserPoolCarMembership";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));

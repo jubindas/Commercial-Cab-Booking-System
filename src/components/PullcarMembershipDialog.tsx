@@ -120,8 +120,8 @@ export default function PullcarMembershipDialog({
         <DialogHeader>
           <DialogTitle className="text-zinc-900">
             {mode === "create"
-              ? "Add Pullcar Membership"
-              : "Edit Pullcar Membership"}
+              ? "Add Poolcar Membership"
+              : "Edit Poolcar Membership"}
           </DialogTitle>
           <DialogDescription className="text-zinc-500">
             Enter the membership details below.

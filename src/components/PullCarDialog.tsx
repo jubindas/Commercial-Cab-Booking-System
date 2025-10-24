@@ -57,6 +57,7 @@ export default function PullCarDialog({ trigger }: Props) {
       toast.success("Pull car created successfully");
       queryClient.invalidateQueries({ queryKey: ["pullcar"] });
       resetForm();
+      setOpen(false)
     },
     onError: (err: any) => {
       if (err?.response?.data?.errors) {
@@ -131,7 +132,7 @@ export default function PullCarDialog({ trigger }: Props) {
       <DialogContent className="sm:max-w-[700px] bg-white rounded-3xl border border-gray-200 shadow-2xl p-10 max-h-[85vh] overflow-y-auto">
         <DialogHeader className="mb-8">
           <DialogTitle className="text-3xl font-extrabold text-gray-900 leading-tight tracking-tight">
-            Add New Pull Car
+            Add New Pool Car
           </DialogTitle>
           <DialogDescription className="text-gray-500 mt-2 text-base">
             Please complete all required fields and upload high-quality car

@@ -68,7 +68,6 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface VendorPayload {
   name: string;
-  email: string;
   phone: string | null;
   alternative_phone_number: string | null;
   password: string;
@@ -83,7 +82,6 @@ interface VendorPayload {
   location_id: number | null;
   pin_code_id: number | null;
   referral_code: string | null;
-  current_membership_id: number | null;
 }
 
 export default function VendorDialog() {
@@ -91,15 +89,9 @@ export default function VendorDialog() {
 
   const [name, setName] = useState("");
 
-  const [email, setEmail] = useState("");
-
   const [phone, setPhone] = useState("");
 
   const [alternativePhone, setAlternativePhone] = useState("");
-
-  const [password, setPassword] = useState("");
-
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
   const [address, setAddress] = useState("");
 
@@ -121,14 +113,17 @@ export default function VendorDialog() {
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [idProofPreview, setIdProofPreview] = useState<string | null>(null);
+
+  const [addressProofPreview, setAddressProofPreview] = useState<string | null>(
+    null
+  );
+
   const [open, setOpen] = useState(false);
+
   const [value, setValue] = useState("");
 
   const [referralCode, setReferralCode] = useState("");
-
-  const [currentMembershipId, setCurrentMembershipId] = useState<number | null>(
-    null
-  );
 
   const queryClient = useQueryClient();
 
@@ -140,14 +135,17 @@ export default function VendorDialog() {
     queryKey: ["states"],
     queryFn: getStates,
   });
+
   const { data: districts } = useQuery<District[]>({
     queryKey: ["districts"],
     queryFn: getDistrict,
   });
+
   const { data: cities } = useQuery<City[]>({
     queryKey: ["cities"],
     queryFn: getCities,
   });
+
   const { data: pinCodes } = useQuery({
     queryKey: ["pinCodes"],
     queryFn: getPincode,
@@ -156,10 +154,13 @@ export default function VendorDialog() {
   const filteredDistricts = districts?.filter(
     (d: any) => d.state_id === stateId
   );
+
   const filteredCities = cities?.filter(
     (c: any) => c.district_id === districtId
   );
+
   const filteredLocations = locations?.filter((l: any) => l.city_id === cityId);
+
   const filteredPinCodes = pinCodes?.filter(
     (p: any) => p.location_id === locationId
   );
@@ -168,7 +169,7 @@ export default function VendorDialog() {
     mutationFn: (payload: VendorPayload) => createVendors(payload),
     onSuccess: () => {
       toast.success("Vendor saved successfully!");
-      queryClient.invalidateQueries({ queryKey: ["vendors_new"] });
+      queryClient.invalidateQueries({ queryKey: ["vendors"] });
       setOpenDialg(false);
     },
     onError: (err: any) => {
@@ -188,16 +189,14 @@ export default function VendorDialog() {
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!name || !email || !password || password !== passwordConfirmation)
-      return;
+    if (!name) return;
 
     const payload: VendorPayload = {
       name,
-      email,
       phone: phone || null,
       alternative_phone_number: alternativePhone || null,
-      password,
-      password_confirmation: passwordConfirmation,
+      password: "password",
+      password_confirmation: "password",
       role: "Vendor",
       address: address || null,
       id_proof: idProof,
@@ -208,7 +207,6 @@ export default function VendorDialog() {
       location_id: locationId,
       pin_code_id: pinCodeId,
       referral_code: referralCode || null,
-      current_membership_id: currentMembershipId,
     };
 
     console.log("the paylod is", payload);
@@ -242,15 +240,6 @@ export default function VendorDialog() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter name"
-              />
-            </div>
-            <div>
-              <Label className="mb-2">Email *</Label>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email"
               />
             </div>
 
@@ -287,9 +276,11 @@ export default function VendorDialog() {
               <Label className="mb-2">Password *</Label>
               <Input
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value="password"
+                readOnly
+                disabled
                 placeholder="Password"
+                className="cursor-not-allowed bg-gray-100 text-gray-500"
               />
               <span
                 className="absolute right-3 top-[36px] cursor-pointer"
@@ -303,9 +294,11 @@ export default function VendorDialog() {
               <Label className="mb-2">Confirm Password *</Label>
               <Input
                 type={showConfirmPassword ? "text" : "password"}
-                value={passwordConfirmation}
-                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                value="password"
+                readOnly
+                disabled
                 placeholder="Confirm Password"
+                className="cursor-not-allowed bg-gray-100 text-gray-500"
               />
               <span
                 className="absolute right-3 top-[36px] cursor-pointer"
@@ -376,17 +369,33 @@ export default function VendorDialog() {
                 onValueChange={(val) => setDistrictId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select District" />
+                  <SelectValue
+                    placeholder={
+                      !stateId ? "Select the state first" : "Select District"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredDistricts?.map((d: any) => (
-                    <SelectItem key={d.id} value={d.id.toString()}>
-                      {d.name}
-                    </SelectItem>
-                  ))}
+                  {!stateId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the state first
+                    </div>
+                  ) : filteredDistricts && filteredDistricts.length > 0 ? (
+                    filteredDistricts.map((d: any) => (
+                      <SelectItem key={d.id} value={d.id.toString()}>
+                        {d.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No districts available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
+
             <div>
               <Label className="mb-2">City</Label>
               <Select
@@ -394,17 +403,33 @@ export default function VendorDialog() {
                 onValueChange={(val) => setCityId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select City" />
+                  <SelectValue
+                    placeholder={
+                      !districtId ? "Select the district first" : "Select City"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredCities?.map((c: any) => (
-                    <SelectItem key={c.id} value={c.id.toString()}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
+                  {!districtId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the district first
+                    </div>
+                  ) : filteredCities && filteredCities.length > 0 ? (
+                    filteredCities.map((c: any) => (
+                      <SelectItem key={c.id} value={c.id.toString()}>
+                        {c.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No cities available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
+
             <div>
               <Label className="mb-2">Location</Label>
               <Select
@@ -412,17 +437,33 @@ export default function VendorDialog() {
                 onValueChange={(val) => setLocationId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select Location" />
+                  <SelectValue
+                    placeholder={
+                      !cityId ? "Select the city first" : "Select Location"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredLocations?.map((l: any) => (
-                    <SelectItem key={l.id} value={l.id.toString()}>
-                      {l.name}
-                    </SelectItem>
-                  ))}
+                  {!cityId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the city first
+                    </div>
+                  ) : filteredLocations && filteredLocations.length > 0 ? (
+                    filteredLocations.map((l: any) => (
+                      <SelectItem key={l.id} value={l.id.toString()}>
+                        {l.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No locations available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
+
             <div>
               <Label className="mb-2">Pin Code</Label>
               <Select
@@ -430,14 +471,31 @@ export default function VendorDialog() {
                 onValueChange={(val) => setPinCodeId(Number(val))}
               >
                 <SelectTrigger className="w-full h-[38px] px-3 rounded-md bg-zinc-50 border border-zinc-300">
-                  <SelectValue placeholder="Select Pin Code" />
+                  <SelectValue
+                    placeholder={
+                      !locationId
+                        ? "Select the location first"
+                        : "Select Pin Code"
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-white">
-                  {filteredPinCodes?.map((p: any) => (
-                    <SelectItem key={p.id} value={p.id.toString()}>
-                      {p.pin_code}
-                    </SelectItem>
-                  ))}
+                  {!locationId ? (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      Select the location first
+                    </div>
+                  ) : filteredPinCodes && filteredPinCodes.length > 0 ? (
+                    filteredPinCodes.map((p: any) => (
+                      <SelectItem key={p.id} value={p.id.toString()}>
+                        {p.pin_code}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500 text-sm">
+                      No pin codes available
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -452,17 +510,6 @@ export default function VendorDialog() {
             </div>
 
             <div>
-              <Label className="mb-2">Current Membership ID</Label>
-              <Input
-                type="number"
-                value={currentMembershipId ?? ""}
-                onChange={(e) => setCurrentMembershipId(Number(e.target.value))}
-                placeholder="Enter membership ID"
-              />
-            </div>
-
-            {/* Address / Files */}
-            <div>
               <Label className="mb-2">Address</Label>
               <Input
                 value={address}
@@ -470,19 +517,53 @@ export default function VendorDialog() {
                 placeholder="Enter address"
               />
             </div>
+
             <div>
               <Label className="mb-2">ID Proof</Label>
               <Input
                 type="file"
-                onChange={(e) => setIdProof(e.target.files?.[0] || null)}
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setIdProof(file);
+                  if (file) {
+                    setIdProofPreview(URL.createObjectURL(file));
+                  } else {
+                    setIdProofPreview(null);
+                  }
+                }}
               />
+              {idProofPreview && (
+                <img
+                  src={idProofPreview}
+                  alt="ID Preview"
+                  className="mt-2 h-32 w-32 object-cover rounded-md border"
+                />
+              )}
             </div>
+
             <div>
               <Label className="mb-2">Address Proof</Label>
               <Input
                 type="file"
-                onChange={(e) => setAddressProof(e.target.files?.[0] || null)}
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setAddressProof(file);
+                  if (file) {
+                    setAddressProofPreview(URL.createObjectURL(file));
+                  } else {
+                    setAddressProofPreview(null);
+                  }
+                }}
               />
+              {addressProofPreview && (
+                <img
+                  src={addressProofPreview}
+                  alt="Address Preview"
+                  className="mt-2 h-32 w-32 object-cover rounded-md border"
+                />
+              )}
             </div>
           </div>
 
@@ -497,8 +578,9 @@ export default function VendorDialog() {
             <Button
               type="submit"
               className="bg-purple-700 text-white hover:bg-purple-800"
+              disabled={createMutation.isPending}
             >
-              Save
+              {createMutation.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

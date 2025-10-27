@@ -10,11 +10,12 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { User } from "@/table-types/user-table-types";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import GlobalError from "@/components/GlobalError";
 
 export default function User() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["users"],
     queryFn: getAllUsers,
   });
@@ -43,6 +44,10 @@ export default function User() {
     if (isLoading) {
       return <LoadingSkeleton />;
     }
+
+      if (isError) {
+        return <GlobalError error={error} />;
+      }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

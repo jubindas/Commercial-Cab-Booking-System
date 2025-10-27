@@ -7,11 +7,11 @@ export const getStates = async () => {
     if (response && response.status === 200) {
       return response.data;
     } else {
-      console.log("Unexpected response:", response);
-      return null;
+      throw new Error(`Unexpected response: ${response.statusText}`);
     }
   } catch (error) {
     console.log("the error is", error);
+    throw error;
   }
 };
 

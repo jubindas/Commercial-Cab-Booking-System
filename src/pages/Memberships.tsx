@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/data-table";
+import GlobalError from "@/components/GlobalError";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
@@ -21,7 +22,7 @@ import { useState } from "react";
 export default function Membership() {
   const [search, setSearch] = useState("");
 
-  const { data: membershipData, isLoading } = useQuery({
+  const { data: membershipData, isLoading, isError, error } = useQuery({
     queryKey: ["membership"],
     queryFn: getMemberships,
   });
@@ -34,6 +35,12 @@ export default function Membership() {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
+
+
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
+
 
   const visibleSubCategories = subCategories?.filter(
     (sub: SubCategory) => sub.category?.is_active === 1

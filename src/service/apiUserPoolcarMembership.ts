@@ -9,12 +9,13 @@ export const getAllUserMembership = async (token: string | null) => {
     });
 
     if (response.status !== 200) {
-      throw new Error("something went wrong try again later");
+       throw new Error(`Unexpected response: ${response.statusText}`);
     }
 
     return response.data;
   } catch (error) {
     console.log("the error is", error);
+    throw error;
   }
 };
 

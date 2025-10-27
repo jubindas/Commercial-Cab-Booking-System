@@ -15,6 +15,7 @@ export const getUserMembership = async (token: string | null) => {
     return response.data;
   } catch (error) {
     console.log("the error is", error);
+    throw error;
   }
 };
 

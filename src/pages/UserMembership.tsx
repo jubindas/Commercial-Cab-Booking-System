@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/data-table";
+import GlobalError from "@/components/GlobalError";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
@@ -13,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function UserMembership() {
   const { token } = useAuth();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["user-membership"],
     queryFn: () => getUserMembership(token),
   });
@@ -23,6 +24,10 @@ export default function UserMembership() {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
+
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

@@ -14,6 +14,7 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import type { State } from "@/table-types/state-table-types";
 
 import { useState } from "react";
+import GlobalError from "@/components/GlobalError";
 
 export default function State() {
   const [search, setSearch] = useState("");
@@ -28,19 +29,16 @@ export default function State() {
     queryFn: getStates,
   });
 
-
-  const states = statesData?.slice().sort((a: any, b: any) =>
-  a.name.localeCompare(b.name)
-);
+  const states = statesData
+    ?.slice()
+    .sort((a: any, b: any) => a.name.localeCompare(b.name));
 
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
   if (isError) {
-    return (
-      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
-    );
+    return <GlobalError error={error} />;
   }
 
   const filteredStates = states?.filter((state: State) =>

@@ -14,11 +14,17 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useState } from "react";
 
 import type { Location } from "@/table-types/location-table-types";
+import GlobalError from "@/components/GlobalError";
 
 export default function Location() {
   const [search, setSearch] = useState("");
 
-  const { data: locationData, isLoading } = useQuery({
+  const {
+    data: locationData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["locations"],
     queryFn: getLocation,
   });
@@ -29,6 +35,10 @@ export default function Location() {
 
   if (isLoading) {
     return <LoadingSkeleton />;
+  }
+
+  if (isError) {
+    return <GlobalError error={error} />;
   }
 
   const filteredLocations = (location || []).filter(

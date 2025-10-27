@@ -13,10 +13,16 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useState } from "react";
 
 import type { MainCategory } from "@/table-types/main-category-table-types";
+import GlobalError from "@/components/GlobalError";
 
 export default function MainCategories() {
   const [search, setSearch] = useState("");
-  const { data: categories, isLoading } = useQuery({
+  const {
+    data: categories,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
@@ -25,6 +31,10 @@ export default function MainCategories() {
 
   if (isLoading) {
     return <LoadingSkeleton />;
+  }
+
+  if (isError) {
+    return <GlobalError error={error} />;
   }
 
   const sortedData = [...(categories || [])].sort(

@@ -13,6 +13,7 @@ import type { SubCategory } from "@/table-types/sub-category-table-types";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import { useState } from "react";
+import GlobalError from "@/components/GlobalError";
 
 export default function SubCategories() {
   const [search, setSearch] = useState("");
@@ -32,11 +33,9 @@ export default function SubCategories() {
     return <LoadingSkeleton />;
   }
 
-  if (isError) {
-    return (
-      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
-    );
-  }
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
 
   const sortedSubCategories = [...(subCategories || [])].sort(
     (

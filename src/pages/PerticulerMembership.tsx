@@ -13,11 +13,12 @@ import {
   ClockIcon,
   CubeIcon,
 } from "@heroicons/react/24/solid";
+import GlobalError from "@/components/GlobalError";
 
 export default function PerticulerMembership() {
   const { id } = useParams();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["membership", id],
     queryFn: () => getMembershipById(Number(id)),
     enabled: !!id,
@@ -31,12 +32,9 @@ export default function PerticulerMembership() {
       </div>
     );
 
-  if (isError)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-red-500 text-lg">Error loading membership data.</p>
-      </div>
-    );
+  if (isError) {
+    return <GlobalError error={error} />;
+  }
 
   return (
     <div className="max-w-5xl mx-auto mt-10 p-6">

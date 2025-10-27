@@ -26,7 +26,7 @@ import { toast } from "sonner";
 
 import { useState } from "react";
 
-import DistrictDialog from "@/components/DistrictDialog";
+import CityDialog from "@/components/CityDialog";
 
 interface Props {
   id: string | number;
@@ -62,12 +62,12 @@ export default function CityTableColumnDropdown({ id, rowData }: Props) {
         </PopoverTrigger>
         <PopoverContent className="w-32 bg-zinc-800 border border-zinc-700 p-2">
           <div className="flex flex-col">
-            <DistrictDialog
+            <CityDialog
               mode="edit"
               id={id}
               initialData={
                 rowData
-                  ? { stateId: rowData.districtId, name: rowData.name, code: rowData.code }
+                  ? { districtId: rowData.districtId, name: rowData.name, code: rowData.code }
                   : undefined
               }
               trigger={

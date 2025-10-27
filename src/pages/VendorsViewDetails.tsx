@@ -15,13 +15,14 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import GlobalError from "@/components/GlobalError";
 
 export default function VendorsViewDetails() {
   const { id } = useParams();
   const [showMemberships, setShowMemberships] = useState(false);
   const BASE_URL = "https://api.bhara.co.in/";
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["vendor", id],
     queryFn: () => getVendorById(id),
   });
@@ -37,9 +38,7 @@ export default function VendorsViewDetails() {
   if (isError || !data) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50">
-        <p className="text-lg text-red-500 font-semibold mb-4">
-          Failed to load vendor details.
-        </p>
+        <GlobalError error={error} />;
         <Link
           to="/vendors"
           className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition"

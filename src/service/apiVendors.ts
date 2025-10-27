@@ -5,12 +5,13 @@ export const getAllvendors = async () => {
     const response = await axiosInstance.get("/vendors");
 
     if (response.status !== 200) {
-      throw new Error("something went wrong try again");
+      throw new Error(`Unexpected response: ${response.statusText}`);
     }
 
     return response.data.data;
   } catch (error) {
     console.log("the error is", error);
+    throw error;
   }
 };
 

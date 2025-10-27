@@ -7,20 +7,27 @@ import { useAuth } from "@/hooks/useAuth";
 import { DataTable } from "@/components/data-table";
 
 import { userPoolCarMembershipColumns } from "@/table-columns/user-pool-car-membership-column";
+
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import GlobalError from "@/components/GlobalError";
 
 export default function UserPoolCarMembership() {
   const { token } = useAuth();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["user-membership-pool-car"],
     queryFn: () => getAllUserMembership(token),
   });
 
   console.log(data);
 
-    if (isLoading) {
-      return <LoadingSkeleton />;
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
+
+    if (isError) {
+      return <GlobalError error={error} />;
     }
 
   return (

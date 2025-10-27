@@ -9,6 +9,7 @@ import {
   FaIdBadge,
   FaUsers,
 } from "react-icons/fa";
+import GlobalError from "@/components/GlobalError";
 
 export default function ViewDetailsSalesmen() {
   const { id } = useParams();
@@ -18,6 +19,7 @@ export default function ViewDetailsSalesmen() {
     data: salesman,
     isLoading,
     isError,
+    error,
   } = useQuery({
     queryKey: ["salesman", id],
     queryFn: () => getSalesmenById(id!),
@@ -30,13 +32,9 @@ export default function ViewDetailsSalesmen() {
         Loading salesman details...
       </div>
     );
-
-  if (isError || !salesman)
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-600">
-        Failed to load salesman details.
-      </div>
-    );
+  if (isError) {
+    return <GlobalError error={error} />;
+  }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-50 flex justify-center items-start">

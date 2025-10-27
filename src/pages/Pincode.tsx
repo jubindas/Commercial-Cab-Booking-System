@@ -13,12 +13,13 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useState } from "react";
 
 import type { Pincode } from "@/table-types/pincode-table-types";
+import GlobalError from "@/components/GlobalError";
 
 export default function Pincode() {
   
   const [search, setSearch] = useState("");
 
-  const { data: pincode, isLoading } = useQuery({
+  const { data: pincode, isLoading, isError, error } = useQuery({
     queryKey: ["pincodes"],
     queryFn: getPincode,
   });
@@ -29,6 +30,10 @@ export default function Pincode() {
     return <LoadingSkeleton />;
   }
 
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
+
   const filteredPincodes = pincode.filter(
     (pincode: Pincode) =>
       pincode.area_name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -38,6 +43,8 @@ export default function Pincode() {
         .includes(search.toLowerCase()) ||
       pincode.status?.toLowerCase().includes(search.toLowerCase())
   );
+
+  console.log("the filtered data is", filteredPincodes);
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

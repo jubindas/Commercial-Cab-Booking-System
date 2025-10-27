@@ -7,11 +7,11 @@ export const getLocation = async () => {
     if (res && res.status === 200) {
       return res.data;
     } else {
-      console.log("Unexpected response:", res);
-      return null;
+       throw new Error(`Unexpected response: ${res.statusText}`);
     }
   } catch (error) {
     console.log("the error is", error);
+    throw error;
   }
 };
 

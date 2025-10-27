@@ -11,14 +11,14 @@ export const getPincode = async () => {
   try {
     const response = await axiosInstance.get("/pin-codes");
 
-     if (response && response.status === 200) {
+    if (response && response.status === 200) {
       return response.data;
     } else {
-      console.log("Unexpected response:", response);
-      return null;
+      throw new Error(`Unexpected response: ${response.statusText}`);
     }
   } catch (error) {
     console.log("the error is", error);
+    throw error;
   }
 };
 

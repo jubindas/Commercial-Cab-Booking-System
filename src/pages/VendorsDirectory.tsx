@@ -14,9 +14,10 @@ import type { Vendor } from "@/table-types/vendors-table-types";
 import VendorDialog from "@/components/VendorsDialog";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import GlobalError from "@/components/GlobalError";
 
 export default function VendorsDirectory() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["vendors"],
     queryFn: getAllvendors,
   });
@@ -40,6 +41,11 @@ export default function VendorsDirectory() {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
+
+
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

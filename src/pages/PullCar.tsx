@@ -14,9 +14,11 @@ import type { PullCar } from "@/table-types/pull-car-types";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
+import GlobalError from "@/components/GlobalError";
+
 export default function PullCar() {
   const [search, setSearch] = useState("");
-  const { data: pullcardata, isLoading } = useQuery({
+  const { data: pullcardata, isLoading, isError, error } = useQuery({
     queryKey: ["pullcar"],
     queryFn: getAllPullCars,
   });
@@ -31,6 +33,10 @@ export default function PullCar() {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
+
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

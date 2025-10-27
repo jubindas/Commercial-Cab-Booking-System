@@ -54,11 +54,11 @@ export const getAllSalesmen = async (token: string | null) => {
     if (response && response.status === 200) {
       return response.data.data;
     } else {
-      console.log("Unexpected response:", response);
-      return null;
+      throw new Error(`Unexpected response: ${response.statusText}`);
     }
   } catch (error) {
     console.log("the error is", error);
+    throw error;
   }
 };
 

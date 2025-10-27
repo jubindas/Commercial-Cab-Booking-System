@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import GlobalError from "@/components/GlobalError";
 import { useAuth } from "@/hooks/useAuth";
 import { getSalesmanReferral } from "@/service/apiSalesman";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +9,12 @@ export default function ReferralMembership() {
   const { id } = useParams();
   const { token } = useAuth();
 
-  const { data: referralMembership, isLoading } = useQuery({
+  const {
+    data: referralMembership,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["salesmanReferral", id],
     queryFn: () => getSalesmanReferral(id, token),
     enabled: !!id && !!token,
@@ -21,6 +28,10 @@ export default function ReferralMembership() {
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
+
+  if (isError) {
+    return <GlobalError error={error} />;
+  }
 
   if (!referralMembership) return <div>No data found</div>;
 

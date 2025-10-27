@@ -11,6 +11,7 @@ export const getCities = async () => {
     return res.data;
   } catch (error) {
     console.log("the err is", error);
+    throw error;
   }
 };
 

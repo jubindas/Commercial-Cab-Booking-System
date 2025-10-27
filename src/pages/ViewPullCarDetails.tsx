@@ -1,3 +1,4 @@
+import GlobalError from "@/components/GlobalError";
 import { getPullcarById } from "@/service/apiPullcar";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -37,6 +38,7 @@ export default function ViewPullCarDetails() {
     data: car,
     isLoading,
     isError,
+    error,
   } = useQuery<PullCar>({
     queryKey: ["pullcar", id],
     queryFn: () => getPullcarById(id!),
@@ -50,12 +52,7 @@ export default function ViewPullCarDetails() {
       </div>
     );
 
-  if (isError || !car)
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-600">
-        Failed to load car details.
-      </div>
-    );
+  if (isError || !car) return <GlobalError error={error} />;
 
   const images = [car.image1, car.image2, car.image3, car.image4]
     .filter(Boolean)
@@ -88,7 +85,6 @@ export default function ViewPullCarDetails() {
             label="Capacity"
             value={`${car.capacity} Seats`}
           />
-
 
           <DetailCard
             icon={<FaMapMarkerAlt className="text-red-400 text-2xl" />}

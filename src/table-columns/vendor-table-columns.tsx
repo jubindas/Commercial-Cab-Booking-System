@@ -21,7 +21,7 @@ export const vendorColumns: ColumnDef<Vendor>[] = [
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => (
-      <span className="text-zinc-700">{row.getValue("email")}</span>
+      <span className="text-zinc-700">{row.getValue("email") || "N/A"}</span>
     ),
   },
   {

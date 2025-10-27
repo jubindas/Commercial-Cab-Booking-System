@@ -14,11 +14,17 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useState } from "react";
 
 import type { City } from "@/table-types/city-table-types";
+import GlobalError from "@/components/GlobalError";
 
 export default function City() {
   const [search, setSearch] = useState("");
 
-  const { data: cityData, isLoading } = useQuery({
+  const {
+    data: cityData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["cities"],
     queryFn: getCities,
   });
@@ -29,6 +35,10 @@ export default function City() {
 
   if (isLoading) {
     return <LoadingSkeleton />;
+  }
+
+  if (isError) {
+    return <GlobalError error={error} />;
   }
 
   const filteredCities = city.filter(

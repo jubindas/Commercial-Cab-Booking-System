@@ -13,6 +13,7 @@ export const getAllPullCars = async () => {
     return response.data;
   } catch (error) {
     console.log("the err is", error);
+    throw error;
   }
 };
 
@@ -95,4 +96,3 @@ export const disablePullCarMembership = async (
     console.log("the error is", error);
   }
 };
-

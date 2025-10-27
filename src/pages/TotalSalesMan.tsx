@@ -11,11 +11,12 @@ import { getAllSalesmen } from "@/service/apiSalesman";
 import { useAuth } from "@/hooks/useAuth";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import GlobalError from "@/components/GlobalError";
 
 export default function TotalSalesMan() {
   const { token } = useAuth();
 
-  const { data: salesmanData, isLoading } = useQuery({
+  const { data: salesmanData, isLoading, isError, error } = useQuery({
     queryKey: ["salesmen"],
     queryFn: () => getAllSalesmen(token),
   });
@@ -25,6 +26,10 @@ export default function TotalSalesMan() {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
+
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
 
    const sortedSalesmen = [...(salesmanData || [])].sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()

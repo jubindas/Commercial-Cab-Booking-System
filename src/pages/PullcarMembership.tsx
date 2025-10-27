@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/data-table";
+import GlobalError from "@/components/GlobalError";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
@@ -11,7 +12,7 @@ import { pullCarMembershipColumns } from "@/table-columns/pull-car-membership-co
 import { useQuery } from "@tanstack/react-query";
 
 export default function PullcarMembership() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["pullcar-memberships"],
     queryFn: getAllPullCars,
   });
@@ -19,6 +20,10 @@ export default function PullcarMembership() {
   console.log("the pull car membership is", data);
 
   if (isLoading) return <LoadingSkeleton />;
+
+    if (isError) {
+      return <GlobalError error={error} />;
+    }
 
   return (
     <div className="min-h-screen p-6 bg-zinc-100">

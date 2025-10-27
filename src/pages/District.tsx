@@ -14,6 +14,7 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useState } from "react";
 
 import type { District } from "@/table-types/district-table-types";
+import GlobalError from "@/components/GlobalError";
 
 export default function District() {
   const [search, setSearch] = useState("");
@@ -39,9 +40,7 @@ export default function District() {
   }
 
   if (isError) {
-    return (
-      <div className="p-6 text-red-500">Error: {(error as Error).message}</div>
-    );
+    return <GlobalError error={error} />;
   }
 
   const filteredDistricts = district.filter(

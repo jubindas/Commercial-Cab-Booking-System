@@ -162,6 +162,20 @@ export default function SalesManDialog({ trigger, id }: SalesManProps) {
       toast.success("Salesman saved successfully!");
       queryClient.invalidateQueries({ queryKey: ["salesmen"] });
 
+      setName("");
+      setPhone("");
+      setAlternativePhone("");
+      setAddress("");
+      setIdProof(null);
+      setAddressProof(null);
+      setStateId(null);
+      setDistrictId(null);
+      setCityId(null);
+      setLocationId(null);
+      setPinCodeId(null);
+      setIdProofPreview(null);
+      setAddressProofPreview(null);
+
       setOpenDialg(false);
     },
     onError: (err: any) => {

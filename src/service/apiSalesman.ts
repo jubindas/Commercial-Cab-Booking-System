@@ -43,9 +43,12 @@ export const createSalesMan = async (data: {
   }
 };
 
-export const getAllSalesmen = async (token: string | null) => {
+export const getAllSalesmen = async (
+  token: string | null,
+  perPage: number = 1000
+) => {
   try {
-    const response = await axiosInstance.get(`/salesmen`, {
+    const response = await axiosInstance.get(`/salesmen?per_page=${perPage}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

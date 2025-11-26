@@ -12,11 +12,19 @@ import { useAuth } from "@/hooks/useAuth";
 
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import GlobalError from "@/components/GlobalError";
+import { useState } from "react";
 
 export default function TotalSalesMan() {
   const { token } = useAuth();
 
-  const { data: salesmanData, isLoading, isError, error } = useQuery({
+  const [search, setSearch] = useState("");
+
+  const {
+    data: salesmanData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["salesmen"],
     queryFn: () => getAllSalesmen(token),
   });
@@ -27,12 +35,17 @@ export default function TotalSalesMan() {
     return <LoadingSkeleton />;
   }
 
-    if (isError) {
-      return <GlobalError error={error} />;
-    }
+  if (isError) {
+    return <GlobalError error={error} />;
+  }
 
-   const sortedSalesmen = [...(salesmanData || [])].sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  const sortedSalesmen = [...(salesmanData || [])].sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
+  const filteredSalesmen = sortedSalesmen.filter((salesman) =>
+    salesman.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -61,6 +74,8 @@ export default function TotalSalesMan() {
           <span className="font-medium">Search:</span>
           <input
             type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Type to search..."
             className="border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 placeholder-zinc-400 shadow-sm focus:ring-2 focus:ring-zinc-500 focus:outline-none transition-all w-64"
           />
@@ -70,7 +85,7 @@ export default function TotalSalesMan() {
       <div className="rounded-xl border border-zinc-200 bg-white shadow-md overflow-hidden">
         {salesmanData && (
           <DataTable
-            data={sortedSalesmen }
+            data={filteredSalesmen}
             columns={salesmanColumns}
             enablePagination
           />

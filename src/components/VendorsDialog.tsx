@@ -31,6 +31,7 @@ import {
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
 import {
   Command,
   CommandEmpty,
@@ -74,6 +75,7 @@ interface VendorPayload {
   password_confirmation: string;
   role: string;
   address: string | null;
+  user_description: string | null;
   id_proof: File | null;
   address_proof: File | null;
   state_id: number | null;
@@ -114,6 +116,8 @@ export default function VendorDialog() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [idProofPreview, setIdProofPreview] = useState<string | null>(null);
+
+  const [description, setDescription] = useState("");
 
   const [addressProofPreview, setAddressProofPreview] = useState<string | null>(
     null
@@ -201,6 +205,7 @@ export default function VendorDialog() {
       address: address || null,
       id_proof: idProof,
       address_proof: addressProof,
+      user_description: description,
       state_id: stateId,
       district_id: districtId,
       city_id: cityId,
@@ -515,6 +520,15 @@ export default function VendorDialog() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Enter address"
+              />
+            </div>
+
+            <div>
+              <Label className="mb-2">Description</Label>
+              <Input
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter description"
               />
             </div>
 

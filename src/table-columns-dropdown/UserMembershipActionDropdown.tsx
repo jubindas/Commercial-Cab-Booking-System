@@ -31,6 +31,8 @@ import {
 
 import { useAuth } from "@/hooks/useAuth";
 
+import { useNavigate } from "react-router-dom";
+
 import type { Membership } from "@/table-types/membership-table-types";
 
 interface Props {
@@ -40,7 +42,10 @@ interface Props {
 
 export default function UserMembershipActionDropdown({ id, rowData }: Props) {
   const { token } = useAuth();
+
   const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
 
   const approveMutation = useMutation({
     mutationFn: () =>
@@ -84,6 +89,7 @@ export default function UserMembershipActionDropdown({ id, rowData }: Props) {
           <Button
             variant="ghost"
             className="justify-start text-blue-400 hover:bg-blue-500 hover:text-white"
+            onClick={() => navigate(`/user-membership-details/${id}`)}
           >
             View Details
           </Button>

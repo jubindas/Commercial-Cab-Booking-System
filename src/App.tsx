@@ -16,6 +16,7 @@ import VendorsDirectory from "./pages/VendorsDirectory";
 import VendorsViewDetails from "./pages/VendorsViewDetails";
 
 import UserPoolCarMembership from "./pages/UserPoolCarMembership";
+import UserMembershipsDetails from "./pages/UserMembershipsDetails";
 
 const RootLayout = lazy(() => import("@/components/RootLayout"));
 
@@ -250,6 +251,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading user memberships...</div>}>
             <UserMembership />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/user-membership-details/:id",
+        element: (
+          <Suspense fallback={<div>Loading users...</div>}>
+           <UserMembershipsDetails />
           </Suspense>
         ),
       },

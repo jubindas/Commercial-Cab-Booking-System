@@ -316,7 +316,7 @@ export default function VendorDialog() {
             <div className="grid gap-2">
               <div className="grid gap-2">
                 <Label htmlFor="state" className="text-zinc-700">
-                  Sub Category *
+                  State
                 </Label>
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>

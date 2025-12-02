@@ -1,7 +1,5 @@
 import axiosInstance from "@/lib/axios";
 
-import type { MainCategory } from "@/table-types/main-category-table-types";
-
 export type CategoryPayload = {
   id: number;
   name: string;
@@ -25,9 +23,13 @@ export const getCategories = async () => {
   }
 };
 
-export async function createCategory(data: MainCategory) {
+export async function createCategory(formData: FormData) {
   try {
-    const response = await axiosInstance.post("/categories", data);
+    const response = await axiosInstance.post("/categories", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     if (response.status !== 201) {
       throw new Error(
@@ -42,13 +44,19 @@ export async function createCategory(data: MainCategory) {
   }
 }
 
-export async function updateCategory(id: string, data: MainCategory) {
+export async function updateCategory(id: string, formData: FormData) {
+  console.log("updating category with id:", id);
+  console.log("updating category with data:", Object.fromEntries(formData));
   try {
-    const response = await axiosInstance.put(`/categories/${id}`, data);
+    const response = await axiosInstance.post(`/categories/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     if (response.status !== 200) {
       throw new Error(
-        "something went wrong updating category, Please try again"
+        "Something went wrong updating the category. Please try again."
       );
     }
 

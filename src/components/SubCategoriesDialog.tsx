@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -33,8 +35,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { useState, useEffect } from "react";
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
@@ -46,7 +46,12 @@ import { createSubcategory, updateSubcategory } from "@/service/apiSubCategory";
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
-  initialData?: { name: string; description: string; category_id: number };
+  initialData?: {
+    name: string;
+    description: string;
+    category_id: number;
+    image?: string;
+  };
   id?: string | number;
 }
 
@@ -63,22 +68,30 @@ export default function SubCategoriesDialog({
   const [subCategoryName, setSubCategoryName] = useState("");
   const [subCategoryDescription, setSubCategoryDescription] = useState("");
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  console.log("📊 Current state:", {
-    openDialog,
-    selectedCategory,
-    subCategoryName,
-    subCategoryDescription,
-  });
+  // console.log("📊 Current state:", {
+  //   openDialog,
+  //   selectedCategory,
+  //   subCategoryName,
+  //   subCategoryDescription,
+  //   previewUrl,
+  // });
 
-  const { data: categories, isError } = useQuery<
-    Array<{ id: number; name: string }>
-  >({
+  const { data: categories, isError } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
+
+  const activeCategories = categories?.filter(
+    (cat: { is_active: number }) => cat.is_active === 1
+  );
+
+  console.log("the filterd datas are", activeCategories);
 
   useEffect(() => {
     if (openDialog) {
@@ -86,23 +99,49 @@ export default function SubCategoriesDialog({
         setSelectedCategory(String(initialData.category_id));
         setSubCategoryName(initialData.name);
         setSubCategoryDescription(initialData.description);
+
+        if ((initialData as any).image) {
+          setPreviewUrl((initialData as any).image);
+          setImageFile(null);
+          setValue(String(initialData.category_id));
+        }
       } else if (mode === "create") {
         setSelectedCategory("");
         setSubCategoryName("");
         setSubCategoryDescription("");
+        setPreviewUrl(null);
+        setImageFile(null);
+        setValue("");
       }
     }
   }, [openDialog, mode, initialData]);
 
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  }
+
   const mutation = useMutation({
-    mutationFn: (data: {
+    mutationFn: async (data: {
       name: string;
       description: string;
       category_id: number;
     }) => {
+      const fd = new FormData();
+      fd.append("name", data.name);
+      fd.append("description", data.description || "");
+      fd.append("category_id", String(data.category_id));
+
+      fd.append("_method", "PUT");
+
+      if (imageFile) fd.append("image", imageFile);
+
       return mode === "create"
-        ? createSubcategory(data)
-        : updateSubcategory(Number(id), data);
+        ? createSubcategory(fd as any)
+        : updateSubcategory(Number(id), fd as any);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subcategories"] });
@@ -113,6 +152,8 @@ export default function SubCategoriesDialog({
       setSelectedCategory("");
       setSubCategoryName("");
       setSubCategoryDescription("");
+      setImageFile(null);
+      setPreviewUrl(null);
       setOpenDialg(false);
     },
     onError: (err) => {
@@ -134,6 +175,7 @@ export default function SubCategoriesDialog({
       selectedCategory,
       subCategoryName,
       subCategoryDescription,
+      imageFile,
     });
 
     if (!selectedCategory || !subCategoryName.trim()) {
@@ -198,7 +240,7 @@ export default function SubCategoriesDialog({
                     className="w-full justify-between bg-white"
                   >
                     {value
-                      ? categories?.find(
+                      ? activeCategories?.find(
                           (s: CategoryPayload) => String(s.id) === value
                         )?.name
                       : "Select Main Category..."}
@@ -211,7 +253,7 @@ export default function SubCategoriesDialog({
                     <CommandList>
                       <CommandEmpty>No state found.</CommandEmpty>
                       <CommandGroup>
-                        {categories?.map((s: CategoryPayload) => (
+                        {activeCategories?.map((s: CategoryPayload) => (
                           <CommandItem
                             key={s.id}
                             value={s.name.toLowerCase()}
@@ -264,6 +306,25 @@ export default function SubCategoriesDialog({
                 setSubCategoryDescription(e.target.value);
               }}
             />
+          </div>
+
+          {/* Image upload area - similar to MainCategoryDialog */}
+          <div className="grid gap-2">
+            <Label htmlFor="image">SubCategory Image</Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="h-28 w-28 object-cover rounded-md border border-zinc-300 mt-2"
+              />
+            )}
           </div>
         </div>
 

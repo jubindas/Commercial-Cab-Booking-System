@@ -4,6 +4,8 @@ import type { MainCategory } from "@/table-types/main-category-table-types";
 
 import MainCategoryTableColumnDropdown from "@/table-columns-dropdown/main-category-table-column-dropdown";
 
+const BASE_IMAGE_URL = "https://api.bhara.co.in/";
+
 export const columns: ColumnDef<MainCategory>[] = [
   {
     accessorKey: "id",
@@ -53,6 +55,26 @@ export const columns: ColumnDef<MainCategory>[] = [
     ),
   },
   {
+    accessorKey: "image",
+    header: "Image",
+    cell: ({ row }) => {
+      const imgPath = row.original.image;
+      const fullUrl = imgPath ? BASE_IMAGE_URL + imgPath : null;
+
+      return fullUrl ? (
+        <img
+          src={fullUrl}
+          alt={row.original.name}
+          className="w-12 h-12 object-cover rounded-md border"
+        />
+      ) : (
+        <span className="w-12 h-12 flex items-center justify-center bg-gray-200 text-xs text-gray-600 rounded-md border">
+          No Image
+        </span>
+      );
+    },
+  },
+  {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
@@ -62,7 +84,7 @@ export const columns: ColumnDef<MainCategory>[] = [
           rowData={{
             name: row.original.name || "",
             description: row.original.description || "",
-            is_active: row.original.is_active || false,
+            is_active: row.original.is_active,
           }}
         />
       );

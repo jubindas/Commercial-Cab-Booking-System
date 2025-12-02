@@ -15,14 +15,21 @@ export const getSubcategories = async () => {
   }
 };
 
-export async function createSubcategory(data: {
-  name: string;
-  description: string;
-  category_id: number;
-}) {
+export async function createSubcategory(
+  data: FormData | { name: string; description: string; category_id: number }
+) {
   try {
-    const response = await axiosInstance.post("/sub-categories", data);
-    if (response && response.status === 201) {
+    const isFormData = data instanceof FormData;
+
+    console.log("the sub category response is", isFormData);
+
+    const response = await axiosInstance.post("/sub-categories", data, {
+      headers: isFormData
+        ? { "Content-Type": "multipart/form-data" }
+        : { "Content-Type": "application/json" },
+    });
+
+    if (response?.status === 201) {
       console.log("Subcategory created:", response.data);
       return response.data;
     } else {
@@ -37,11 +44,24 @@ export async function createSubcategory(data: {
 
 export async function updateSubcategory(
   id: number,
-  data: { name?: string; description?: string; category_id?: number }
+  data:
+    | FormData
+    | {
+        name?: string;
+        description?: string;
+        category_id?: number;
+      }
 ) {
   try {
-    const response = await axiosInstance.put(`/sub-categories/${id}`, data);
-    if (response && response.status === 200) {
+    const isFormData = data instanceof FormData;
+
+    const response = await axiosInstance.post(`/sub-categories/${id}`, data, {
+      headers: isFormData
+        ? { "Content-Type": "multipart/form-data" }
+        : { "Content-Type": "application/json" },
+    });
+
+    if (response?.status === 200) {
       console.log("Subcategory updated:", response.data);
       return response.data;
     } else {

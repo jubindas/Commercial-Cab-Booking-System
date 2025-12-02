@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import {
   Dialog,
   DialogContent,
@@ -26,7 +25,7 @@ import { toast } from "sonner";
 interface Props {
   mode: "create" | "edit";
   trigger?: React.ReactNode;
-  initialData?: { name: string; description?: string };
+  initialData?: { name: string; description?: string; image?: string };
   id?: string | number;
 }
 
@@ -39,41 +38,66 @@ export default function MainCategoryDialog({
   const queryClient = useQueryClient();
 
   const [openDialog, setOpenDialg] = useState(false);
-
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ name: "", description: "",  });
 
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setFormData({
         name: initialData.name,
         description: initialData.description ?? "",
+        
       });
+
+      if (initialData.image) {
+        setPreviewUrl(initialData.image);
+      }
     }
   }, [mode, initialData]);
 
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  }
+
   const mutation = useMutation({
-    mutationFn: (data: {
+    mutationFn: async (payload: {
       name: string;
       description?: string;
       is_active: boolean;
-    }) =>
-      mode === "create"
-        ? createCategory(data)
-        : updateCategory(String(id), data),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      toast.success(
-        `Category ${mode === "create" ? "created" : "updated"} successfully`
-      );
+    }) => {
+      const fd = new FormData();
+      fd.append("name", payload.name);
+      fd.append("description", payload.description || "");
+      fd.append("_method","PUT")
+
+      if (imageFile) fd.append("image", imageFile);
+
       console.log(
-        `Category ${mode === "create" ? "created" : "updated"}:`,
-        data
+        mode === "create" ? "Create Payload:" : "Update Payload:",
+        Object.fromEntries(fd.entries())
       );
+
+      return mode === "create"
+        ? createCategory(fd)
+        : updateCategory(String(id), fd);
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      toast.success(`Category ${mode === "create" ? "created" : "updated"} successfully`);
+
       setFormData({ name: "", description: "" });
+      setImageFile(null);
+      setPreviewUrl(null);
       setOpenDialg(false);
     },
-    onError: (err) => {
-      console.error(`Failed to ${mode} category:`, err);
+
+    onError: () => {
       toast.error(`Failed to ${mode} category`);
     },
   });
@@ -110,42 +134,51 @@ export default function MainCategoryDialog({
 
       <DialogContent className="sm:max-w-[600px] bg-white text-zinc-900 border border-zinc-200 shadow-md rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-zinc-900">
+          <DialogTitle>
             {mode === "create" ? "Add a Main Category" : "Edit Main Category"}
           </DialogTitle>
-          <DialogDescription className="text-zinc-500">
-            {mode === "create"
-              ? "Enter the category details below. Description is optional."
-              : "Update the category details below."}
+          <DialogDescription>
+            {mode === "create" ? "Enter category details." : "Update category details."}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name" className="text-zinc-700">
-              Name *
-            </Label>
+            <Label htmlFor="name">Name *</Label>
             <Input
               id="name"
               placeholder="Enter category name"
               value={formData.name}
               onChange={handleChange}
-              required
-              className="bg-zinc-50 text-zinc-900 border border-zinc-300 placeholder:text-zinc-400"
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="description" className="text-zinc-700">
-              Description (Optional)
-            </Label>
+            <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              placeholder="Add a short description for this category"
+              placeholder="Add a short description"
               value={formData.description}
               onChange={handleChange}
-              className="bg-zinc-50 text-zinc-900 border border-zinc-300 placeholder:text-zinc-400"
             />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="image">Category Image</Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="h-28 w-28 object-cover rounded-md border border-zinc-300 mt-2"
+              />
+            )}
           </div>
         </div>
 

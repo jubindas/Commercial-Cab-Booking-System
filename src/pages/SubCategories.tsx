@@ -13,6 +13,7 @@ import type { SubCategory } from "@/table-types/sub-category-table-types";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 import { useState } from "react";
+
 import GlobalError from "@/components/GlobalError";
 
 export default function SubCategories() {
@@ -28,14 +29,13 @@ export default function SubCategories() {
     queryFn: getSubcategories,
   });
 
-  console.log("the sub category is", subCategories);
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
-    if (isError) {
-      return <GlobalError error={error} />;
-    }
+  if (isError) {
+    return <GlobalError error={error} />;
+  }
 
   const sortedSubCategories = [...(subCategories || [])].sort(
     (
@@ -46,9 +46,13 @@ export default function SubCategories() {
       new Date(a.created_at || 0).getTime()
   );
 
+  console.log("the sub categories are", sortedSubCategories);
+
   const activeSubCategory = sortedSubCategories?.filter(
-    (sub: SubCategory) => sub.category?.is_active === 1
+    (sub: SubCategory) => sub.is_active === 1
   );
+
+  console.log("the active sub categories", activeSubCategory);
 
   const filteredSubCategories = activeSubCategory?.filter(
     (sub: SubCategory) => {
